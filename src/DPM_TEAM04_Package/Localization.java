@@ -8,13 +8,15 @@ import lejos.hardware.ev3.LocalEV3;
 public class Localization extends Thread {
 
 	private Odometer odometer;
+	private Resources resources;
 	
 	private double minDistance, minDistAngle;
 	private ArrayList<Distance> listOfDistances;
 	private boolean isLeftWall;
 	
-	public Localization(Odometer odometer) {
+	public Localization(Odometer odometer, Resources resources) {
 		this.odometer = odometer;
+		this.resources = resources;
 		
 		listOfDistances = new ArrayList<Distance>();
 	}
@@ -23,14 +25,12 @@ public class Localization extends Thread {
 		
 		// Wait 1 second for everything to be set up (sensors)
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(4000);
 		} catch (InterruptedException e) {}
 		
 		Navigation navigator = new Navigation(this.odometer);
 		
-		
-		
-		this.minDistance = Resources.getFrontUSData();
+		this.minDistance = resources.getFrontUSData();
 		this.minDistAngle = odometer.getTheta();
 		
 		
@@ -78,7 +78,7 @@ public class Localization extends Thread {
 		
 		
 		// Go forward to the next wall
-		navigator.goForward(Resources.getFrontUSData() + 6.0);
+		navigator.goForward(resources.getFrontUSData() + 6.0);
 		
 		// reset the smooth acceleration (default)
 		navigator.setAcceleration(-1);
@@ -95,7 +95,7 @@ public class Localization extends Thread {
 		}
 		
 		
-		Resources.getLeftUSData();
+		resources.getFrontUSData();
 		
 		
 		try {
@@ -115,7 +115,7 @@ public class Localization extends Thread {
 	
 	private void saveDistance() {
 		
-		float actualDist = Resources.getFrontUSData();
+		float actualDist = resources.getFrontUSData();
 		Distance d = new Distance(actualDist, odometer.getTheta());
 		this.listOfDistances.add(d);
 		

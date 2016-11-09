@@ -22,6 +22,11 @@ import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
+import lejos.hardware.port.Port;
+import lejos.hardware.sensor.EV3ColorSensor;
+import lejos.hardware.sensor.EV3UltrasonicSensor;
+import lejos.hardware.sensor.SensorModes;
+import lejos.robotics.SampleProvider;
 
 public class Main {
 	
@@ -30,7 +35,10 @@ public class Main {
 	private static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("C"));
 	
-	
+	//private static final Port usPortLeft = LocalEV3.get().getPort("S2");
+	private static final Port usPortFront = LocalEV3.get().getPort("S2");		
+	private static final Port colorPortDown = LocalEV3.get().getPort("S1");
+	//private static final Port colorPortFront = LocalEV3.get().getPort("S1");
 	
 	
 	/**
@@ -39,6 +47,29 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		
+		
+		// Ultrasonic sensors
+		/*
+		@SuppressWarnings("resource")							    			// Because we don't bother to close this resource
+		SensorModes usSensorLeft_Mode = new EV3UltrasonicSensor(usPortLeft);	// usSensor is the instance
+		SampleProvider usSensorLeft = usSensorLeft_Mode.getMode("Distance");					// usDistance provides samples from this instance
+		float[] usDataLeft = new float[usSensorLeft.sampleSize()];						// usData is the buffer in which data are returned
+		*/
+		
+		@SuppressWarnings("resource")
+		SensorModes usSensorFront_Mode = new EV3UltrasonicSensor(usPortFront);
+		SampleProvider usSensorFront = usSensorFront_Mode.getMode("Distance");
+		float[] usDataFront = new float[usSensorFront.sampleSize()];
+		
+		SensorModes colorSensorDown_Mode = new EV3ColorSensor(colorPortDown);
+		SampleProvider colorSensorDown = colorSensorDown_Mode.getMode("Red");			// colorValue provides samples from this instance
+		float[] colorDataDown = new float[colorSensorDown.sampleSize()];			// colorData is the buffer in which data are returned
+		
+		/*
+		SensorModes colorSensorFront_Mode = new EV3ColorSensor(colorPortFront);
+		SampleProvider colorSensorFront = colorSensorFront_Mode.getMode("Red");			// colorValue provides samples from this instance
+		float[] colorDataFront = new float[colorSensorFront.sampleSize()];			// colorData is the buffer in which data are returned
+		*/
 		
 		
 		// LCD Display
@@ -50,20 +81,19 @@ public class Main {
 		// Initialize the display
 		Display display = new Display(odometer, t);
 		
-		/*
-		Resources resources = new Resources(usDistanceLeft, usDataLeft, usDistanceFront, usDataFront, colorValueDown, colorDataDown, colorValueFront, colorDataFront);
-		*/
+		
+		Resources resources = new Resources(usSensorFront, usDataFront, colorSensorDown, colorDataDown);
+		
 		
 		// Initialize the resources (constants and sensors)
-		Resources resources = new Resources();
+		//Resources resources = new Resources();
 		
 		// Initialize the localization thread
-		Localization localization = new Localization(odometer);
+		Localization localization = new Localization(odometer, resources);
 		
 		
 		
 		odometer.start();
-		resources.start();
 		display.start();
 		
 		localization.start();

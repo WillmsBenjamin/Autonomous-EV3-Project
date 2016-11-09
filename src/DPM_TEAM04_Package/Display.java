@@ -36,8 +36,8 @@ public class Display extends Thread {
 			odometer.getPosition(position, new boolean[] { true, true, true });
 
 			// display odometry information
-			for (int i = 1; i <= 3; i++) {
-				t.drawString(formattedDoubleToString(position[i], 2), 3, i);
+			for (int i = 0; i < 3; i++) {
+				t.drawString(formattedDoubleToString(position[i], 2), 3, i+1);
 			}
 
 			// throttle the OdometryDisplay
