@@ -13,9 +13,9 @@ public class Odometer extends Thread {
 	private Object lock;
 
 	// default constructor
-	public Odometer(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor) {
-		this.leftMotor = leftMotor;
-		this.rightMotor = rightMotor;
+	public Odometer() {
+		this.leftMotor = Resources.leftMotor;
+		this.rightMotor = Resources.rightMotor;
 		this.x = 0.0;
 		this.y = 0.0;
 		this.theta = 0.0;
@@ -165,16 +165,7 @@ public class Odometer extends Thread {
 	}
 	
 	
-	// accessors to motors
-	public EV3LargeRegulatedMotor [] getMotors() {
-		return new EV3LargeRegulatedMotor[] {this.leftMotor, this.rightMotor};
-	}
-	public EV3LargeRegulatedMotor getLeftMotor() {
-		return this.leftMotor;
-	}
-	public EV3LargeRegulatedMotor getRightMotor() {
-		return this.rightMotor;
-	}
+	
 	
 
 	/**

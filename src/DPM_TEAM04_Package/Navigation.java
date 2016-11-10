@@ -16,9 +16,8 @@ public class Navigation {
 	public Navigation(Odometer odometer) {
 		this.odometer = odometer;
 		
-		EV3LargeRegulatedMotor[] motors = this.odometer.getMotors();
-		this.leftMotor = motors[0];
-		this.rightMotor = motors[1];
+		this.leftMotor = Resources.leftMotor;
+		this.rightMotor = Resources.rightMotor;
 		
 		// set acceleration
 		this.leftMotor.setAcceleration(Resources.ACCELERATION_SMOOTH);
@@ -27,6 +26,7 @@ public class Navigation {
 		// set speed
 		this.leftMotor.setSpeed(Resources.SPEED_FORWARD);
 		this.rightMotor.setSpeed(Resources.SPEED_FORWARD);
+		
 		
 		this.navigating = false;
 	}
@@ -94,9 +94,9 @@ public class Navigation {
 		double thetaRightTurn = 0.0;
 		if(theta <= this.odometer.getTheta()) {
 			thetaLeftTurn = this.odometer.getTheta() - theta;
-			thetaRightTurn = (2.0*Math.PI - this.odometer.getTheta()) + theta;
+			thetaRightTurn = ((2.0*Math.PI) - this.odometer.getTheta()) + theta;
 		} else {
-			thetaLeftTurn = (2.0*Math.PI - theta) + this.odometer.getTheta();
+			thetaLeftTurn = ((2.0*Math.PI) - theta) + this.odometer.getTheta();
 			thetaRightTurn = theta - this.odometer.getTheta();
 		}
 		
@@ -146,7 +146,7 @@ public class Navigation {
 	 * returns 2pi
 	 */
 	public double getMaxAngle() {
-		return 2.0*Math.PI;
+		return (2.0*Math.PI);
 	}
 	
 	/*
@@ -172,8 +172,8 @@ public class Navigation {
 			// Adjust the bandWidth according to a linear function having a small angle range when it is "far" from the position
 			// and a bigger range when it is closer
 			bandWidth=4*Math.PI/distance;
-			if(bandWidth >= 2.0*Math.PI) {
-				bandWidth = 2.0*Math.PI;
+			if(bandWidth >= (2.0*Math.PI)) {
+				bandWidth = (2.0*Math.PI);
 			}
 		}
 		
@@ -182,11 +182,11 @@ public class Navigation {
 		thetaRangeHigh = (desiredTheta+bandWidth)%(2.0*Math.PI);
 		if (thetaRangeLow < 0) {
 			// If the lower bound is negative, add 2*PI
-			thetaRangeLow += 2.0*Math.PI;
+			thetaRangeLow += (2.0*Math.PI);
 		}
 		// Condition to avoid issues when the range passes 2*PI to 0
 		if (thetaRangeHigh < thetaRangeLow) {
-			if(((trueTheta >= thetaRangeLow) && (trueTheta < 2.0*Math.PI)) || ((trueTheta <= thetaRangeHigh) && (trueTheta >= 0))) {
+			if(((trueTheta >= thetaRangeLow) && (trueTheta < (2.0*Math.PI))) || ((trueTheta <= thetaRangeHigh) && (trueTheta >= 0))) {
 				// If the angle falls between the lower bound and 2PI or the upper bound and 0
 				inRange = true;
 			} else {
@@ -210,7 +210,7 @@ public class Navigation {
 		y_diff = this.y - odometer.getY();
 		desiredTheta = Math.atan2(x_diff, y_diff);		// Get the angle from delta X and Y
 		if(desiredTheta < 0) {
-			desiredTheta += 2.0*Math.PI;					// If the angle is negative, add 2*PI
+			desiredTheta += (2.0*Math.PI);					// If the angle is negative, add 2*PI
 		}
 		
 		return desiredTheta;							// Return the desired theta (towards the position)
@@ -321,7 +321,7 @@ public class Navigation {
 	 * converts radians to degrees for use in the turnTo method.
 	 */
 	private static double radsToDegrees(double angle) {
-		return (angle/2.0*Math.PI)*360.0;
+		return (angle/(2.0*Math.PI))*360.0;
 	}
 
 }

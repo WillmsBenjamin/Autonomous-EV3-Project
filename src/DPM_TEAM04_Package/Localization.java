@@ -23,12 +23,8 @@ public class Localization extends Thread {
 	
 	public void run() {
 		
-		// Wait 1 second for everything to be set up (sensors)
-		try {
-			Thread.sleep(4000);
-		} catch (InterruptedException e) {}
 		
-		Navigation navigator = new Navigation(this.odometer);
+		Navigation navigator = new Navigation(this.odometer);		
 		
 		this.minDistance = resources.getFrontUSData();
 		this.minDistAngle = odometer.getTheta();
@@ -52,36 +48,40 @@ public class Localization extends Thread {
 		int index = getMinimalDistance();
 		isLeftWall = determineWallSeen(index);
 		
+		this.minDistAngle = (this.minDistAngle + Math.PI)%(2.0*Math.PI);
+		
 		// Turn to the minimal distance seen
 		navigator.turnTo(this.minDistAngle, true);
 		// Go to this distance and more than the distance to "bump" into it
-		navigator.goForward(this.minDistance + 6.0);
+		navigator.goForward(-(this.minDistance + 6.0));
+		
+		
+		
+		// reset the smooth acceleration (default)
+		navigator.setAcceleration(-1);
 		
 		if (isLeftWall) {
 			// If it bumped into the left wall, set position accordingly
 			odometer.setX(-Resources.TILE_WIDTH+Resources.BUMPER_TO_CENTER);
-			odometer.setTheta(3.0/2.0*Math.PI);
+			odometer.setTheta(1.0/2.0*Math.PI);
 			
 			// Go back to turn and bump the other wall
-			navigator.goForward(-20.0);
-			navigator.turnTo(Math.PI, true);
+			navigator.goForward(20.0);
+			navigator.turnTo(0.0, true);
 		} else {
 			// If it bumped into the right wall, set position accordingly
 			odometer.setY(-Resources.TILE_WIDTH+Resources.BUMPER_TO_CENTER);
-			odometer.setTheta(Math.PI);
+			odometer.setTheta(0.0);
 			
 			// Go back to turn and bump the other wall
-			navigator.goForward(-20.0);
-			navigator.turnTo(3.0/2.0*Math.PI, true);
+			navigator.goForward(20.0);
+			navigator.turnTo(1.0/2.0*Math.PI, true);
 		}
 		
 		
 		
 		// Go forward to the next wall
-		navigator.goForward(resources.getFrontUSData() + 6.0);
-		
-		// reset the smooth acceleration (default)
-		navigator.setAcceleration(-1);
+		navigator.goForward(-(resources.getFrontUSData() + 6.0));
 		
 		
 		if (isLeftWall) {
@@ -104,7 +104,7 @@ public class Localization extends Thread {
 		
 		
 		
-		navigator.goForward(-10.0);
+		
 		navigator.travelTo(0.0, 0.0);
 		navigator.turnTo(0.0, true);
 		

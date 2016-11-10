@@ -32,13 +32,11 @@ public class Main {
 	
 	public static final int VERSION_NB = 1;
 	
-	private static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
-	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("C"));
 	
-	//private static final Port usPortLeft = LocalEV3.get().getPort("S2");
-	private static final Port usPortFront = LocalEV3.get().getPort("S2");		
+	//private static final Port usPortLeft = LocalEV3.get().getPort("S4");
+	private static final Port usPortFront = LocalEV3.get().getPort("S3");		
 	private static final Port colorPortDown = LocalEV3.get().getPort("S1");
-	//private static final Port colorPortFront = LocalEV3.get().getPort("S1");
+	//private static final Port colorPortFront = LocalEV3.get().getPort("S2");
 	
 	
 	/**
@@ -76,7 +74,7 @@ public class Main {
 		final TextLCD t = LocalEV3.get().getTextLCD();
 		
 		// Initialize the odometer
-		Odometer odometer = new Odometer(leftMotor, rightMotor);
+		Odometer odometer = new Odometer();
 		
 		// Initialize the display
 		Display display = new Display(odometer, t);
@@ -95,6 +93,12 @@ public class Main {
 		
 		odometer.start();
 		display.start();
+		
+		
+		// Wait 4 seconds for everything to be set up (sensors)
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {}
 		
 		localization.start();
 		
