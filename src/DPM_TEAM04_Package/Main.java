@@ -17,6 +17,9 @@
 
 package DPM_TEAM04_Package;
 
+import java.io.IOException;
+import java.util.HashMap;
+
 import DPM_TEAM04_Package.Odometer;
 import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
@@ -27,6 +30,8 @@ import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.hardware.sensor.SensorModes;
 import lejos.robotics.SampleProvider;
+import lejos.robotics.geometry.Rectangle2D;
+import wifi.WifiConnection;
 
 public class Main {
 	
@@ -34,7 +39,7 @@ public class Main {
 	
 	
 	//private static final Port usPortLeft = LocalEV3.get().getPort("S4");
-	private static final Port usPortFront = LocalEV3.get().getPort("S3");		
+	private static final Port usPortFront = LocalEV3.get().getPort("S2");		
 	private static final Port colorPortDown = LocalEV3.get().getPort("S1");
 	//private static final Port colorPortFront = LocalEV3.get().getPort("S2");
 	
@@ -91,16 +96,6 @@ public class Main {
 		
 		
 		
-		odometer.start();
-		display.start();
-		
-		
-		// Wait 4 seconds for everything to be set up (sensors)
-		try {
-			Thread.sleep(4000);
-		} catch (InterruptedException e) {}
-		
-		localization.start();
 		
 		/*
 		 * 
@@ -113,6 +108,92 @@ public class Main {
 		 * 
 		 * 
 		 */
+		
+		t.clear();
+
+		/*
+		 * WiFiConnection will establish a connection to the server and wait for data
+		 * If the server is not running, this will throw an IOException
+		 * If the server is running but the user has yet to press start on the Java GUI with some data,
+		 * this will wait forever
+		 * During the competition, this means you can start your code, place it on the field, and it will wait
+		 * for data from the professor's computer
+		 * If you need it to stop, access the robot via the EV3Control program and click "Stop Program"
+		 * Alternatively, you can reset the robot but you risk SD card corruption
+		 * Note that you can set the final argument debugPrint as false to disable printing to the LCD if desired.
+		 */ 
+		WifiConnection conn = null;
+		try {
+			//System.out.println("Connecting...");
+			conn = new WifiConnection(Resources.SERVER_IP, Resources.TEAM_NUMBER, false);
+		} catch (IOException e) {
+			System.out.println("Connection failed");
+		}
+		
+		t.clear();
+
+		/*
+		 * This section of the code reads and prints the data received from the server,
+		 * stored as a HashMap with String keys and Integer values.
+		 */
+		if (conn != null) {
+			HashMap<String, Integer> connData = conn.StartData;
+			if (connData == null) {
+				System.out.println("Failed to read transmission");
+				
+
+				/*
+				 * 
+				 * 
+				 * WHAT SHOULD WE DO WHEN TRANSMISSION FAILED???
+				 * 
+				 * 
+				 */
+				
+				
+				
+			} else {
+				
+				Resources.wifiData = connData;
+				if (connData.get("BTN") == Resources.TEAM_NUMBER) {
+					Resources.isBuilder = true;
+				} else {
+					Resources.isBuilder = false;
+				}
+				
+				Rectangle2D builderCorner = new Rectangle2D.Double(connData.get("LGZx"), connData.get("LGZy"), connData.get("UGZx")-connData.get("LGZx"), connData.get("UGZy")-connData.get("LGZy"));
+				Rectangle2D garbageCorner = new Rectangle2D.Double(connData.get("LRZx"), connData.get("LRZy"), connData.get("URZx")-connData.get("LRZx"), connData.get("URZy")-connData.get("LRZy"));
+				
+				System.out.println("\n\n\n\n\n" + builderCorner.getHeight());
+				
+			}
+		}
+		
+		
+		
+		
+		
+		/*
+		 * 
+		 * 
+		 * 
+		 * END OF WIFI CONNECTION
+		 * 
+		 * 
+		 * 
+		 */
+		
+		
+		
+		odometer.start();
+		display.start();
+		
+		// Wait 4 seconds for everything to be set up (sensors)
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {}
+		
+		localization.start();
 		
 		
 		

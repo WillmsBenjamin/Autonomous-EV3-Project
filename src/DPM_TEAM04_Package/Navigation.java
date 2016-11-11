@@ -82,6 +82,13 @@ public class Navigation {
 		return;													// return void
 	}
 	
+	/**
+	 * Travels to the point on the map
+	 */
+	public void travelToMapCoordinates(double x, double y) {
+		travelTo(x*Resources.TILE_WIDTH, y*Resources.TILE_WIDTH);
+	}
+	
 	
 	// Turns to a desired orientation by the minimum angle. Theta is in radians.
 	public void turnTo(double theta, boolean wait) {
@@ -307,6 +314,8 @@ public class Navigation {
 		}
 		
 	}
+	
+	
 	
 	
 	

@@ -26,7 +26,7 @@ public class Display extends Thread {
 
 			// clear the lines for displaying odometry information
 			t.drawString("VERSION:        ", 0, 0);
-			t.drawInt(Main.VERSION_NB, 10, 0);
+			t.drawInt(Main.VERSION_NB, 9, 0);
 			t.drawString("X:              ", 0, 1);
 			t.drawString("Y:              ", 0, 2);
 			t.drawString("T:              ", 0, 3);

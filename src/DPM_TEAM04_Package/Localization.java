@@ -24,6 +24,7 @@ public class Localization extends Thread {
 	public void run() {
 		
 		
+		
 		Navigation navigator = new Navigation(this.odometer);		
 		
 		this.minDistance = resources.getFrontUSData();
@@ -40,9 +41,6 @@ public class Localization extends Thread {
 		}
 		
 		
-		// Make EV3 beep when it stops following the wall
-		Audio audio = LocalEV3.get().getAudio();
-		audio.systemSound(2);
 		
 		
 		int index = getMinimalDistance();
@@ -53,7 +51,7 @@ public class Localization extends Thread {
 		// Turn to the minimal distance seen
 		navigator.turnTo(this.minDistAngle, true);
 		// Go to this distance and more than the distance to "bump" into it
-		navigator.goForward(-(this.minDistance + 6.0));
+		navigator.goForward(-(this.minDistance - Resources.BUMPER_TO_CENTER + Resources.US_TO_CENTER + 6.0));
 		
 		
 		
@@ -63,10 +61,10 @@ public class Localization extends Thread {
 		if (isLeftWall) {
 			// If it bumped into the left wall, set position accordingly
 			odometer.setX(-Resources.TILE_WIDTH+Resources.BUMPER_TO_CENTER);
-			odometer.setTheta(1.0/2.0*Math.PI);
+			odometer.setTheta(Math.PI/2.0);
 			
 			// Go back to turn and bump the other wall
-			navigator.goForward(20.0);
+			navigator.goForward(6.0);
 			navigator.turnTo(0.0, true);
 		} else {
 			// If it bumped into the right wall, set position accordingly
@@ -74,28 +72,38 @@ public class Localization extends Thread {
 			odometer.setTheta(0.0);
 			
 			// Go back to turn and bump the other wall
-			navigator.goForward(20.0);
-			navigator.turnTo(1.0/2.0*Math.PI, true);
+			navigator.goForward(6.0);
+			navigator.turnTo(Math.PI/2.0, true);
 		}
 		
 		
 		
 		// Go forward to the next wall
-		navigator.goForward(-(resources.getFrontUSData() + 6.0));
+		navigator.goForward(-(Resources.TILE_WIDTH-Resources.BUMPER_TO_CENTER));
 		
 		
 		if (isLeftWall) {
 			// Now it bumped the right wall
 			odometer.setY(-Resources.TILE_WIDTH+Resources.BUMPER_TO_CENTER);
-			odometer.setTheta(Math.PI);
+			odometer.setTheta(0.0);
 		} else {
 			// Now it bumped the left wall
 			odometer.setX(-Resources.TILE_WIDTH+Resources.BUMPER_TO_CENTER);
-			odometer.setTheta(3.0/2.0*Math.PI);
+			odometer.setTheta(Math.PI/2.0);
 		}
 		
 		
-		resources.getFrontUSData();
+		/*
+		 * 
+		 * END OF LOCALIZATION
+		 * 
+		 */
+		
+		// Make EV3 beep when it stops following the wall
+		Audio audio = LocalEV3.get().getAudio();
+		audio.systemSound(2);
+		
+		
 		
 		
 		try {
@@ -104,8 +112,8 @@ public class Localization extends Thread {
 		
 		
 		
-		
-		navigator.travelTo(0.0, 0.0);
+		navigator.goForward(10.0);
+		navigator.travelToMapCoordinates(Resources.wifiData.get("LGZx"), Resources.wifiData.get("LGZy"));
 		navigator.turnTo(0.0, true);
 		
 		
