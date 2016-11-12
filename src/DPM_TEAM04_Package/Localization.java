@@ -8,15 +8,13 @@ import lejos.hardware.ev3.LocalEV3;
 public class Localization extends Thread {
 
 	private Odometer odometer;
-	private Resources resources;
 	
 	private double minDistance, minDistAngle;
 	private ArrayList<Distance> listOfDistances;
 	private boolean isLeftWall;
 	
-	public Localization(Odometer odometer, Resources resources) {
+	public Localization(Odometer odometer) {
 		this.odometer = odometer;
-		this.resources = resources;
 		
 		listOfDistances = new ArrayList<Distance>();
 	}
@@ -27,7 +25,7 @@ public class Localization extends Thread {
 		
 		Navigation navigator = new Navigation(this.odometer);		
 		
-		this.minDistance = resources.getFrontUSData();
+		this.minDistance = Resources.getFrontUSData();
 		this.minDistAngle = odometer.getTheta();
 		
 		
@@ -123,7 +121,7 @@ public class Localization extends Thread {
 	
 	private void saveDistance() {
 		
-		float actualDist = resources.getFrontUSData();
+		float actualDist = Resources.getFrontUSData();
 		Distance d = new Distance(actualDist, odometer.getTheta());
 		this.listOfDistances.add(d);
 		

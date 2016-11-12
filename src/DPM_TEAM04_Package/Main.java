@@ -17,31 +17,22 @@
 
 package DPM_TEAM04_Package;
 
+import static DPM_TEAM04_Package.Resources.lcd;
+
 import java.io.IOException;
 import java.util.HashMap;
 
-import DPM_TEAM04_Package.Odometer;
 import lejos.hardware.Button;
-import lejos.hardware.ev3.LocalEV3;
-import lejos.hardware.lcd.TextLCD;
-import lejos.hardware.motor.EV3LargeRegulatedMotor;
-import lejos.hardware.port.Port;
-import lejos.hardware.sensor.EV3ColorSensor;
-import lejos.hardware.sensor.EV3UltrasonicSensor;
-import lejos.hardware.sensor.SensorModes;
-import lejos.robotics.SampleProvider;
 import lejos.robotics.geometry.Rectangle2D;
 import wifi.WifiConnection;
 
+/**
+ * 
+ * @author Tristan Toupin, Alexis GJ
+ */
 public class Main {
 	
 	public static final int VERSION_NB = 1;
-	
-	
-	//private static final Port usPortLeft = LocalEV3.get().getPort("S4");
-	private static final Port usPortFront = LocalEV3.get().getPort("S2");		
-	private static final Port colorPortDown = LocalEV3.get().getPort("S1");
-	//private static final Port colorPortFront = LocalEV3.get().getPort("S2");
 	
 	
 	/**
@@ -50,49 +41,20 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		
-		
-		// Ultrasonic sensors
-		/*
-		@SuppressWarnings("resource")							    			// Because we don't bother to close this resource
-		SensorModes usSensorLeft_Mode = new EV3UltrasonicSensor(usPortLeft);	// usSensor is the instance
-		SampleProvider usSensorLeft = usSensorLeft_Mode.getMode("Distance");					// usDistance provides samples from this instance
-		float[] usDataLeft = new float[usSensorLeft.sampleSize()];						// usData is the buffer in which data are returned
-		*/
-		
-		@SuppressWarnings("resource")
-		SensorModes usSensorFront_Mode = new EV3UltrasonicSensor(usPortFront);
-		SampleProvider usSensorFront = usSensorFront_Mode.getMode("Distance");
-		float[] usDataFront = new float[usSensorFront.sampleSize()];
-		
-		SensorModes colorSensorDown_Mode = new EV3ColorSensor(colorPortDown);
-		SampleProvider colorSensorDown = colorSensorDown_Mode.getMode("Red");			// colorValue provides samples from this instance
-		float[] colorDataDown = new float[colorSensorDown.sampleSize()];			// colorData is the buffer in which data are returned
-		
-		/*
-		SensorModes colorSensorFront_Mode = new EV3ColorSensor(colorPortFront);
-		SampleProvider colorSensorFront = colorSensorFront_Mode.getMode("Red");			// colorValue provides samples from this instance
-		float[] colorDataFront = new float[colorSensorFront.sampleSize()];			// colorData is the buffer in which data are returned
-		*/
-		
-		
-		// LCD Display
-		final TextLCD t = LocalEV3.get().getTextLCD();
+		//Forces initialization of Resources
+		Resources.initialize = true;
 		
 		// Initialize the odometer
 		Odometer odometer = new Odometer();
 		
 		// Initialize the display
-		Display display = new Display(odometer, t);
-		
-		
-		Resources resources = new Resources(usSensorFront, usDataFront, colorSensorDown, colorDataDown);
-		
+		Display display = new Display(odometer);
 		
 		// Initialize the resources (constants and sensors)
 		//Resources resources = new Resources();
 		
 		// Initialize the localization thread
-		Localization localization = new Localization(odometer, resources);
+		Localization localization = new Localization(odometer);
 		
 		
 		
@@ -109,7 +71,7 @@ public class Main {
 		 * 
 		 */
 		
-		t.clear();
+		lcd.clear();
 
 		/*
 		 * WiFiConnection will establish a connection to the server and wait for data
@@ -130,7 +92,7 @@ public class Main {
 			System.out.println("Connection failed");
 		}
 		
-		t.clear();
+		lcd.clear();
 
 		/*
 		 * This section of the code reads and prints the data received from the server,

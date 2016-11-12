@@ -1,16 +1,13 @@
 package DPM_TEAM04_Package;
 
-import DPM_TEAM04_Package.Odometer;
-import lejos.hardware.lcd.TextLCD;
+import static DPM_TEAM04_Package.Resources.lcd;
 
 public class Display extends Thread {
 	private Odometer odometer;
-	private TextLCD t;
 
 	// constructor
-	public Display(Odometer odometer, TextLCD t) {
+	public Display(Odometer odometer) {
 		this.odometer = odometer;
-		this.t = t;
 	}
 
 	// run method (required for Thread)
@@ -19,17 +16,17 @@ public class Display extends Thread {
 		double[] position = new double[3];
 
 		// clear the display once
-		t.clear();
+		lcd.clear();
 
 		while (true) {
 			displayStart = System.currentTimeMillis();
 
 			// clear the lines for displaying odometry information
-			t.drawString("VERSION:        ", 0, 0);
-			t.drawInt(Main.VERSION_NB, 9, 0);
-			t.drawString("X:              ", 0, 1);
-			t.drawString("Y:              ", 0, 2);
-			t.drawString("T:              ", 0, 3);
+			lcd.drawString("VERSION:        ", 0, 0);
+			lcd.drawInt(Main.VERSION_NB, 9, 0);
+			lcd.drawString("X:              ", 0, 1);
+			lcd.drawString("Y:              ", 0, 2);
+			lcd.drawString("T:              ", 0, 3);
 			
 
 			// get the odometry information
@@ -37,7 +34,7 @@ public class Display extends Thread {
 
 			// display odometry information
 			for (int i = 0; i < 3; i++) {
-				t.drawString(formattedDoubleToString(position[i], 2), 3, i+1);
+				lcd.drawString(formattedDoubleToString(position[i], 2), 3, i+1);
 			}
 
 			// throttle the OdometryDisplay
