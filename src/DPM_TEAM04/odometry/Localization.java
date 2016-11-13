@@ -1,7 +1,10 @@
-package DPM_TEAM04_Package;
+package DPM_TEAM04.odometry;
 
 import java.util.ArrayList;
 
+import DPM_TEAM04.Distance;
+import DPM_TEAM04.Resources;
+import DPM_TEAM04.navigation.Navigation;
 import lejos.hardware.Audio;
 import lejos.hardware.ev3.LocalEV3;
 

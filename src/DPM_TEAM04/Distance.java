@@ -1,4 +1,4 @@
-package DPM_TEAM04_Package;
+package DPM_TEAM04;
 
 public class Distance {
 	

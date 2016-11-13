@@ -1,27 +1,13 @@
-/*
- * DPM
- * ECSE 211
- * DESIGN PROJECT
- * 
- * 
- * 2016
- * 
- * 
- * 
- * 
- * 
- * VERSION NUMBER WRITTEN AS A CONSTANT
- * 
- */
+package DPM_TEAM04;
 
-
-package DPM_TEAM04_Package;
-
-import static DPM_TEAM04_Package.Resources.lcd;
+import static DPM_TEAM04.Resources.lcd;
 
 import java.io.IOException;
 import java.util.HashMap;
 
+import DPM_TEAM04.logging.DataEntryProvider;
+import DPM_TEAM04.odometry.Localization;
+import DPM_TEAM04.odometry.Odometer;
 import lejos.hardware.Button;
 import lejos.robotics.geometry.Rectangle2D;
 import wifi.WifiConnection;
@@ -34,11 +20,6 @@ public class Main {
 	
 	public static final int VERSION_NB = 1;
 	
-	
-	/**
-	 * DOCUMENTATION COMMENTS
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		
 		//Forces initialization of Resources
@@ -55,8 +36,6 @@ public class Main {
 		
 		// Initialize the localization thread
 		Localization localization = new Localization(odometer);
-		
-		
 		
 		
 		/*

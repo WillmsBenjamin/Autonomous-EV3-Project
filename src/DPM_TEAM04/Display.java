@@ -1,6 +1,8 @@
-package DPM_TEAM04_Package;
+package DPM_TEAM04;
 
-import static DPM_TEAM04_Package.Resources.lcd;
+import static DPM_TEAM04.Resources.lcd;
+
+import DPM_TEAM04.odometry.Odometer;
 
 public class Display extends Thread {
 	private Odometer odometer;
