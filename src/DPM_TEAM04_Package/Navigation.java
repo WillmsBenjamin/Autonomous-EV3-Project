@@ -34,9 +34,11 @@ public class Navigation {
 	
 	
 	
-	
-	// travelTo navigates to the desired coordinates, within a range of error.
-	// It inputs the desired position (x and y)
+	/**
+	 * This method makes the robot navigate to the desired coordinates, within a range of error.
+	 * @param x Position desired in x
+	 * @param y Position desired in y
+	 */
 	public void travelTo(double x, double y) {
 		
 		this.navigating = true;									// The robot is navigating
@@ -83,7 +85,9 @@ public class Navigation {
 	}
 	
 	/**
-	 * Travels to the point on the map
+	 * This method calls the travelTo method, but converting the inputs from a point coordinate on the map to (x,y) coordinates in cm.
+	 * @param x X component of the point coordinate
+	 * @param y Y component of the point coordinate
 	 */
 	public void travelToMapCoordinates(double x, double y) {
 		travelTo(x*Resources.TILE_WIDTH, y*Resources.TILE_WIDTH);
