@@ -5,6 +5,12 @@ import lejos.hardware.Audio;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
+/**
+ * This class contains all navigation methods.
+ * 
+ * @author Alexis Giguère-Joannette & Tristan Saumure-Toupin
+ * @version 1.0
+ */
 public class Navigation {
 	
 	private Odometer odometer;
@@ -94,7 +100,11 @@ public class Navigation {
 	}
 	
 	
-	// Turns to a desired orientation by the minimum angle. Theta is in radians.
+	/**
+	 * Turns to a desired orientation by the minimum angle.
+	 * @param theta The angle at which it needs to turn to. Theta is in radians.
+	 * @param wait Boolean to set if the method waits until the rotation is complete before returning. True sets it to wait. False sets it to not wait.
+	 */
 	public void turnTo(double theta, boolean wait) {
 		this.navigating = true;									// When turning, the robot is navigating
 		this.leftMotor.stop(true);								// Stop the motors and wait until complete
@@ -139,29 +149,31 @@ public class Navigation {
 		return;
 	}
 	
+	/**
+	 * This method turns to the desired theta, which is the minimal angle to reach a destination.
+	 */
 	public void turnToDesiredTheta() {
 		this.leftMotor.stop(true);								// Stop the motors and wait until complete
 		this.rightMotor.stop(false);
 		double desiredTheta = getDesiredTheta();				// Get the desired theta AFTER the motors are stopped
-		turnTo(desiredTheta, true);									// turnTo the desired heading
+		turnTo(desiredTheta, true);								// turnTo the desired heading
 	}
 	
-	/*
-	 * returns whether turnTo is running, or travelTo is running and isn't pausing until the path is clear
+	
+	/**
+	 * Returns whether turnTo is running, or travelTo is running and isn't pausing until the path is clear.
+	 * @return Returns true if navigating, false if not.
 	 */
 	public boolean isNavigating() {
 		return navigating;
 	}
 	
-	/*
-	 * returns 2pi
-	 */
-	public double getMaxAngle() {
-		return (2.0*Math.PI);
-	}
 	
-	/*
-	 * returns true if trueTheta is within a range. The range is determined by the current position in relation to x and y, plus or minus the bandwidth.
+	/**
+	 * Returns true if trueTheta is within a range. The range is determined by the current position in relation to x and y, plus or minus the bandwidth.
+	 * @param bandWidth Range of error in theta accepted.
+	 * @param trueTheta Inputs the heading that needs to be checked if it is in range.
+	 * @return Returns true if theta is in range, false otherwise.
 	 */
 	public boolean thetaInRange(double bandWidth, double trueTheta) {
 		
@@ -212,6 +224,10 @@ public class Navigation {
 		return inRange;
 	}
 	
+	/**
+	 * Compute the optimal angle to reach a point (x,y).
+	 * @return Returns the desired theta.
+	 */
 	public double getDesiredTheta() {
 		
 		double x_diff, y_diff, desiredTheta;
@@ -227,7 +243,11 @@ public class Navigation {
 		return desiredTheta;							// Return the desired theta (towards the position)
 	}
 	
-	// Method to turn around until it is called again
+	
+	/**
+	 * Method to turn around for 360 degrees.
+	 * @param clockwise Turns clockwise if true. Turns counterclockwise if false.
+	 */
 	public void turnAround(boolean clockwise) {
 		
 		this.leftMotor.setSpeed(Resources.SPEED_TURNING);
@@ -246,8 +266,8 @@ public class Navigation {
 	}
 	
 	/**
-	 * Set the acceleration of the motors
-	 * @param acceleration Set acceleration of the motors to this input value
+	 * Set the acceleration of the motors.
+	 * @param acceleration Set acceleration of the motors to this input value. Default acceleration if the input is -1.
 	 */
 	public void setAcceleration(int acceleration) {
 		
@@ -267,7 +287,12 @@ public class Navigation {
 		
 	}
 	
-	// Method to turn around at a custom speed
+	/**
+	 * Method to turn around at a custom speed (forever) until it is called to stop.
+	 * @param clockwise Turns clockwise if true. Turns counterclockwise if false.
+	 * @param start Starts turning if true, stops turning if false.
+	 * @param speed Desired turning speed.
+	 */
 	public void turnAround(boolean clockwise, boolean start, int speed) {
 		
 		if (start) {
@@ -294,6 +319,10 @@ public class Navigation {
 		
 	}
 	
+	/**
+	 * Go forward for a specified distance.
+	 * @param distance Distance to go forward in cm. Negative distance will go backwards.
+	 */
 	public void goForward(double distance) {
 		
 		this.leftMotor.setSpeed(Resources.SPEED_FORWARD);
@@ -304,6 +333,10 @@ public class Navigation {
 		
 	}
 	
+	/**
+	 * Go backward (forever) until it is called again to stop.
+	 * @param start Starts going backward if true, stops if false.
+	 */
 	public void goBackward(boolean start) {
 		
 		this.leftMotor.setSpeed(Resources.SPEED_FORWARD);
@@ -322,16 +355,31 @@ public class Navigation {
 	
 	
 	
-	
+	/**
+	 * Convert a distance in cm to radians.
+	 * @param radius Radius of the wheels in cm.
+	 * @param distance Distance in cm.
+	 * @return Converted distance in radians.
+	 */
 	private static int convertDistance(double radius, double distance) {
 		return (int) ((180.0 * distance) / (Math.PI * radius));
 	}
+	/**
+	 * Convert an angle to turn to according to the track of the robot.
+	 * @param radius Radius of the wheels in cm.
+	 * @param width Width (track) of the robot in cm.
+	 * @param angle Angle to turn in radians.
+	 * @return Returns the angle to turn in radians.
+	 */
 	private static int convertAngle(double radius, double width, double angle) {
 		return convertDistance(radius, Math.PI * width * angle / 360.0);
 	}
 	
-	/*
-	 * converts radians to degrees for use in the turnTo method.
+	
+	/**
+	 * Converts radians to degrees.
+	 * @param angle Angle in radians.
+	 * @return Returns the angle in degrees.
 	 */
 	private static double radsToDegrees(double angle) {
 		return (angle/(2.0*Math.PI))*360.0;

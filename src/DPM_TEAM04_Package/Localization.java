@@ -5,6 +5,16 @@ import java.util.ArrayList;
 import lejos.hardware.Audio;
 import lejos.hardware.ev3.LocalEV3;
 
+
+/**
+ * This class localizes the robot using the ultrasonic sensor.
+ * 
+ * It is started by the Main class and extends Thread. It scans its environment and bumps into the closest wall (the minimal 
+ * distance seen). It after bumps into the other wall and sets the x, y and theta values of the odometer.
+ * 
+ * @author Alexis Giguère-Joannette & Tristan Saumure-Toupin
+ * @version 1.0
+ */
 public class Localization extends Thread {
 
 	private Odometer odometer;
@@ -19,6 +29,9 @@ public class Localization extends Thread {
 		listOfDistances = new ArrayList<Distance>();
 	}
 	
+	/**
+	 * Code executed when the Thread is started.
+	 */
 	public void run() {
 		
 		
@@ -118,7 +131,10 @@ public class Localization extends Thread {
 		
 	}
 	
-	
+	/**
+	 * Saves the distance seen by the ultrasonic sensor and the angle at which the distance has been seen.
+	 * It saves a Distance object into an ArrayList.
+	 */
 	private void saveDistance() {
 		
 		float actualDist = Resources.getFrontUSData();
@@ -127,6 +143,10 @@ public class Localization extends Thread {
 		
 	}
 	
+	/**
+	 * This method is called to set the minimal distance and its angle.
+	 * @return Returns the index of the minimal distance in the ArrayList of distances.
+	 */
 	private int getMinimalDistance() {
 		
 		int index = 0;
@@ -153,6 +173,12 @@ public class Localization extends Thread {
 		
 	}
 	
+	/**
+	 * Determines if the wall seen is the left or the right wall. It basically checks the smallest distance at 90 degrees from the 
+	 * minimal distance.
+	 * @param index Inputs the index of the minimal distance in the ArrayList of distances.
+	 * @return Returns true if it is the left wall. Returns false if it is the right wall.
+	 */
 	private boolean determineWallSeen(int index) {
 		
 		// return true if facing the left wall, false if it is the "right" wall
