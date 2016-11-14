@@ -164,10 +164,6 @@ public class Odometer extends Thread {
 			this.theta = theta;
 		}
 	}
-	
-	
-	
-	
 
 	/**
 	 * @return the leftMotorTachoCount
