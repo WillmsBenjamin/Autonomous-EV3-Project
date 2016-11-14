@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.xml.crypto.Data;
 
@@ -22,27 +23,18 @@ public class FileLogger extends Thread {
 	private String fileName;
 	private int refreshPeriod;
 	
-	private ArrayList<DataEntryProvider> entryProviders;
-	
-	
-	public FileLogger(String fileName, int refreshPeriod) {
-		this.fileName = fileName;
-		this.refreshPeriod = refreshPeriod;
-		this.entryProviders = new ArrayList<DataEntryProvider>();
-	}
+	private DataEntryProvider[] entryProviders;
 	
 	/**
-	 * Adds a DataEntryProvider to this data logger.
-	 * Only adds if this DataLogger is not running
-	 * @param entryProvider the DataEntryProvider to add
-	 * @return true if entryProvider added successfully, false if this DataLogger is already running
+	 * Creates a new FileLogger
+	 * @param fileName name of log file, should include .csv extension
+	 * @param refreshPeriod minimum refresh period in ms
+	 * @param dataEntryProviders the entry providers to poll
 	 */
-	public boolean addToLogger(DataEntryProvider entryProvider) {
-		if(!isAlive()) {
-			entryProviders.add(entryProvider);
-			return true;
-		}
-		return false;
+	public FileLogger(String fileName, int refreshPeriod, DataEntryProvider...dataEntryProviders) {
+		this.fileName = fileName;
+		this.refreshPeriod = refreshPeriod;
+		this.entryProviders = dataEntryProviders;
 	}
 	
 	@Override
@@ -57,7 +49,7 @@ public class FileLogger extends Thread {
 			writeHeadings(writer);
 			
 			//Repeat until closed
-			while(!isInterrupted()) {
+			while(!this.isInterrupted()) {
 				long start = System.currentTimeMillis();
 				String dataLine = "";
 				
@@ -84,6 +76,11 @@ public class FileLogger extends Thread {
 		}
 	}
 	
+	/**
+	 * Writes headings at the top of the CSV file
+	 * @param writer the BufferedWriter that is writing to the file
+	 * @throws IOException
+	 */
 	public void writeHeadings(BufferedWriter writer) throws IOException {
 		String heading = "";
 		for(DataEntryProvider data : entryProviders)

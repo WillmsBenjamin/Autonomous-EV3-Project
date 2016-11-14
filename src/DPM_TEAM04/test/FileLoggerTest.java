@@ -2,6 +2,7 @@ package DPM_TEAM04.test;
 
 import DPM_TEAM04.Resources;
 import DPM_TEAM04.logging.DataEntryProvider;
+import DPM_TEAM04.logging.FileLogger;
 import DPM_TEAM04.logging.LCDLogger;
 import lejos.hardware.Button;
 
@@ -10,14 +11,12 @@ import static DPM_TEAM04.Resources.*;
 import DPM_TEAM04.Main;
 
 /**
- * Testing the functionality of the LCDLogger class
- * Tests polling at 50 ms and adding entry providers
- * after starting thread
+ * Testing the functionality of the FileLogger class
+ * Tests polling at 50 ms
  * 
  * @author Kareem Halabi
- *
  */
-public class LCDLoggerTest {
+public class FileLoggerTest {
 
 	public static void main(String[] args) {
 		
@@ -25,10 +24,10 @@ public class LCDLoggerTest {
 		Button.waitForAnyPress();
 		
 		//Create basic data providers
-		DataEntryProvider version = new DataEntryProvider("Version") {
+		DataEntryProvider systemTimeProvider = new DataEntryProvider("System Time") {
 			@Override
 			public double getEntry() {
-				return Main.VERSION_NB;
+				return System.currentTimeMillis();
 			}
 		};
 		
@@ -64,19 +63,14 @@ public class LCDLoggerTest {
 			}
 		};
 	
-		LCDLogger lcdLog = new LCDLogger(50, 2);
+		FileLogger fileLog = new FileLogger("Log_Test.csv", 50, systemTimeProvider,
+				csFrontProvider, usFrontProvider, usSideProvider, csDownProvider);
 		
-		//start logger with one provider
-		lcdLog.addToEntryProviders(version);
-		lcdLog.start();
-		
+		//start logger
+		fileLog.start();
 		Button.waitForAnyPress();
 		
-		//add the rest of the providers
-		lcdLog.addToEntryProviders(csFrontProvider,usFrontProvider, usSideProvider, csDownProvider);
-		Button.waitForAnyPress();
-		
-		//stop the logger
-		lcdLog.interrupt();
+		//save and close logger
+		fileLog.interrupt();
 	}
 }
