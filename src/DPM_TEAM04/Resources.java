@@ -30,12 +30,12 @@ public class Resources {
 	public static HashMap<String, Integer> wifiData;
 	
 	//Motor Constants
-	public static final int SPEED_FORWARD = 200, SPEED_TURNING = 200, SPEED_ROTATING = 110, ACCELERATION_FAST = 4000;
-	public static final int ACCELERATION_SMOOTH = 500;
+	public static final int SPEED_FORWARD = 200, SPEED_TURNING = 140, SPEED_ROTATING = 60, ACCELERATION_FAST = 4000;
+	public static final int ACCELERATION_SMOOTH = 400;
 	
 	//Distance Constants
-	public static final double TILE_WIDTH = 30.48, CS_TO_CENTER = 14.7, US_TO_CENTER = 6.7, BUMPER_TO_CENTER = 17.6;
-	public static final double TRACK = 10.25, WHEEL_RADIUS = 2.127, LEFT_WHEEL_RADIUS = WHEEL_RADIUS, RIGHT_WHEEL_RADIUS = WHEEL_RADIUS;
+	public static final double TILE_WIDTH = 30.48, CS_TO_CENTER = 14.7, US_TO_CENTER = 20.1, BUMPER_TO_CENTER = 9.1;
+	public static final double TRACK = 12.1, WHEEL_RADIUS = 2.127, LEFT_WHEEL_RADIUS = WHEEL_RADIUS, RIGHT_WHEEL_RADIUS = WHEEL_RADIUS;
 
 	public static final long ODOMETER_PERIOD = 25;		// odometer update period, in ms
 	public static final long DISPLAY_PERIOD = 250;
@@ -56,7 +56,7 @@ public class Resources {
 	private static final SampleProvider usFront;
 	private static final float[] usDataFront;
 	private static final MedianFilter usFrontFilter;
-	private static final int US_FRONT_NUM_SAMPLES = 10;
+	private static final int US_FRONT_NUM_SAMPLES = 15;
 	private static final float US_FRONT_CLIP = 50;
 	
 	private static final String US_SIDE_PORT = "S3";

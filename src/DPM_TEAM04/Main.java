@@ -105,7 +105,7 @@ public class Main {
 				Rectangle2D builderCorner = new Rectangle2D.Double(connData.get("LGZx"), connData.get("LGZy"), connData.get("UGZx")-connData.get("LGZx"), connData.get("UGZy")-connData.get("LGZy"));
 				Rectangle2D garbageCorner = new Rectangle2D.Double(connData.get("LRZx"), connData.get("LRZy"), connData.get("URZx")-connData.get("LRZx"), connData.get("URZy")-connData.get("LRZy"));
 				
-				System.out.println("\n\n\n\n\n" + builderCorner.getHeight());
+				
 				
 			}
 		}
@@ -131,7 +131,7 @@ public class Main {
 		
 		// Wait 4 seconds for everything to be set up (sensors)
 		try {
-			Thread.sleep(4000);
+			Thread.sleep(3000);
 		} catch (InterruptedException e) {}
 		
 		localization.start();

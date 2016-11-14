@@ -36,18 +36,20 @@ public class Localization extends Thread {
 	 * Code executed when the Thread is started.
 	 */
 	public void run() {
-
+		
 		Navigation navigator = new Navigation(this.odometer);
+		
+		// set the smooth acceleration (default)
+		navigator.setAcceleration(-1);
 
-		this.minDistance = Resources.getFrontUSData();
+		this.minDistance = Resources.getSideUSData();
 		this.minDistAngle = odometer.getTheta();
 
-		navigator.setAcceleration(4000);
+		
 		navigator.turnAround(true);
 		while (odometer.getTheta() >= 0.0 && odometer.getTheta() < 6.26) {
 			// wait until it turns a little
 
-			// System.out.println(odometer.getTheta());
 			saveDistance();
 		}
 
@@ -59,10 +61,8 @@ public class Localization extends Thread {
 		// Turn to the minimal distance seen
 		navigator.turnTo(this.minDistAngle, true);
 		// Go to this distance and more than the distance to "bump" into it
-		navigator.goForward(-(this.minDistance - Resources.BUMPER_TO_CENTER + Resources.US_TO_CENTER + 6.0));
+		navigator.goForward(-(this.minDistance - Resources.BUMPER_TO_CENTER + Resources.US_TO_CENTER + 12.0));
 
-		// reset the smooth acceleration (default)
-		navigator.setAcceleration(-1);
 
 		if (isLeftWall) {
 			// If it bumped into the left wall, set position accordingly
@@ -83,7 +83,7 @@ public class Localization extends Thread {
 		}
 
 		// Go forward to the next wall
-		navigator.goForward(-(Resources.TILE_WIDTH - Resources.BUMPER_TO_CENTER));
+		navigator.goForward(-(Resources.TILE_WIDTH - Resources.BUMPER_TO_CENTER + 6.0));
 
 		if (isLeftWall) {
 			// Now it bumped the right wall
@@ -122,7 +122,7 @@ public class Localization extends Thread {
 	 */
 	private void saveDistance() {
 
-		float actualDist = Resources.getFrontUSData();
+		float actualDist = Resources.getSideUSData();
 		Distance d = new Distance(actualDist, odometer.getTheta());
 		this.listOfDistances.add(d);
 
