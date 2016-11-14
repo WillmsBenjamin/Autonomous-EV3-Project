@@ -29,6 +29,8 @@ public class Display extends Thread {
 			lcd.drawString("X:              ", 0, 1);
 			lcd.drawString("Y:              ", 0, 2);
 			lcd.drawString("T:              ", 0, 3);
+			lcd.drawString("Dist:           ", 0, 4);
+			lcd.drawInt((int) Resources.getSideUSData(), 5, 4);
 			
 
 			// get the odometry information

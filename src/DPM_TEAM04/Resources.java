@@ -3,6 +3,7 @@ package DPM_TEAM04;
 
 import java.util.HashMap;
 
+import DPM_TEAM04.logging.FileLogger;
 import lejos.hardware.Sound;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
@@ -136,6 +137,7 @@ public class Resources {
 		
 		lcd.drawString("Ready", 0, 0);
 		Sound.beep();
+		
 	}
 	
 	

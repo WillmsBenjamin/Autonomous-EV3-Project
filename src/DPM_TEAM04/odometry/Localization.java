@@ -123,8 +123,10 @@ public class Localization extends Thread {
 	private void saveDistance() {
 
 		float actualDist = Resources.getSideUSData();
-		Distance d = new Distance(actualDist, odometer.getTheta());
-		this.listOfDistances.add(d);
+		if (actualDist > 1) {
+			Distance d = new Distance(actualDist, odometer.getTheta());
+			this.listOfDistances.add(d);
+		}
 
 	}
 
