@@ -1,8 +1,8 @@
 package DPM_TEAM04.logging;
 
-import java.util.ArrayList;
-
 import static DPM_TEAM04.Resources.lcd;
+
+import java.util.ArrayList;
 
 /**
  * Displays numerical information on the EV3 LCD
@@ -24,13 +24,14 @@ public class LCDLogger extends Thread {
 	}
 	
 	/**
-	 * Adds an entry provider to the display.
+	 * Adds one or many entry providers to the display.
 	 * Only occurs at the end of a display cycle
-	 * @param dataProvider the entry provider to add
-	 */
-	public void addToEntryProviders(DataEntryProvider dataProvider) {
+	 * @param inputDataProviders the entry provider(s) to add
+	 */	
+	public void addToEntryProviders(DataEntryProvider... inputDataProviders) {
 		synchronized (dataProviders) {
-			dataProviders.add(dataProvider);
+			for(DataEntryProvider data : inputDataProviders)
+				dataProviders.add(data);
 		}
 	}
 	
@@ -38,7 +39,7 @@ public class LCDLogger extends Thread {
 	public void run() {
 		lcd.clear();
 		
-		while(!isInterrupted()) {
+		while(!this.isInterrupted()) {
 			
 			long start = System.currentTimeMillis();
 			
@@ -51,7 +52,7 @@ public class LCDLogger extends Thread {
 					lcd.clear(i);
 					lcd.drawString(
 							provider.HEADING + ": "
-							+formattedDoubleToString(provider.getEntry(), decimalPlaces)
+							+ formattedDoubleToString(provider.getEntry(), decimalPlaces)
 							, 0, i);
 				}
 			}
@@ -61,7 +62,9 @@ public class LCDLogger extends Thread {
 			if((end-start) < refreshPeriod) {
 				try {
 					Thread.sleep(refreshPeriod - (end-start));
-				} catch (InterruptedException e) {}
+				} catch (InterruptedException e) { // if interrupted, exit
+					break;
+				}
 			}
 		}
 	}
@@ -77,7 +80,7 @@ public class LCDLogger extends Thread {
 	 * @return a String representing {@code x} with {@code places} number
 	 * of decimal places
 	 */
-	private static String formattedDoubleToString(double x, int places) {
+	public static String formattedDoubleToString(double x, int places) {
 		String result = "";
 		String stack = "";
 		long t;

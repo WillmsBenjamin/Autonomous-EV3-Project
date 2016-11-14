@@ -43,23 +43,23 @@ public class Resources {
 	public static final double NAVIGATION_POSITION_BANDWIDTH = 2.5, NAVIGATION_HEADING_BANDWIDTH = 0.14;
 
 	
-	private static final String LEFT_MOTOR_PORT = "D";
+	private static final String LEFT_MOTOR_PORT = "B";
 	public static final EV3LargeRegulatedMotor leftMotor;
-	private static final String RIGHT_MOTOR_PORT = "C";
+	private static final String RIGHT_MOTOR_PORT = "A";
 	public static final EV3LargeRegulatedMotor rightMotor;
 
 	//public static final EV3LargeRegulatedMotor grabMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("C"));
 	//public static final EV3LargeRegulatedMotor liftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 
 	//Ultrasonic sensors
-	private static final String US_FRONT_PORT = "S4";
+	private static final String US_FRONT_PORT = "S1";
 	private static final SampleProvider usFront;
 	private static final float[] usDataFront;
 	private static final MedianFilter usFrontFilter;
 	private static final int US_FRONT_NUM_SAMPLES = 10;
 	private static final float US_FRONT_CLIP = 50;
 	
-	private static final String US_SIDE_PORT = "S2";
+	private static final String US_SIDE_PORT = "S3";
 	private static final SampleProvider usSide;
 	private static final float[] usDataSide;
 	private static final MedianFilter usSideFilter;
@@ -67,13 +67,13 @@ public class Resources {
 	private static final float US_SIDE_CLIP = US_FRONT_CLIP;
 	
 	//Color sensors
-	private static final String CS_FRONT_PORT = "S3";
+	private static final String CS_FRONT_PORT = "S2";
 	private static final SampleProvider csFront;
 	private static final float[] csDataFront;
 	private static final MedianFilter csFrontFilter;
 	private static final int CS_FRONT_NUM_SAMPLES = US_FRONT_NUM_SAMPLES;
 	
-	private static final String CS_DOWN_PORT = "S1";
+	private static final String CS_DOWN_PORT = "S4";
 	private static final SampleProvider csDown;
 	private static final float[] csDataDown;
 	private static final MeanFilter csDownFilter;
@@ -86,7 +86,11 @@ public class Resources {
 	
 	//Dummy variable to force initialization
 	public static boolean initialize;
+	
 	//Initializes resources
+	//ENSURE SENSORS AND MOTORS ARE CORRECTED PROPERLY
+	//There is no reasonably easy way to tell if correct
+	//sensors are attached to the correct ports
 	static {
 		//--------------------------Motors-------------------------
 		
@@ -99,24 +103,24 @@ public class Resources {
 		//------------------------US Sensors------------------------
 		
 		System.out.println("US Front-" + US_FRONT_PORT);
-		usFront = (new EV3UltrasonicSensor(LocalEV3.get().getPort(US_FRONT_PORT))).getDistanceMode();
+		usFront = (new EV3UltrasonicSensor(LocalEV3.get().getPort(US_FRONT_PORT))).getMode("Distance");
 		usDataFront = new float[usFront.sampleSize()];
 		usFrontFilter = new MedianFilter(usFront, US_FRONT_NUM_SAMPLES);
 		
 		System.out.println("US Side-" + US_SIDE_PORT);
-		usSide = (new EV3UltrasonicSensor(LocalEV3.get().getPort(US_SIDE_PORT))).getDistanceMode();
+		usSide = (new EV3UltrasonicSensor(LocalEV3.get().getPort(US_SIDE_PORT))).getMode("Distance");
 		usDataSide = new float[usSide.sampleSize()];
 		usSideFilter = new MedianFilter(usSide, US_SIDE_NUM_SAMPLES);
 		
 		//-----------------------Color Sensors-----------------------
 		
 		System.out.println("CS Front-" + CS_FRONT_PORT);
-		csFront = (new EV3ColorSensor(LocalEV3.get().getPort(CS_FRONT_PORT))).getColorIDMode();
+		csFront = (new EV3ColorSensor(LocalEV3.get().getPort(CS_FRONT_PORT))).getMode("ColorID");
 		csDataFront = new float[csFront.sampleSize()];
 		csFrontFilter = new MedianFilter(csFront, CS_FRONT_NUM_SAMPLES);
 		
 		System.out.println("CS Down-" + CS_DOWN_PORT);
-		csDown = (new EV3ColorSensor(LocalEV3.get().getPort(CS_DOWN_PORT))).getRedMode();
+		csDown = (new EV3ColorSensor(LocalEV3.get().getPort(CS_DOWN_PORT))).getMode("Red");
 		csDataDown = new float[csDown.sampleSize()];
 		csDownFilter = new MeanFilter(csDown, CS_DOWN_NUM_SAMPLES);
 		
@@ -125,7 +129,11 @@ public class Resources {
 		//---------------------------LCD---------------------------
 		lcd = LocalEV3.get().getTextLCD();
 		
-		lcd.clear();
+		//lcd.clear() does not work
+		//print 8 blank lines
+		for(int i = 0; i < 8; i++)
+			System.out.println();
+		
 		lcd.drawString("Ready", 0, 0);
 		Sound.beep();
 	}
@@ -133,6 +141,8 @@ public class Resources {
 	
 	public static float getFrontUSData() {
 		usFrontFilter.fetchSample(usDataFront, 0);
+		
+		usDataFront[0] *= 100;
 		
 		if (usDataFront[0] > US_FRONT_CLIP)
 			usDataFront[0] = US_FRONT_CLIP;
@@ -143,38 +153,27 @@ public class Resources {
 	public static float getSideUSData() {
 		usSideFilter.fetchSample(usDataSide, 0);
 		
+		usDataSide[0] *= 100;
+		
 		if (usDataSide[0] > US_SIDE_CLIP)
 			usDataSide[0] = US_SIDE_CLIP;
 		
 		return usDataSide[0];
 	}
 	
-	public static boolean isBlueBlock() {
+	public static float getColorID() {
 		//Since the front color sensor is not polled continuously
 		//we always need a fresh set of samples
 		for(int i = 0; i < CS_FRONT_NUM_SAMPLES; i++)
 			csFrontFilter.fetchSample(csDataFront, 0);
 		
-		if(csDataFront[0] == 6f || csDataFront[0] == 7f)
-			return true;
-		
-		return false;
+		return csDataFront[0];
 	}
 	
-	/**
-	 * Determines if the robot has crossed a line.
-	 * Uses a Mean filter for previous and current values, comparing
-	 * their difference to determine a line
-	 * @return true if a line is detected, false if otherwise
-	 * @version 1.0
-	 */
-	public static boolean isLinePresent() {
-		previousValue = csDataDown[0];
+
+	public static float getDownCSData() {
 		csDownFilter.fetchSample(csDataDown, 0);
 		
-		if((csDataDown[0] - previousValue) < DIFF_THRESH)
-			return true;
-		
-		return false;
+		return csDataDown[0];
 	}
 }
