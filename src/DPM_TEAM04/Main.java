@@ -101,6 +101,8 @@ public class Main {
 			conn = new WifiConnection(Resources.SERVER_IP, Resources.TEAM_NUMBER, false);
 		} catch (IOException e) {
 			System.out.println("Connection failed");
+			Button.waitForAnyPress();
+			System.exit(0);
 		}
 
 		lcd.clear();
@@ -113,6 +115,8 @@ public class Main {
 			HashMap<String, Integer> connData = conn.StartData;
 			if (connData == null) {
 				System.out.println("Failed to read transmission");
+				Button.waitForAnyPress();
+				System.exit(0);
 
 				/*
 				 * 
@@ -126,15 +130,19 @@ public class Main {
 
 				Resources.wifiData = connData;
 				if (connData.get("BTN") == Resources.TEAM_NUMBER) {
-					Resources.isBuilder = true;
+					isBuilder = true;
+					startingCorner = connData.get("BSC");
 				} else {
-					Resources.isBuilder = false;
+					isBuilder = false;
+					startingCorner = connData.get("CSC");
 				}
 
+				/*
 				Rectangle2D builderCorner = new Rectangle2D.Double(connData.get("LGZx"), connData.get("LGZy"),
 						connData.get("UGZx") - connData.get("LGZx"), connData.get("UGZy") - connData.get("LGZy"));
 				Rectangle2D garbageCorner = new Rectangle2D.Double(connData.get("LRZx"), connData.get("LRZy"),
 						connData.get("URZx") - connData.get("LRZx"), connData.get("URZy") - connData.get("LRZy"));
+				*/
 
 			}
 		}

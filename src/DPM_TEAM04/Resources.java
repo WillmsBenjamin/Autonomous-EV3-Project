@@ -25,10 +25,14 @@ import lejos.robotics.filter.MedianFilter;
 public class Resources {
 	
 	//Wifi
-	public static final String SERVER_IP = "192.168.2.7";
+	public static final String SERVER_IP = "192.168.2.5";
 	public static final int TEAM_NUMBER = 4;
 	public static boolean isBuilder;
+	public static int startingCorner;
 	public static HashMap<String, Integer> wifiData;
+	
+	//MAP
+	public static final int MAP_DIMENSION = 8;		// 8 X 8 tiles
 	
 	//Motor Constants
 	public static final int SPEED_FORWARD = 200, SPEED_TURNING = 140, SPEED_ROTATING = 60, ACCELERATION_FAST = 4000;

@@ -26,6 +26,7 @@ import lejos.utility.Delay;
  */
 public class Localization extends Thread {
 
+	//public enum LocalizationType { FALLING_EDGE, RISING_EDGE };
 	private double minDistance, minDistAngle;
 	private ArrayList<Distance> listOfDistances;
 	private boolean isLeftWall;
@@ -40,6 +41,9 @@ public class Localization extends Thread {
 	 * Code executed when the Thread is started.
 	 */
 	public void run() {
+		
+		
+		
 		
 		Navigation navigator = new Navigation(Odometer.getOdometer());
 		
@@ -150,6 +154,8 @@ public class Localization extends Thread {
 
 
 	}
+	
+	
 
 	/**
 	 * Saves the distance seen by the ultrasonic sensor and the angle at which
