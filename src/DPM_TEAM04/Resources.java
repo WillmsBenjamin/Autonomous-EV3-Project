@@ -25,7 +25,7 @@ import lejos.robotics.filter.MedianFilter;
 public class Resources {
 	
 	//Wifi
-	public static final String SERVER_IP = "192.168.2.5";
+	public static final String SERVER_IP = "192.168.2.47";
 	public static final int TEAM_NUMBER = 4;
 	public static boolean isBuilder;
 	public static int startingCorner;

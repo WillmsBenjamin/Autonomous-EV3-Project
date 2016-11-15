@@ -26,7 +26,6 @@ import lejos.utility.Delay;
  */
 public class Localization extends Thread {
 
-	//public enum LocalizationType { FALLING_EDGE, RISING_EDGE };
 	private double minDistance, minDistAngle;
 	private ArrayList<Distance> listOfDistances;
 	private boolean isLeftWall;
@@ -72,53 +71,48 @@ public class Localization extends Thread {
 
 		this.minDistAngle = (this.minDistAngle + Math.PI) % (2.0 * Math.PI);
 
-		// Turn to the minimal distance seen
-		//navigator.turnTo(this.minDistAngle, true);
 		driver.turnTo(this.minDistAngle, CoordinateSystem.POLAR_RAD);
-		// Go to this distance and more than the distance to "bump" into it
-		//navigator.goForward(-(this.minDistance - Resources.BUMPER_TO_CENTER + Resources.US_TO_CENTER + 12.0));
+		
 		driver.travelDistance(-(this.minDistance - Resources.BUMPER_TO_CENTER + Resources.US_TO_CENTER + 12.0));
 
-		if (getSideUSData() < 22.0) {
+		if (getSideUSData() < (TILE_WIDTH-5.0)) {
 			isLeftWall = false;
 		} else {
 			isLeftWall = true;
 		}
 
-		lcd.drawString(""+isLeftWall, 0, 5);
+		setNewCoordinates();
 		
 		if (isLeftWall) {
-			// If it bumped into the left wall, set position accordingly
-			position.setX(-Resources.TILE_WIDTH + Resources.BUMPER_TO_CENTER);
-			position.setDirection(0.0, CoordinateSystem.POLAR_RAD);
-
-			// Go back to turn and bump the other wall
-			//navigator.goForward(6.0);
+			
+			
 			driver.travelDistance(6.0);
 
-			//navigator.turnTo(0.0, true);
-			driver.turnTo(Math.PI/2.0, CoordinateSystem.POLAR_RAD);
+			driver.rotate(Math.PI/2.0, CoordinateSystem.POLAR_RAD);
 
 		} else {
-			// If it bumped into the right wall, set position accordingly
-			position.setY(-Resources.TILE_WIDTH + Resources.BUMPER_TO_CENTER);
-			position.setDirection(Math.PI/2, CoordinateSystem.POLAR_RAD);
+			
 
-			// Go back to turn and bump the other wall
-			//navigator.goForward(6.0);
+
 			driver.travelDistance(6.0);
 
-			//navigator.turnTo(Math.PI / 2.0, true);
-			driver.turnTo(0.0, CoordinateSystem.POLAR_RAD);
+			driver.rotate(-Math.PI/2.0, CoordinateSystem.POLAR_RAD);
 
 		}
 
 		// Go forward to the next wall
 		//navigator.goForward(-(Resources.TILE_WIDTH - Resources.BUMPER_TO_CENTER + 6.0));
 		driver.travelDistance(-(this.minDistance - Resources.BUMPER_TO_CENTER + Resources.US_TO_CENTER + 12.0));
+		
+		if(isLeftWall){
+			isLeftWall = false;
+		}else {
+			isLeftWall = true;
+		}
+		
+		setNewCoordinates();
 
-
-		if (isLeftWall) {
+		/*if (isLeftWall) {
 			// Now it bumped the right wall
 			position.setY(-Resources.TILE_WIDTH + Resources.BUMPER_TO_CENTER);
 			position.setDirection(Math.PI/2.0, CoordinateSystem.POLAR_RAD);
@@ -126,7 +120,7 @@ public class Localization extends Thread {
 			// Now it bumped the left wall
 			position.setX(-Resources.TILE_WIDTH + Resources.BUMPER_TO_CENTER);
 			position.setDirection(0.0, CoordinateSystem.POLAR_RAD);
-		}
+		}*/
 
 		/*
 		 * 
@@ -153,6 +147,58 @@ public class Localization extends Thread {
 		driver.turnTo(0.0, CoordinateSystem.POLAR_RAD);
 
 
+	}
+	
+	/*
+	 * |---------------|	
+	 * | 4 + + + + + 3 |	
+	 * | + + + + + + + |	
+	 * | + + + + + + + |	^y
+	 * | + + + + + + + |	|
+	 * | + + + + + + + |	|
+	 * | 1 + + + + + 2 |	|______>x
+	 * |---------------|
+	 * 
+	 */
+	private void setNewCoordinates(){
+		
+		if (isLeftWall){
+			if (startingCorner == 1){
+				position.setX(-TILE_WIDTH + BUMPER_TO_CENTER);
+				position.setDirection(0.0, CoordinateSystem.POLAR_RAD);
+			}else if (startingCorner == 2){
+				position.setY(-TILE_WIDTH + BUMPER_TO_CENTER);
+				position.setDirection((Math.PI/2), CoordinateSystem.POLAR_RAD);
+
+			}else if (startingCorner == 3){
+				position.setX((MAP_DIMENSION - 1) * TILE_WIDTH);
+				position.setDirection((Math.PI), CoordinateSystem.POLAR_RAD);
+
+			}else {
+				position.setY((MAP_DIMENSION - 1) * TILE_WIDTH);
+				position.setDirection((3*Math.PI/2), CoordinateSystem.POLAR_RAD);
+
+			}
+		}else{	//right wall
+			if (startingCorner == 1){
+				position.setY(-TILE_WIDTH + BUMPER_TO_CENTER);
+				position.setDirection(Math.PI/2, CoordinateSystem.POLAR_RAD);
+			}else if (startingCorner == 2){
+				position.setX((MAP_DIMENSION - 1) * TILE_WIDTH);
+				position.setDirection((Math.PI), CoordinateSystem.POLAR_RAD);
+
+			}else if (startingCorner == 3){
+				position.setY((MAP_DIMENSION - 1) * TILE_WIDTH);
+				position.setDirection((3*Math.PI/2), CoordinateSystem.POLAR_RAD);
+
+			}else {
+				position.setX(-TILE_WIDTH + BUMPER_TO_CENTER);
+				position.setDirection(0.0, CoordinateSystem.POLAR_RAD);
+
+			}
+		}
+		
+		
 	}
 	
 	
