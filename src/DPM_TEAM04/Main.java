@@ -1,13 +1,19 @@
 package DPM_TEAM04;
 
+import static DPM_TEAM04.Resources.getColorID;
+import static DPM_TEAM04.Resources.getDownCSData;
+import static DPM_TEAM04.Resources.getFrontUSData;
+import static DPM_TEAM04.Resources.getSideUSData;
 import static DPM_TEAM04.Resources.lcd;
 
 import java.io.IOException;
 import java.util.HashMap;
 
 import DPM_TEAM04.logging.DataEntryProvider;
+import DPM_TEAM04.logging.FileLogger;
 import DPM_TEAM04.odometry.Localization;
 import DPM_TEAM04.odometry.Odometer;
+import DPM_TEAM04.test.FileLoggerTest;
 import lejos.hardware.Button;
 import lejos.robotics.geometry.Rectangle2D;
 import wifi.WifiConnection;
@@ -36,6 +42,8 @@ public class Main {
 		
 		// Initialize the localization thread
 		Localization localization = new Localization(odometer);
+		
+		
 		
 		
 		/*
@@ -105,7 +113,6 @@ public class Main {
 				Rectangle2D builderCorner = new Rectangle2D.Double(connData.get("LGZx"), connData.get("LGZy"), connData.get("UGZx")-connData.get("LGZx"), connData.get("UGZy")-connData.get("LGZy"));
 				Rectangle2D garbageCorner = new Rectangle2D.Double(connData.get("LRZx"), connData.get("LRZy"), connData.get("URZx")-connData.get("LRZx"), connData.get("URZy")-connData.get("LRZy"));
 				
-				System.out.println("\n\n\n\n\n" + builderCorner.getHeight());
 				
 			}
 		}
@@ -131,10 +138,54 @@ public class Main {
 		
 		// Wait 4 seconds for everything to be set up (sensors)
 		try {
-			Thread.sleep(4000);
+			Thread.sleep(3000);
 		} catch (InterruptedException e) {}
 		
 		localization.start();
+		
+		
+		
+		
+		
+		/*
+		 * 
+		 * 	LOGGER
+		 * 
+		 */
+		
+		
+		//Create basic data providers
+		DataEntryProvider systemTimeProvider = new DataEntryProvider("System Time") {
+			@Override
+			public double getEntry() {
+				return System.currentTimeMillis();
+			}
+		};
+		
+		DataEntryProvider usFrontProvider = new DataEntryProvider("US Front") {
+			
+			@Override
+			public double getEntry() {
+				return getFrontUSData();
+			}
+		}; 
+		
+		DataEntryProvider usSideProvider = new DataEntryProvider("US Side") {
+			
+			@Override
+			public double getEntry() {
+				return getSideUSData();
+			}
+		};
+	
+		FileLogger fileLog = new FileLogger("Log_Test.csv", 50, systemTimeProvider, usFrontProvider, usSideProvider);
+		
+		//start logger
+		fileLog.start();
+		Button.waitForAnyPress();
+		
+		//save and close logger
+		fileLog.interrupt();
 		
 		
 		

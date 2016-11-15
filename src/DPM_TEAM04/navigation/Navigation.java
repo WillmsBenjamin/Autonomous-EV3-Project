@@ -251,8 +251,8 @@ public class Navigation {
 	 */
 	public void turnAround(boolean clockwise) {
 		
-		this.leftMotor.setSpeed(Resources.SPEED_TURNING);
-		this.rightMotor.setSpeed(Resources.SPEED_TURNING);
+		this.leftMotor.setSpeed(Resources.SPEED_ROTATING);
+		this.rightMotor.setSpeed(Resources.SPEED_ROTATING);
 		
 		if (clockwise) {
 			// Turn clockwise
