@@ -23,6 +23,13 @@ public class LCDLogger extends Thread {
 		this.dataProviders = new ArrayList<>();
 	}
 	
+	public LCDLogger(int refreshPeriod, int decimalPlaces, DataEntryProvider...inputDataProviders ) {
+		this.refreshPeriod = refreshPeriod;
+		this.decimalPlaces = decimalPlaces;
+		this.dataProviders = new ArrayList<>();
+		addToEntryProviders(inputDataProviders);
+	}
+	
 	/**
 	 * Adds one or many entry providers to the display.
 	 * Only occurs at the end of a display cycle

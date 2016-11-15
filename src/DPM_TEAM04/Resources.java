@@ -25,7 +25,7 @@ import lejos.robotics.filter.MedianFilter;
 public class Resources {
 	
 	//Wifi
-	public static final String SERVER_IP = "192.168.2.5";
+	public static final String SERVER_IP = "192.168.2.7";
 	public static final int TEAM_NUMBER = 4;
 	public static boolean isBuilder;
 	public static HashMap<String, Integer> wifiData;
@@ -36,10 +36,10 @@ public class Resources {
 	
 	//Distance Constants
 	public static final double TILE_WIDTH = 30.48, CS_TO_CENTER = 14.7, US_TO_CENTER = 20.1, BUMPER_TO_CENTER = 9.1;
-	public static final double TRACK = 12.1, WHEEL_RADIUS = 2.127, LEFT_WHEEL_RADIUS = WHEEL_RADIUS, RIGHT_WHEEL_RADIUS = WHEEL_RADIUS;
+	public static final double TRACK = 11.6, WHEEL_RADIUS = 2.127, LEFT_WHEEL_RADIUS = WHEEL_RADIUS, RIGHT_WHEEL_RADIUS = WHEEL_RADIUS;
 
-	public static final long ODOMETER_PERIOD = 25;		// odometer update period, in ms
-	public static final long DISPLAY_PERIOD = 250;
+	public static final int ODOMETER_PERIOD = 25;		// odometer update period, in ms
+	public static final int DISPLAY_PERIOD = 250;
 	public static final double BAND_CENTER = 20.0;
 	public static final double NAVIGATION_POSITION_BANDWIDTH = 2.5, NAVIGATION_HEADING_BANDWIDTH = 0.14;
 
@@ -135,11 +135,26 @@ public class Resources {
 		for(int i = 0; i < 8; i++)
 			System.out.println();
 		
+		//Initially populate the buffers that will be
+		//polled continuously
+		for(int i = 0; i < US_FRONT_NUM_SAMPLES; i++)
+			getFrontUSData();
+		
+		for(int i = 0; i < US_SIDE_NUM_SAMPLES; i++)
+			getSideUSData();
+		
+		for(int i = 0; i < CS_DOWN_NUM_SAMPLES; i++)
+			getDownCSData();
+		
 		lcd.drawString("Ready", 0, 0);
 		Sound.beep();
 		
 	}
 	
+	public static float getFrontUSRawData() {
+		usFront.fetchSample(usDataFront, 0);
+		return usDataFront[0];
+	}
 	
 	public static float getFrontUSData() {
 		usFrontFilter.fetchSample(usDataFront, 0);
