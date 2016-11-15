@@ -2,11 +2,17 @@ package DPM_TEAM04.odometry;
 
 import java.util.ArrayList;
 
-import DPM_TEAM04.Distance;
+import static DPM_TEAM04.Resources.*;
 import DPM_TEAM04.Resources;
+import DPM_TEAM04.geometry.Coordinate;
+import DPM_TEAM04.geometry.CoordinateSystem;
+import DPM_TEAM04.geometry.DirectedCoordinate;
+import DPM_TEAM04.geometry.Distance;
+import DPM_TEAM04.navigation.Driver;
 import DPM_TEAM04.navigation.Navigation;
 import lejos.hardware.Audio;
 import lejos.hardware.ev3.LocalEV3;
+import lejos.utility.Delay;
 
 /**
  * This class localizes the robot using the ultrasonic sensor.
@@ -20,15 +26,13 @@ import lejos.hardware.ev3.LocalEV3;
  */
 public class Localization extends Thread {
 
-	private Odometer odometer;
-
 	private double minDistance, minDistAngle;
 	private ArrayList<Distance> listOfDistances;
 	private boolean isLeftWall;
+	
+	private DirectedCoordinate position;
 
-	public Localization(Odometer odometer) {
-		this.odometer = odometer;
-
+	public Localization() {
 		listOfDistances = new ArrayList<Distance>();
 	}
 
@@ -37,19 +41,25 @@ public class Localization extends Thread {
 	 */
 	public void run() {
 		
-		Navigation navigator = new Navigation(this.odometer);
+		Navigation navigator = new Navigation(Odometer.getOdometer());
+		
+		position = Odometer.getOdometer().getPosition();
+		
+		Driver driver = new Driver();
 		
 		// set the smooth acceleration (default)
 		navigator.setAcceleration(-1);
 
-		this.minDistance = Resources.getSideUSData();
-		this.minDistAngle = odometer.getTheta();
+		this.minDistance = Resources.getFrontUSData();
+		this.minDistAngle = Odometer.getOdometer().getPosition().getDirection(CoordinateSystem.POLAR_RAD);
 
+		//navigator.turnAround(true);
+		driver.rotate(360, CoordinateSystem.POLAR_DEG, true);
 		
-		navigator.turnAround(true);
-		while (odometer.getTheta() >= 0.0 && odometer.getTheta() < 6.26) {
-			// wait until it turns a little
-
+		//wait a little to get motors started
+		Delay.msDelay(100);
+		
+		while (leftMotor.isMoving() && rightMotor.isMoving()) {
 			saveDistance();
 		}
 
@@ -59,40 +69,59 @@ public class Localization extends Thread {
 		this.minDistAngle = (this.minDistAngle + Math.PI) % (2.0 * Math.PI);
 
 		// Turn to the minimal distance seen
-		navigator.turnTo(this.minDistAngle, true);
+		//navigator.turnTo(this.minDistAngle, true);
+		driver.turnTo(this.minDistAngle, CoordinateSystem.POLAR_RAD);
 		// Go to this distance and more than the distance to "bump" into it
-		navigator.goForward(-(this.minDistance - Resources.BUMPER_TO_CENTER + Resources.US_TO_CENTER + 12.0));
+		//navigator.goForward(-(this.minDistance - Resources.BUMPER_TO_CENTER + Resources.US_TO_CENTER + 12.0));
+		driver.travelDistance(-(this.minDistance - Resources.BUMPER_TO_CENTER + Resources.US_TO_CENTER + 12.0));
 
+		if (getSideUSData() < 22.0) {
+			isLeftWall = false;
+		} else {
+			isLeftWall = true;
+		}
 
+		lcd.drawString(""+isLeftWall, 0, 5);
+		
 		if (isLeftWall) {
 			// If it bumped into the left wall, set position accordingly
-			odometer.setX(-Resources.TILE_WIDTH + Resources.BUMPER_TO_CENTER);
-			odometer.setTheta(Math.PI / 2.0);
+			position.setX(-Resources.TILE_WIDTH + Resources.BUMPER_TO_CENTER);
+			position.setDirection(0.0, CoordinateSystem.POLAR_RAD);
 
 			// Go back to turn and bump the other wall
-			navigator.goForward(6.0);
-			navigator.turnTo(0.0, true);
+			//navigator.goForward(6.0);
+			driver.travelDistance(6.0);
+
+			//navigator.turnTo(0.0, true);
+			driver.turnTo(Math.PI/2.0, CoordinateSystem.POLAR_RAD);
+
 		} else {
 			// If it bumped into the right wall, set position accordingly
-			odometer.setY(-Resources.TILE_WIDTH + Resources.BUMPER_TO_CENTER);
-			odometer.setTheta(0.0);
+			position.setY(-Resources.TILE_WIDTH + Resources.BUMPER_TO_CENTER);
+			position.setDirection(Math.PI/2, CoordinateSystem.POLAR_RAD);
 
 			// Go back to turn and bump the other wall
-			navigator.goForward(6.0);
-			navigator.turnTo(Math.PI / 2.0, true);
+			//navigator.goForward(6.0);
+			driver.travelDistance(6.0);
+
+			//navigator.turnTo(Math.PI / 2.0, true);
+			driver.turnTo(0.0, CoordinateSystem.POLAR_RAD);
+
 		}
 
 		// Go forward to the next wall
-		navigator.goForward(-(Resources.TILE_WIDTH - Resources.BUMPER_TO_CENTER + 6.0));
+		//navigator.goForward(-(Resources.TILE_WIDTH - Resources.BUMPER_TO_CENTER + 6.0));
+		driver.travelDistance(-(this.minDistance - Resources.BUMPER_TO_CENTER + Resources.US_TO_CENTER + 12.0));
+
 
 		if (isLeftWall) {
 			// Now it bumped the right wall
-			odometer.setY(-Resources.TILE_WIDTH + Resources.BUMPER_TO_CENTER);
-			odometer.setTheta(0.0);
+			position.setY(-Resources.TILE_WIDTH + Resources.BUMPER_TO_CENTER);
+			position.setDirection(Math.PI/2.0, CoordinateSystem.POLAR_RAD);
 		} else {
 			// Now it bumped the left wall
-			odometer.setX(-Resources.TILE_WIDTH + Resources.BUMPER_TO_CENTER);
-			odometer.setTheta(Math.PI / 2.0);
+			position.setX(-Resources.TILE_WIDTH + Resources.BUMPER_TO_CENTER);
+			position.setDirection(0.0, CoordinateSystem.POLAR_RAD);
 		}
 
 		/*
@@ -110,9 +139,15 @@ public class Localization extends Thread {
 		} catch (InterruptedException e) {
 		}
 
-		navigator.goForward(10.0);
-		navigator.travelToMapCoordinates(Resources.wifiData.get("LGZx"), Resources.wifiData.get("LGZy"));
-		navigator.turnTo(0.0, true);
+		//navigator.goForward(10.0);
+		driver.travelDistance(10.0);
+
+		//navigator.travelToMapCoordinates(Resources.wifiData.get("LGZx"), Resources.wifiData.get("LGZy"));
+		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, 0, 0)));
+		
+		//navigator.turnTo(0.0, true);
+		driver.turnTo(0.0, CoordinateSystem.POLAR_RAD);
+
 
 	}
 
@@ -122,9 +157,9 @@ public class Localization extends Thread {
 	 */
 	private void saveDistance() {
 
-		float actualDist = Resources.getSideUSData();
+		float actualDist = Resources.getFrontUSData();
 		if (actualDist > 1) {
-			Distance d = new Distance(actualDist, odometer.getTheta());
+			Distance d = new Distance(actualDist, position.getDirection(CoordinateSystem.POLAR_RAD));
 			this.listOfDistances.add(d);
 		}
 

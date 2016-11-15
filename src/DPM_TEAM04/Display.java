@@ -2,6 +2,7 @@ package DPM_TEAM04;
 
 import static DPM_TEAM04.Resources.lcd;
 
+import DPM_TEAM04.geometry.CoordinateSystem;
 import DPM_TEAM04.odometry.Odometer;
 
 public class Display extends Thread {
@@ -34,7 +35,7 @@ public class Display extends Thread {
 			
 
 			// get the odometry information
-			odometer.getPosition(position, new boolean[] { true, true, true });
+			position = odometer.getPosition().getCoordinates(CoordinateSystem.CARTESIAN, CoordinateSystem.HEADING_DEG);
 
 			// display odometry information
 			for (int i = 0; i < 3; i++) {

@@ -1,6 +1,7 @@
 package DPM_TEAM04.navigation;
 
 import DPM_TEAM04.Resources;
+import DPM_TEAM04.geometry.CoordinateSystem;
 import DPM_TEAM04.odometry.Odometer;
 import lejos.hardware.Audio;
 import lejos.hardware.ev3.LocalEV3;
@@ -57,8 +58,8 @@ public class Navigation {
 		
 		while(true) {
 			this.navigating = true;								// If the path is now clear, the robot is navigating again
-			trueX = odometer.getX();							// Get the X and Y values from the odometer
-			trueY = odometer.getY();
+			trueX = odometer.getPosition().getX();							// Get the X and Y values from the odometer
+			trueY = odometer.getPosition().getY();
 			if ((trueX <= (this.x+Resources.NAVIGATION_POSITION_BANDWIDTH) && trueX >= (this.x-Resources.NAVIGATION_POSITION_BANDWIDTH))
 					&& ((trueY <= (this.y+Resources.NAVIGATION_POSITION_BANDWIDTH)) && (trueY >= (this.y-Resources.NAVIGATION_POSITION_BANDWIDTH)))) {
 				
@@ -73,7 +74,7 @@ public class Navigation {
 				break;											// Break the first while loop to exit the travelTo method
 			}
 			
-			if(thetaInRange(Resources.NAVIGATION_HEADING_BANDWIDTH, this.odometer.getTheta())) {
+			if(thetaInRange(Resources.NAVIGATION_HEADING_BANDWIDTH, this.odometer.getPosition().getTheta(CoordinateSystem.POLAR_RAD))) {
 				
 				// If the robot's heading is going in the right direction (within a Resources.NAVIGATION_HEADING_BANDWIDTH range)
 				this.leftMotor.setSpeed(Resources.SPEED_FORWARD);			// Reset speeds to go straight to the position (same speed)
@@ -114,12 +115,13 @@ public class Navigation {
 		// Compute both turns (left and right) to compare which one will be the smallest
 		double thetaLeftTurn = 0.0;
 		double thetaRightTurn = 0.0;
-		if(theta <= this.odometer.getTheta()) {
-			thetaLeftTurn = this.odometer.getTheta() - theta;
-			thetaRightTurn = ((2.0*Math.PI) - this.odometer.getTheta()) + theta;
+		double currentHeading = this.odometer.getPosition().getTheta(CoordinateSystem.POLAR_RAD);
+		if(theta <= currentHeading) {
+			thetaLeftTurn = currentHeading - theta;
+			thetaRightTurn = ((2.0*Math.PI) - currentHeading) + theta;
 		} else {
-			thetaLeftTurn = ((2.0*Math.PI) - theta) + this.odometer.getTheta();
-			thetaRightTurn = theta - this.odometer.getTheta();
+			thetaLeftTurn = ((2.0*Math.PI) - theta) + currentHeading;
+			thetaRightTurn = theta - currentHeading;
 		}
 		
 		// Reset the motors speeds
@@ -182,8 +184,8 @@ public class Navigation {
 		double x_diff, y_diff, desiredTheta, thetaRangeLow, thetaRangeHigh, trueX, trueY;
 		
 		boolean inRange;										// boolean to know if the heading is in range of the desired theta
-		trueX = odometer.getX();
-		trueY = odometer.getY();
+		trueX = odometer.getPosition().getX();
+		trueY = odometer.getPosition().getY();
 		x_diff = this.x - trueX;								// Compute the X and Y deltas (difference)
 		y_diff = this.y - trueY;
 		desiredTheta = getDesiredTheta();						// Get the desired theta
@@ -234,8 +236,8 @@ public class Navigation {
 		double x_diff, y_diff, desiredTheta;
 		// If the robot's heading is not facing the desired theta to go to the position,
 		// compute its desired theta and turn to this heading
-		x_diff = this.x - odometer.getX();				// Compute the X and Y difference (desired and actual values)
-		y_diff = this.y - odometer.getY();
+		x_diff = this.x - odometer.getPosition().getX();				// Compute the X and Y difference (desired and actual values)
+		y_diff = this.y - odometer.getPosition().getY();
 		desiredTheta = Math.atan2(x_diff, y_diff);		// Get the angle from delta X and Y
 		if(desiredTheta < 0) {
 			desiredTheta += (2.0*Math.PI);					// If the angle is negative, add 2*PI
