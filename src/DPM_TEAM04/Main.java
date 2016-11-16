@@ -5,10 +5,12 @@ import static DPM_TEAM04.Resources.*;
 import java.io.IOException;
 import java.util.HashMap;
 
+import DPM_TEAM04.geometry.Coordinate;
 import DPM_TEAM04.geometry.CoordinateSystem;
 import DPM_TEAM04.logging.DataEntryProvider;
 import DPM_TEAM04.logging.FileLogger;
 import DPM_TEAM04.logging.LCDLogger;
+import DPM_TEAM04.navigation.Driver;
 import DPM_TEAM04.odometry.Localization;
 import DPM_TEAM04.odometry.Odometer;
 import lejos.hardware.Button;
@@ -68,6 +70,7 @@ public class Main {
 
 		// Initialize the localization thread
 		Localization localization = new Localization();
+		Driver driver = new Driver();
 
 		/*
 		 * 
@@ -137,12 +140,14 @@ public class Main {
 					startingCorner = connData.get("CSC");
 				}
 
-				/*
-				Rectangle2D builderCorner = new Rectangle2D.Double(connData.get("LGZx"), connData.get("LGZy"),
+				
+				 builderCorner = new Rectangle2D.Double(connData.get("LGZx"), connData.get("LGZy"),
 						connData.get("UGZx") - connData.get("LGZx"), connData.get("UGZy") - connData.get("LGZy"));
-				Rectangle2D garbageCorner = new Rectangle2D.Double(connData.get("LRZx"), connData.get("LRZy"),
+				 garbageCorner = new Rectangle2D.Double(connData.get("LRZx"), connData.get("LRZy"),
 						connData.get("URZx") - connData.get("LRZx"), connData.get("URZy") - connData.get("LRZy"));
-				*/
+				 
+				 builderCorner.getBounds().
+				
 
 			}
 		}
@@ -196,8 +201,7 @@ public class Main {
 		// start logger
 		fileLog.start();
 		localization.start();
-		Button.waitForAnyPress();
-
+		driver.travelTo(new Coordinate(CoordinateSystem.CARTESIAN, 1*TILE_WIDTH, 0));
 		// save and close logger
 		fileLog.interrupt();
 

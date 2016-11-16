@@ -13,6 +13,7 @@ import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.SampleProvider;
 import lejos.robotics.filter.MeanFilter;
 import lejos.robotics.filter.MedianFilter;
+import lejos.robotics.geometry.Rectangle2D;
 
 /**
  * This class contains all resources (Motors, Sensors, Filters, Display) and all constants
@@ -47,6 +48,9 @@ public class Resources {
 	public static final double BAND_CENTER = 20.0;
 	public static final double NAVIGATION_POSITION_BANDWIDTH = 2.5, NAVIGATION_HEADING_BANDWIDTH = 0.14;
 
+	//Geometry
+	public static Rectangle2D builderCorner;
+	public static Rectangle2D garbageCorner;
 	
 	private static final String LEFT_MOTOR_PORT = "B";
 	public static final EV3LargeRegulatedMotor leftMotor;
@@ -85,6 +89,11 @@ public class Resources {
 	private static final int CS_DOWN_NUM_SAMPLES = US_FRONT_NUM_SAMPLES;
 	private static final float DIFF_THRESH = -0.02f;
 	private static float previousValue;
+	
+ 
+	
+	
+	
 	
 	//LCD
 	public static final TextLCD lcd;
