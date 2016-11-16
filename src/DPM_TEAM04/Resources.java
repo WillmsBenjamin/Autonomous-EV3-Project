@@ -13,6 +13,7 @@ import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.SampleProvider;
 import lejos.robotics.filter.MeanFilter;
 import lejos.robotics.filter.MedianFilter;
+import lejos.robotics.geometry.Point2D;
 import lejos.robotics.geometry.Rectangle2D;
 
 /**
@@ -26,7 +27,7 @@ import lejos.robotics.geometry.Rectangle2D;
 public class Resources {
 	
 	//Wifi
-	public static final String SERVER_IP = "192.168.2.47";
+	public static final String SERVER_IP = "192.168.2.5";
 	public static final int TEAM_NUMBER = 4;
 	public static boolean isBuilder;
 	public static int startingCorner;
@@ -40,7 +41,8 @@ public class Resources {
 	public static final int ACCELERATION_SMOOTH = 400;
 	
 	//Distance Constants
-	public static final double TILE_WIDTH = 30.48, CS_TO_CENTER = 14.7, US_TO_CENTER = 20.1, BUMPER_TO_CENTER = 9.1;
+	public static final double TILE_WIDTH = 30.48, HALF_TILE_WIDTH = TILE_WIDTH/2.0;
+	public static final double CS_TO_CENTER = 14.7, US_TO_CENTER = 20.1, BUMPER_TO_CENTER = 9.1;
 	public static final double TRACK = 11.6, WHEEL_RADIUS = 2.127, LEFT_WHEEL_RADIUS = WHEEL_RADIUS, RIGHT_WHEEL_RADIUS = WHEEL_RADIUS;
 
 	public static final int ODOMETER_PERIOD = 25;		// odometer update period, in ms
@@ -49,8 +51,11 @@ public class Resources {
 	public static final double NAVIGATION_POSITION_BANDWIDTH = 2.5, NAVIGATION_HEADING_BANDWIDTH = 0.14;
 
 	//Geometry
-	public static Rectangle2D builderCorner;
-	public static Rectangle2D garbageCorner;
+	public static Rectangle2D builderZone;
+	public static Rectangle2D collectorZone;
+	public static Point2D.Double mapCenter;
+	public static Point2D.Double searchPoint;
+	public static Point2D.Double stackPoint;
 	
 	private static final String LEFT_MOTOR_PORT = "B";
 	public static final EV3LargeRegulatedMotor leftMotor;

@@ -14,6 +14,7 @@ import DPM_TEAM04.navigation.Driver;
 import DPM_TEAM04.odometry.Localization;
 import DPM_TEAM04.odometry.Odometer;
 import lejos.hardware.Button;
+import lejos.robotics.geometry.Point2D;
 import lejos.robotics.geometry.Rectangle2D;
 import wifi.WifiConnection;
 
@@ -130,25 +131,81 @@ public class Main {
 				 */
 
 			} else {
+				
+				// we just got the data from the wifi connection
+				wifiData = connData;
 
-				Resources.wifiData = connData;
-				if (connData.get("BTN") == Resources.TEAM_NUMBER) {
+				double builderWidth = (connData.get("UGZx") - connData.get("LGZx")) * TILE_WIDTH;
+				double builderHeight = (connData.get("UGZy") - connData.get("LGZy")) * TILE_WIDTH;
+				
+				double collectorWidth = (connData.get("URZx") - connData.get("LRZx")) * TILE_WIDTH;
+				double collectorHeight = (connData.get("URZy") - connData.get("LRZy")) * TILE_WIDTH;
+				
+				// we create rectangles for the 2 zones
+				builderZone = new Rectangle2D.Double(connData.get("LGZx")*TILE_WIDTH, connData.get("LGZy")*TILE_WIDTH, builderWidth, builderHeight);
+				collectorZone = new Rectangle2D.Double(connData.get("LRZx")*TILE_WIDTH, connData.get("LRZy")*TILE_WIDTH, collectorWidth, collectorHeight);
+				
+				// prints the center of the builder zone
+				System.out.println("\n\n\n\n\n(" + builderZone.getCenterX() + "," + builderZone.getCenterY() + ")");
+				
+				
+				
+				if (connData.get("BTN") == TEAM_NUMBER) {
 					isBuilder = true;
 					startingCorner = connData.get("BSC");
 				} else {
 					isBuilder = false;
 					startingCorner = connData.get("CSC");
 				}
-
 				
-				 builderCorner = new Rectangle2D.Double(connData.get("LGZx"), connData.get("LGZy"),
-						connData.get("UGZx") - connData.get("LGZx"), connData.get("UGZy") - connData.get("LGZy"));
-				 garbageCorner = new Rectangle2D.Double(connData.get("LRZx"), connData.get("LRZy"),
-						connData.get("URZx") - connData.get("LRZx"), connData.get("URZy") - connData.get("LRZy"));
-				 
-				 builderCorner.getBounds().
+				// get the center of the builder zone to know it is in which quarter (compared to the center of the map)
 				
-
+				mapCenter = new Point2D.Double((MAP_DIMENSION/2)*30.48, (MAP_DIMENSION/2)*30.48);
+				
+				
+				// Determines the search point
+				// It is the closest "corner" to the center of the map (and on the border of the builder zone)
+				if (builderZone.getCenterX() < mapCenter.x) {
+					if (builderZone.getCenterY() < mapCenter.y) {
+						// Bottom left quadrant
+						searchPoint = new Point2D.Double(builderZone.getMaxX(), builderZone.getMaxY());
+					} else {
+						// Top left quadrant
+						searchPoint = new Point2D.Double(builderZone.getMaxX(), builderZone.getMinY());
+					}
+				} else {
+					if (builderZone.getCenterY() < mapCenter.y) {
+						// Bottom right quadrant
+						searchPoint = new Point2D.Double(builderZone.getMinX(), builderZone.getMaxY());
+					} else {
+						// Bottom right quadrant
+						searchPoint = new Point2D.Double(builderZone.getMinX(), builderZone.getMinY());
+					}
+				}
+				
+				// Determines the stack point
+				// Is is the "corner" of the builder zone that is in the orientation of the red zone
+				if (builderZone.getCenterX() < collectorZone.getCenterX()) {
+					if (builderZone.getCenterY() < collectorZone.getCenterY()) {
+						// Bottom left quadrant
+						stackPoint = new Point2D.Double(builderZone.getMaxX()-HALF_TILE_WIDTH, builderZone.getMaxY()-HALF_TILE_WIDTH);
+					} else {
+						// Top left quadrant
+						stackPoint = new Point2D.Double(builderZone.getMaxX()-HALF_TILE_WIDTH, builderZone.getMinY()+HALF_TILE_WIDTH);
+					}
+				} else {
+					if (builderZone.getCenterY() < collectorZone.getCenterY()) {
+						// Bottom right quadrant
+						stackPoint = new Point2D.Double(builderZone.getMinX()+HALF_TILE_WIDTH, builderZone.getMaxY()-HALF_TILE_WIDTH);
+					} else {
+						// Bottom right quadrant
+						stackPoint = new Point2D.Double(builderZone.getMinX()+HALF_TILE_WIDTH, builderZone.getMinY()+HALF_TILE_WIDTH);
+					}
+				}
+				
+				
+				
+				
 			}
 		}
 

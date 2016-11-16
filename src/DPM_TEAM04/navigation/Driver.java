@@ -73,16 +73,20 @@ public class Driver extends Thread{
 	 */
 	public void travelTo(Coordinate dest) {
 		//clear lines
+		/*
 		LCD.drawString("                  ", 0, 5); 
 		LCD.drawString("                  ", 0, 6);
 		
 		LCD.drawString("Travelling to (x,y):", 0, 5);
 		
 		
+		
 		//String of coordinates (X.XX, Y.YY)
 		String toPrint = "(" + LCDLogger.formattedDoubleToString(dest.getX(), 2) + ", " +
 				LCDLogger.formattedDoubleToString(dest.getY(), 2) + ")";
 		LCD.drawString(toPrint, 0, 6);
+		
+		*/
 		
 		//get distance and heading changes
 		double distanceToC = Odometer.getOdometer().getPosition().distanceTo(dest);

@@ -13,6 +13,7 @@ import DPM_TEAM04.navigation.Navigation;
 import lejos.hardware.Audio;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.utility.Delay;
+import lejos.robotics.geometry.*;
 
 /**
  * This class localizes the robot using the ultrasonic sensor.
@@ -139,7 +140,7 @@ public class Localization extends Thread {
 
 		//navigator.goForward(10.0);
 		driver.travelDistance(10.0);
-
+		
 		//navigator.travelToMapCoordinates(Resources.wifiData.get("LGZx"), Resources.wifiData.get("LGZy"));
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, 0, 0)));
 		
