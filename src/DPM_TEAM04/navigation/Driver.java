@@ -143,6 +143,7 @@ public class Driver extends Thread{
 		double changeInAngle = position.directionTo(angle, angleUnit);
 		rotate(changeInAngle, angleUnit, immediateReturn);
 	}
+	
 
 	/**
 	 * Travels a distance in cm

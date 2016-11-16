@@ -76,7 +76,7 @@ public class Localization extends Thread {
 		
 		driver.travelDistance(-(this.minDistance - Resources.BUMPER_TO_CENTER + Resources.US_TO_CENTER + 12.0));
 
-		if (getSideUSData() < (TILE_WIDTH-5.0)) {
+		if (getSideUSData() < TILE_WIDTH) {
 			isLeftWall = false;
 		} else {
 			isLeftWall = true;
@@ -142,10 +142,10 @@ public class Localization extends Thread {
 		driver.travelDistance(10.0);
 		
 		//navigator.travelToMapCoordinates(Resources.wifiData.get("LGZx"), Resources.wifiData.get("LGZy"));
-		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, 0, 0)));
+		//driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, 0, 0)));
 		
-		//navigator.turnTo(0.0, true);
-		driver.turnTo(0.0, CoordinateSystem.POLAR_RAD);
+		
+		isLocalizing = false;
 
 
 	}

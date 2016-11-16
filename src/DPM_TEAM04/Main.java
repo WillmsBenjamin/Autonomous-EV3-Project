@@ -11,6 +11,7 @@ import DPM_TEAM04.logging.DataEntryProvider;
 import DPM_TEAM04.logging.FileLogger;
 import DPM_TEAM04.logging.LCDLogger;
 import DPM_TEAM04.navigation.Driver;
+import DPM_TEAM04.navigation.Search;
 import DPM_TEAM04.odometry.Localization;
 import DPM_TEAM04.odometry.Odometer;
 import lejos.hardware.Button;
@@ -72,6 +73,7 @@ public class Main {
 		// Initialize the localization thread
 		Localization localization = new Localization();
 		Driver driver = new Driver();
+		Search search = new Search();
 
 		/*
 		 * 
@@ -145,8 +147,6 @@ public class Main {
 				builderZone = new Rectangle2D.Double(connData.get("LGZx")*TILE_WIDTH, connData.get("LGZy")*TILE_WIDTH, builderWidth, builderHeight);
 				collectorZone = new Rectangle2D.Double(connData.get("LRZx")*TILE_WIDTH, connData.get("LRZy")*TILE_WIDTH, collectorWidth, collectorHeight);
 				
-				// prints the center of the builder zone
-				System.out.println("\n\n\n\n\n(" + builderZone.getCenterX() + "," + builderZone.getCenterY() + ")");
 				
 				
 				
@@ -178,7 +178,7 @@ public class Main {
 						// Bottom right quadrant
 						searchPoint = new Point2D.Double(builderZone.getMinX(), builderZone.getMaxY());
 					} else {
-						// Bottom right quadrant
+						// Top right quadrant
 						searchPoint = new Point2D.Double(builderZone.getMinX(), builderZone.getMinY());
 					}
 				}
@@ -198,11 +198,14 @@ public class Main {
 						// Bottom right quadrant
 						stackPoint = new Point2D.Double(builderZone.getMinX()+HALF_TILE_WIDTH, builderZone.getMaxY()-HALF_TILE_WIDTH);
 					} else {
-						// Bottom right quadrant
+						// Top right quadrant
 						stackPoint = new Point2D.Double(builderZone.getMinX()+HALF_TILE_WIDTH, builderZone.getMinY()+HALF_TILE_WIDTH);
 					}
 				}
 				
+				
+				// prints the center of the builder zone
+				System.out.println("\n\n\n\n\n(" + stackPoint.x + "," + stackPoint.y + ")");
 				
 				
 				
@@ -258,7 +261,8 @@ public class Main {
 		// start logger
 		fileLog.start();
 		localization.start();
-		driver.travelTo(new Coordinate(CoordinateSystem.CARTESIAN, 1*TILE_WIDTH, 0));
+		search.start();
+		// driver.travelTo(new Coordinate(CoordinateSystem.CARTESIAN, 1*TILE_WIDTH, 0));
 		// save and close logger
 		fileLog.interrupt();
 

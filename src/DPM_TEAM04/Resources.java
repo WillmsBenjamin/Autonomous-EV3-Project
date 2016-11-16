@@ -27,7 +27,7 @@ import lejos.robotics.geometry.Rectangle2D;
 public class Resources {
 	
 	//Wifi
-	public static final String SERVER_IP = "192.168.2.5";
+	public static final String SERVER_IP = "192.168.2.7";
 	public static final int TEAM_NUMBER = 4;
 	public static boolean isBuilder;
 	public static int startingCorner;
@@ -96,7 +96,8 @@ public class Resources {
 	private static float previousValue;
 	
  
-	
+	// Threads
+	public static boolean isLocalizing = true;
 	
 	
 	
