@@ -2,7 +2,7 @@ package DPM_TEAM04.navigation;
 
 import static DPM_TEAM04.Resources.ACCELERATION_SMOOTH;
 import static DPM_TEAM04.Resources.SPEED_FORWARD;
-import static DPM_TEAM04.Resources.SPEED_TURNING;
+import static DPM_TEAM04.Resources.SPEED_TURNING_FAST;
 import static DPM_TEAM04.Resources.TRACK;
 import static DPM_TEAM04.Resources.WHEEL_RADIUS;
 import static DPM_TEAM04.Resources.leftMotor;
@@ -13,9 +13,7 @@ import java.util.Queue;
 import DPM_TEAM04.geometry.Coordinate;
 import DPM_TEAM04.geometry.CoordinateSystem;
 import DPM_TEAM04.geometry.DirectedCoordinate;
-import DPM_TEAM04.logging.LCDLogger;
 import DPM_TEAM04.odometry.Odometer;
-import lejos.hardware.lcd.LCD;
 
 
 /**
@@ -115,8 +113,8 @@ public class Driver extends Thread{
 	
 	@SuppressWarnings("incomplete-switch")
 	public void rotate(double angle, CoordinateSystem angleUnit, boolean immediateReturn) {
-		leftMotor.setSpeed(SPEED_TURNING);
-		rightMotor.setSpeed(SPEED_TURNING);
+		leftMotor.setSpeed(SPEED_TURNING_FAST);
+		rightMotor.setSpeed(SPEED_TURNING_FAST);
 		
 		double angleHeadingDeg = angle;
 		//normalize angle to Heading Deg

@@ -35,14 +35,10 @@ public class Resources {
 	//MAP
 	public static final int MAP_DIMENSION = 8;		// 8 X 8 tiles
 	
-	//Motor Constants
-	public static final int SPEED_FORWARD = 200, SPEED_TURNING = 140, SPEED_ROTATING = 60, ACCELERATION_FAST = 4000;
-	public static final int ACCELERATION_SMOOTH = 400;
-	
 	//Distance Constants
 	public static final double TILE_WIDTH = 30.48, HALF_TILE_WIDTH = TILE_WIDTH/2.0;
 	public static final double CS_TO_CENTER = 14.7, US_TO_CENTER = 20.1, BUMPER_TO_CENTER = 9.1;
-	public static final double TRACK = 11.6, WHEEL_RADIUS = 2.127, LEFT_WHEEL_RADIUS = WHEEL_RADIUS, RIGHT_WHEEL_RADIUS = WHEEL_RADIUS;
+	public static final double TRACK = 11.35, WHEEL_RADIUS = 2.03, LEFT_WHEEL_RADIUS = WHEEL_RADIUS, RIGHT_WHEEL_RADIUS = WHEEL_RADIUS;
 
 	public static final int ODOMETER_PERIOD = 25;		// odometer update period, in ms
 	public static final int DISPLAY_PERIOD = 250;
@@ -64,6 +60,10 @@ public class Resources {
 
 	//public static final EV3LargeRegulatedMotor grabMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("C"));
 	//public static final EV3LargeRegulatedMotor liftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
+	
+	//Motor Constants
+	public static final int SPEED_FORWARD = 200, SPEED_TURNING_FAST = 140, SPEED_TURNING_SLOW = 60, ACCELERATION_FAST = 4000, SPEED_SCANNING = 30;
+	public static final int ACCELERATION_SMOOTH = 400;
 
 	//Ultrasonic sensors
 	private static final String US_FRONT_PORT = "S1";
@@ -71,14 +71,14 @@ public class Resources {
 	private static final float[] usDataFront;
 	private static final int US_FRONT_NUM_SAMPLES = 15;
 	private static final int US_FRONT_SAMPLE_DELAY = 10;
-	private static float US_FRONT_CLIP = 50;
+	public static float US_FRONT_CLIP = 50;
 	
 	private static final String US_SIDE_PORT = "S3";
 	private static final SampleProvider usSide;
 	private static final float[] usDataSide;
 	private static final int US_SIDE_NUM_SAMPLES = US_FRONT_NUM_SAMPLES;
 	private static final int US_SIDE_SAMPLE_DELAY = US_FRONT_SAMPLE_DELAY;
-	private static float US_SIDE_CLIP = US_FRONT_CLIP;
+	public static float US_SIDE_CLIP = US_FRONT_CLIP;
 	
 	//Color sensors
 	private static final String CS_FRONT_PORT = "S2";
@@ -208,7 +208,7 @@ public class Resources {
 	public static float getColorID() {
 //		for(int i = 0; i < CS_FRONT_NUM_SAMPLES; i++)
 //			csFrontFilter.fetchSample(csDataFront, 0);
-		
+		csFront.fetchSample(csDataFront, 0);
 		return csDataFront[0];
 	}
 	
