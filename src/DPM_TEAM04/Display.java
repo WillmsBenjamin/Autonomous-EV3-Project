@@ -5,6 +5,7 @@ import static DPM_TEAM04.Resources.lcd;
 import DPM_TEAM04.geometry.CoordinateSystem;
 import DPM_TEAM04.odometry.Odometer;
 
+@Deprecated
 public class Display extends Thread {
 	private Odometer odometer;
 

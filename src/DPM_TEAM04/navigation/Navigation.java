@@ -13,6 +13,7 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
  * @author Alexis Giguère-Joannette & Tristan Saumure-Toupin
  * @version 1.0
  */
+@Deprecated
 public class Navigation {
 	
 	private Odometer odometer;
@@ -125,8 +126,8 @@ public class Navigation {
 		}
 		
 		// Reset the motors speeds
-		this.leftMotor.setSpeed(Resources.SPEED_TURNING);
-		this.rightMotor.setSpeed(Resources.SPEED_TURNING);
+		this.leftMotor.setSpeed(Resources.SPEED_TURNING_FAST);
+		this.rightMotor.setSpeed(Resources.SPEED_TURNING_FAST);
 		
 		if(thetaLeftTurn <= thetaRightTurn) {
 			// If the left turn is smaller than the right turn, turn left
@@ -253,8 +254,8 @@ public class Navigation {
 	 */
 	public void turnAround(boolean clockwise) {
 		
-		this.leftMotor.setSpeed(Resources.SPEED_ROTATING);
-		this.rightMotor.setSpeed(Resources.SPEED_ROTATING);
+		this.leftMotor.setSpeed(Resources.SPEED_TURNING_SLOW);
+		this.rightMotor.setSpeed(Resources.SPEED_TURNING_SLOW);
 		
 		if (clockwise) {
 			// Turn clockwise
