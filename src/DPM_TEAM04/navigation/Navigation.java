@@ -10,6 +10,9 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 /**
  * This class contains all navigation methods.
  * 
+ * @deprecated Use Driver instead as it incorporates the use 
+ * of Coordinate and DirectedCoordinate
+ * 
  * @author Alexis Giguère-Joannette & Tristan Saumure-Toupin
  * @version 1.0
  */
