@@ -5,7 +5,6 @@ import static DPM_TEAM04.Resources.*;
 import java.io.IOException;
 import java.util.HashMap;
 
-import DPM_TEAM04.geometry.Coordinate;
 import DPM_TEAM04.geometry.CoordinateSystem;
 import DPM_TEAM04.logging.DataEntryProvider;
 import DPM_TEAM04.logging.FileLogger;
@@ -163,26 +162,6 @@ public class Main {
 				mapCenter = new Point2D.Double((MAP_DIMENSION/2)*30.48, (MAP_DIMENSION/2)*30.48);
 				
 				
-				// Determines the search point
-				// It is the closest "corner" to the center of the map (and on the border of the builder zone)
-				if (builderZone.getCenterX() < mapCenter.x) {
-					if (builderZone.getCenterY() < mapCenter.y) {
-						// Bottom left quadrant
-						searchPoint = new Point2D.Double(builderZone.getMaxX(), builderZone.getMaxY());
-					} else {
-						// Top left quadrant
-						searchPoint = new Point2D.Double(builderZone.getMaxX(), builderZone.getMinY());
-					}
-				} else {
-					if (builderZone.getCenterY() < mapCenter.y) {
-						// Bottom right quadrant
-						searchPoint = new Point2D.Double(builderZone.getMinX(), builderZone.getMaxY());
-					} else {
-						// Top right quadrant
-						searchPoint = new Point2D.Double(builderZone.getMinX(), builderZone.getMinY());
-					}
-				}
-				
 				// Determines the stack point
 				// Is is the "corner" of the builder zone that is in the orientation of the red zone
 				if (builderZone.getCenterX() < collectorZone.getCenterX()) {
@@ -202,6 +181,44 @@ public class Main {
 						stackPoint = new Point2D.Double(builderZone.getMinX()+HALF_TILE_WIDTH, builderZone.getMinY()+HALF_TILE_WIDTH);
 					}
 				}
+				
+				// Determines the search point
+				// It is the closest "corner" to the center of the map (and on the border of the builder zone)
+				if (builderZone.getCenterX() < mapCenter.x) {
+					if (builderZone.getCenterY() < mapCenter.y) {
+						// Bottom left quadrant
+						searchPoint = new Point2D.Double(builderZone.getMaxX()-HALF_TILE_WIDTH, builderZone.getMaxY()-HALF_TILE_WIDTH);
+					} else {
+						// Top left quadrant
+						searchPoint = new Point2D.Double(builderZone.getMaxX()-HALF_TILE_WIDTH, builderZone.getMinY()+HALF_TILE_WIDTH);
+					}
+				} else {
+					if (builderZone.getCenterY() < mapCenter.y) {
+						// Bottom right quadrant
+						searchPoint = new Point2D.Double(builderZone.getMinX()+HALF_TILE_WIDTH, builderZone.getMaxY()-HALF_TILE_WIDTH);
+					} else {
+						// Top right quadrant
+						searchPoint = new Point2D.Double(builderZone.getMinX()+HALF_TILE_WIDTH, builderZone.getMinY()+HALF_TILE_WIDTH);
+					}
+				}
+				
+				if (searchPoint.x == stackPoint.x) {
+					if (searchPoint.x == (builderZone.getMaxX()-HALF_TILE_WIDTH)) {
+						searchPoint.x = builderZone.getMinX()+HALF_TILE_WIDTH;
+					} else {
+						searchPoint.x = builderZone.getMaxX()-HALF_TILE_WIDTH;
+					}
+				}
+				
+				// Y doesn't need to be changed because X has been changed before (unless the zone has only 1 tile of width)
+				if (searchPoint.y == stackPoint.y && builderZone.getWidth() <= 1) {
+					if (searchPoint.y == (builderZone.getMaxY()-HALF_TILE_WIDTH)) {
+						searchPoint.y = builderZone.getMinY()+HALF_TILE_WIDTH;
+					} else {
+						searchPoint.y = builderZone.getMaxY()-HALF_TILE_WIDTH;
+					}
+				}
+				
 				
 				
 				// prints the center of the builder zone
@@ -259,15 +276,20 @@ public class Main {
 		FileLogger fileLog = new FileLogger("Log_Test.csv", 50, angleProvider, usFrontProvider, usSideProvider);
 
 		// start logger
-		fileLog.start();
+//		fileLog.start();
 		localization.start();
+		try {
+			localization.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		search.start();
 		// driver.travelTo(new Coordinate(CoordinateSystem.CARTESIAN, 1*TILE_WIDTH, 0));
 		// save and close logger
-		fileLog.interrupt();
+//		fileLog.interrupt();
 
-		while (Button.waitForAnyPress() != Button.ID_ESCAPE)
-			;
+		Button.waitForAnyPress();
 		System.exit(0);
 	}
 
