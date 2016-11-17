@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import static DPM_TEAM04.Resources.*;
 import DPM_TEAM04.Resources;
-import DPM_TEAM04.geometry.Coordinate;
 import DPM_TEAM04.geometry.CoordinateSystem;
 import DPM_TEAM04.geometry.DirectedCoordinate;
 import DPM_TEAM04.geometry.Distance;
@@ -13,7 +12,6 @@ import DPM_TEAM04.navigation.Navigation;
 import lejos.hardware.Audio;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.utility.Delay;
-import lejos.robotics.geometry.*;
 
 /**
  * This class localizes the robot using the ultrasonic sensor.
