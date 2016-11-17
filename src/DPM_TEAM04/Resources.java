@@ -1,9 +1,9 @@
 
 package DPM_TEAM04;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
-import DPM_TEAM04.logging.FileLogger;
 import lejos.hardware.Sound;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
@@ -11,10 +11,9 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.SampleProvider;
-import lejos.robotics.filter.MeanFilter;
-import lejos.robotics.filter.MedianFilter;
 import lejos.robotics.geometry.Point2D;
 import lejos.robotics.geometry.Rectangle2D;
+import lejos.utility.Delay;
 
 /**
  * This class contains all resources (Motors, Sensors, Filters, Display) and all constants
@@ -27,7 +26,7 @@ import lejos.robotics.geometry.Rectangle2D;
 public class Resources {
 	
 	//Wifi
-	public static final String SERVER_IP = "192.168.2.7";
+	public static final String SERVER_IP = "192.168.2.28";
 	public static final int TEAM_NUMBER = 4;
 	public static boolean isBuilder;
 	public static int startingCorner;
@@ -57,6 +56,7 @@ public class Resources {
 	public static Point2D.Double searchPoint;
 	public static Point2D.Double stackPoint;
 	
+	//Motors
 	private static final String LEFT_MOTOR_PORT = "B";
 	public static final EV3LargeRegulatedMotor leftMotor;
 	private static final String RIGHT_MOTOR_PORT = "A";
@@ -69,28 +69,26 @@ public class Resources {
 	private static final String US_FRONT_PORT = "S1";
 	private static final SampleProvider usFront;
 	private static final float[] usDataFront;
-	private static final MedianFilter usFrontFilter;
 	private static final int US_FRONT_NUM_SAMPLES = 15;
-	private static final float US_FRONT_CLIP = 50;
+	private static final int US_FRONT_SAMPLE_DELAY = 10;
+	private static float US_FRONT_CLIP = 50;
 	
 	private static final String US_SIDE_PORT = "S3";
 	private static final SampleProvider usSide;
 	private static final float[] usDataSide;
-	private static final MedianFilter usSideFilter;
 	private static final int US_SIDE_NUM_SAMPLES = US_FRONT_NUM_SAMPLES;
-	private static final float US_SIDE_CLIP = US_FRONT_CLIP;
+	private static final int US_SIDE_SAMPLE_DELAY = US_FRONT_SAMPLE_DELAY;
+	private static float US_SIDE_CLIP = US_FRONT_CLIP;
 	
 	//Color sensors
 	private static final String CS_FRONT_PORT = "S2";
 	private static final SampleProvider csFront;
 	private static final float[] csDataFront;
-	private static final MedianFilter csFrontFilter;
 	private static final int CS_FRONT_NUM_SAMPLES = US_FRONT_NUM_SAMPLES;
 	
 	private static final String CS_DOWN_PORT = "S4";
 	private static final SampleProvider csDown;
 	private static final float[] csDataDown;
-	private static final MeanFilter csDownFilter;
 	private static final int CS_DOWN_NUM_SAMPLES = US_FRONT_NUM_SAMPLES;
 	private static final float DIFF_THRESH = -0.02f;
 	private static float previousValue;
@@ -103,6 +101,7 @@ public class Resources {
 	
 	//LCD
 	public static final TextLCD lcd;
+
 	
 	//Dummy variable to force initialization
 	public static boolean initialize;
@@ -124,27 +123,21 @@ public class Resources {
 		
 		System.out.println("US Front-" + US_FRONT_PORT);
 		usFront = (new EV3UltrasonicSensor(LocalEV3.get().getPort(US_FRONT_PORT))).getMode("Distance");
-		usDataFront = new float[usFront.sampleSize()];
-		usFrontFilter = new MedianFilter(usFront, US_FRONT_NUM_SAMPLES);
+		usDataFront = new float[usFront.sampleSize()*US_FRONT_NUM_SAMPLES];
 		
 		System.out.println("US Side-" + US_SIDE_PORT);
 		usSide = (new EV3UltrasonicSensor(LocalEV3.get().getPort(US_SIDE_PORT))).getMode("Distance");
-		usDataSide = new float[usSide.sampleSize()];
-		usSideFilter = new MedianFilter(usSide, US_SIDE_NUM_SAMPLES);
+		usDataSide = new float[usSide.sampleSize()*US_SIDE_NUM_SAMPLES];
 		
 		//-----------------------Color Sensors-----------------------
 		
 		System.out.println("CS Front-" + CS_FRONT_PORT);
 		csFront = (new EV3ColorSensor(LocalEV3.get().getPort(CS_FRONT_PORT))).getMode("ColorID");
-		csDataFront = new float[csFront.sampleSize()];
-		csFrontFilter = new MedianFilter(csFront, CS_FRONT_NUM_SAMPLES);
+		csDataFront = new float[csFront.sampleSize()*CS_FRONT_NUM_SAMPLES];
 		
 		System.out.println("CS Down-" + CS_DOWN_PORT);
 		csDown = (new EV3ColorSensor(LocalEV3.get().getPort(CS_DOWN_PORT))).getMode("Red");
-		csDataDown = new float[csDown.sampleSize()];
-		csDownFilter = new MeanFilter(csDown, CS_DOWN_NUM_SAMPLES);
-		
-		csDownFilter.fetchSample(csDataDown, 0);
+		csDataDown = new float[csDown.sampleSize()*CS_DOWN_NUM_SAMPLES];
 		
 		//---------------------------LCD---------------------------
 		lcd = LocalEV3.get().getTextLCD();
@@ -154,61 +147,74 @@ public class Resources {
 		for(int i = 0; i < 8; i++)
 			System.out.println();
 		
-		//Initially populate the buffers that will be
-		//polled continuously
-		for(int i = 0; i < US_FRONT_NUM_SAMPLES; i++)
-			getFrontUSData();
-		
-		for(int i = 0; i < US_SIDE_NUM_SAMPLES; i++)
-			getSideUSData();
-		
-		for(int i = 0; i < CS_DOWN_NUM_SAMPLES; i++)
-			getDownCSData();
-		
 		lcd.drawString("Ready", 0, 0);
 		Sound.beep();
 		
 	}
 	
 	public static float getFrontUSRawData() {
-		usFront.fetchSample(usDataFront, 0);
-		return usDataFront[0];
+		float[] singleSample = new float[usFront.sampleSize()];
+		usFront.fetchSample(singleSample, 0);
+		return singleSample[0];
 	}
 	
 	public static float getFrontUSData() {
-		usFrontFilter.fetchSample(usDataFront, 0);
 		
-		usDataFront[0] *= 100;
+		// Populate the array with samples (with a delay between each sample)
+		for(int i = 0; i < US_FRONT_NUM_SAMPLES; i++) {
+			usFront.fetchSample(usDataFront, i);
+			Delay.msDelay(US_FRONT_SAMPLE_DELAY);
+		}
 		
-		if (usDataFront[0] > US_FRONT_CLIP)
-			usDataFront[0] = US_FRONT_CLIP;
+		// Sort samples
+		Arrays.sort(usDataFront);
 		
-		return usDataFront[0];
+		// Acquire median from middle of array and scale up by 100
+		// to get value in centimeters
+		float median = usDataFront[usDataFront.length/2]*100;
+		
+		if (median > US_FRONT_CLIP)
+			median = US_FRONT_CLIP;
+		
+		return median;
+	}
+	
+	public static float getSideUSRawData() {
+		float[] singleSample = new float[usSide.sampleSize()];
+		usSide.fetchSample(singleSample, 0);
+		return singleSample[0];
 	}
 	
 	public static float getSideUSData() {
-		usSideFilter.fetchSample(usDataSide, 0);
+		// Populate the array with samples (with a delay between each sample)
+		for(int i = 0; i < US_SIDE_NUM_SAMPLES; i++) {
+			usSide.fetchSample(usDataSide, i);
+			Delay.msDelay(US_SIDE_SAMPLE_DELAY);
+		}
 		
-		usDataSide[0] *= 100;
+		// Sort samples
+		Arrays.sort(usDataSide);
 		
-		if (usDataSide[0] > US_SIDE_CLIP)
-			usDataSide[0] = US_SIDE_CLIP;
+		// Acquire median from middle of array and scale up by 100
+		// to get value in centimeters
+		float median = usDataSide[usDataSide.length/2]*100;
 		
-		return usDataSide[0];
+		if (median > US_SIDE_CLIP)
+			median = US_SIDE_CLIP;
+		
+		return median;
 	}
 	
 	public static float getColorID() {
-		//Since the front color sensor is not polled continuously
-		//we always need a fresh set of samples
-		for(int i = 0; i < CS_FRONT_NUM_SAMPLES; i++)
-			csFrontFilter.fetchSample(csDataFront, 0);
+//		for(int i = 0; i < CS_FRONT_NUM_SAMPLES; i++)
+//			csFrontFilter.fetchSample(csDataFront, 0);
 		
 		return csDataFront[0];
 	}
 	
 
 	public static float getDownCSData() {
-		csDownFilter.fetchSample(csDataDown, 0);
+//		csDownFilter.fetchSample(csDataDown, 0);
 		
 		return csDataDown[0];
 	}
