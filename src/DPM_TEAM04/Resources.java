@@ -26,7 +26,7 @@ import lejos.utility.Delay;
 public class Resources {
 	
 	//Wifi
-	public static final String SERVER_IP = "192.168.2.28";
+	public static final String SERVER_IP = "192.168.2.7";
 	public static final int TEAM_NUMBER = 4;
 	public static boolean isBuilder;
 	public static int startingCorner;
@@ -62,7 +62,8 @@ public class Resources {
 	//public static final EV3LargeRegulatedMotor liftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 	
 	//Motor Constants
-	public static final int SPEED_FORWARD = 200, SPEED_TURNING_FAST = 140, SPEED_TURNING_SLOW = 60, ACCELERATION_FAST = 4000, SPEED_SCANNING = 30;
+	public static final int SPEED_FORWARD = 200, SPEED_TURNING_FAST = 140, SPEED_TURNING_SLOW = 60, ACCELERATION_FAST = 4000;
+	public static final int SPEED_TURNING_MEDIUM = 100, SPEED_SCANNING = 30;
 	public static final int ACCELERATION_SMOOTH = 400;
 
 	//Ultrasonic sensors
@@ -71,7 +72,7 @@ public class Resources {
 	private static final float[] usDataFront;
 	private static final int US_FRONT_NUM_SAMPLES = 15;
 	private static final int US_FRONT_SAMPLE_DELAY = 10;
-	public static float US_FRONT_CLIP = 50;
+	public static float US_FRONT_CLIP = 100;
 	
 	private static final String US_SIDE_PORT = "S3";
 	private static final SampleProvider usSide;

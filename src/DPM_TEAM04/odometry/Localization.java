@@ -43,14 +43,13 @@ public class Localization extends Thread {
 		
 		
 		
-		Navigation navigator = new Navigation(Odometer.getOdometer());
+		
 		
 		position = Odometer.getOdometer().getPosition();
 		
 		Driver driver = new Driver();
 		
-		// set the smooth acceleration (default)
-		navigator.setAcceleration(-1);
+		
 
 		this.minDistance = Resources.getFrontUSData();
 		this.minDistAngle = Odometer.getOdometer().getPosition().getDirection(CoordinateSystem.POLAR_RAD);
