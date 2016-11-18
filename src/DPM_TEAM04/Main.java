@@ -24,7 +24,7 @@ import wifi.WifiConnection;
  */
 public class Main {
 
-	public static final int VERSION_NB = 1;
+	public static final int VERSION_NB = 2;
 
 	public static LCDLogger lcdLog;
 	
@@ -202,6 +202,7 @@ public class Main {
 					}
 				}
 				
+				
 				if (searchPoint.x == stackPoint.x) {
 					if (searchPoint.x == (builderZone.getMaxX()-HALF_TILE_WIDTH)) {
 						searchPoint.x = builderZone.getMinX()+HALF_TILE_WIDTH;
@@ -221,8 +222,9 @@ public class Main {
 				
 				
 				
+				
 				// prints the center of the builder zone
-				System.out.println("\n\n\n\n\n(" + stackPoint.x + "," + stackPoint.y + ")");
+				System.out.println("\n\n\n\n\n(" + searchPoint.x + "," + searchPoint.y + ")");
 				
 				
 				

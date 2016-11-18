@@ -26,7 +26,7 @@ import lejos.utility.Delay;
 public class Resources {
 	
 	//Wifi
-	public static final String SERVER_IP = "192.168.2.7";
+	public static final String SERVER_IP = "192.168.2.10";
 	public static final int TEAM_NUMBER = 4;
 	public static boolean isBuilder;
 	public static int startingCorner;
@@ -38,7 +38,7 @@ public class Resources {
 	//Distance Constants
 	public static final double TILE_WIDTH = 30.48, HALF_TILE_WIDTH = TILE_WIDTH/2.0;
 	public static final double CS_TO_CENTER = 14.7, US_TO_CENTER = 20.1, BUMPER_TO_CENTER = 9.1;
-	public static final double TRACK = 11.35, WHEEL_RADIUS = 2.03, LEFT_WHEEL_RADIUS = WHEEL_RADIUS, RIGHT_WHEEL_RADIUS = WHEEL_RADIUS;
+	public static final double TRACK = 11.25, WHEEL_RADIUS = 2.03, LEFT_WHEEL_RADIUS = WHEEL_RADIUS, RIGHT_WHEEL_RADIUS = WHEEL_RADIUS;
 
 	public static final int ODOMETER_PERIOD = 25;		// odometer update period, in ms
 	public static final int DISPLAY_PERIOD = 250;
@@ -57,13 +57,15 @@ public class Resources {
 	public static final EV3LargeRegulatedMotor leftMotor;
 	private static final String RIGHT_MOTOR_PORT = "A";
 	public static final EV3LargeRegulatedMotor rightMotor;
-
-	//public static final EV3LargeRegulatedMotor grabMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("C"));
-	//public static final EV3LargeRegulatedMotor liftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
+	private static final String GRAB_MOTOR_PORT = "C";
+	public static final EV3LargeRegulatedMotor grabMotor;
+	private static final String LIFT_MOTOR_PORT = "D";
+	public static final EV3LargeRegulatedMotor liftMotor;
 	
 	//Motor Constants
 	public static final int SPEED_FORWARD = 200, SPEED_TURNING_FAST = 140, SPEED_TURNING_SLOW = 60, ACCELERATION_FAST = 4000;
 	public static final int SPEED_TURNING_MEDIUM = 100, SPEED_SCANNING = 30;
+	public static final int SPEED_GRAB = 100, SPEED_LIFT = 100;
 	public static final int ACCELERATION_SMOOTH = 400;
 
 	//Ultrasonic sensors
@@ -120,6 +122,12 @@ public class Resources {
 		System.out.println("R Motor-" + RIGHT_MOTOR_PORT);
 		rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort(RIGHT_MOTOR_PORT));
 		
+		System.out.println("Grab Motor-" + GRAB_MOTOR_PORT);
+		grabMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort(GRAB_MOTOR_PORT));
+		
+		System.out.println("Lift Motor-" + LIFT_MOTOR_PORT);
+		liftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort(LIFT_MOTOR_PORT));
+		
 		//------------------------US Sensors------------------------
 		
 		System.out.println("US Front-" + US_FRONT_PORT);
@@ -133,7 +141,7 @@ public class Resources {
 		//-----------------------Color Sensors-----------------------
 		
 		System.out.println("CS Front-" + CS_FRONT_PORT);
-		csFront = (new EV3ColorSensor(LocalEV3.get().getPort(CS_FRONT_PORT))).getMode("ColorID");
+		csFront = (new EV3ColorSensor(LocalEV3.get().getPort(CS_FRONT_PORT))).getMode("RGB");
 		csDataFront = new float[csFront.sampleSize()*CS_FRONT_NUM_SAMPLES];
 		
 		System.out.println("CS Down-" + CS_DOWN_PORT);
@@ -206,11 +214,11 @@ public class Resources {
 		return median;
 	}
 	
-	public static float getColorID() {
+	public static float[] getColorRGB() {
 //		for(int i = 0; i < CS_FRONT_NUM_SAMPLES; i++)
 //			csFrontFilter.fetchSample(csDataFront, 0);
 		csFront.fetchSample(csDataFront, 0);
-		return csDataFront[0];
+		return csDataFront;
 	}
 	
 

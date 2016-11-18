@@ -35,7 +35,7 @@ public class FileLoggerTest {
 			
 			@Override
 			public double getEntry() {
-				return getColorID();
+				return getColorRGB()[0];
 			}
 		};
 		

@@ -36,7 +36,7 @@ public class LCDLoggerTest {
 			
 			@Override
 			public double getEntry() {
-				return getColorID();
+				return getColorRGB()[0];
 			}
 		};
 		
