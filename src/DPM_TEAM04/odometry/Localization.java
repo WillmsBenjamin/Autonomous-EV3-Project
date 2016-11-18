@@ -128,7 +128,7 @@ public class Localization extends Thread {
 
 		// Make EV3 beep when it stops following the wall
 		Audio audio = LocalEV3.get().getAudio();
-		audio.systemSound(2);
+		audio.systemSound(0);
 
 		try {
 			Thread.sleep(1000);

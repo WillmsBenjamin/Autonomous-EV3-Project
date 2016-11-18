@@ -7,7 +7,9 @@ import DPM_TEAM04.geometry.Coordinate;
 import DPM_TEAM04.geometry.CoordinateSystem;
 import DPM_TEAM04.geometry.DirectedCoordinate;
 import DPM_TEAM04.odometry.Odometer;
+import lejos.hardware.Audio;
 import lejos.hardware.Button;
+import lejos.hardware.ev3.LocalEV3;
 import lejos.robotics.geometry.Point2D;
 
 public class Search extends Thread {
@@ -44,7 +46,26 @@ public class Search extends Thread {
 		
 		// Go to the search point
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, searchPoint.x, searchPoint.y)));
-		driver.turnTo(270, CoordinateSystem.POLAR_DEG);
+		
+		if (searchPoint.x < mapCenter.x) {
+			if (searchPoint.y < mapCenter.y) {
+				// Bottom left quadrant
+				driver.turnTo(0, CoordinateSystem.POLAR_DEG, false);
+			} else {
+				// Top left quadrant
+				driver.turnTo(270, CoordinateSystem.POLAR_DEG, false);
+			}
+		} else {
+			if (searchPoint.y < mapCenter.y) {
+				// Bottom right quadrant
+				driver.turnTo(90, CoordinateSystem.POLAR_DEG, false);
+				
+			} else {
+				// Top right quadrant
+				driver.turnTo(180, CoordinateSystem.POLAR_DEG, false);
+			}
+		}
+		
 		
 		
 		search();
@@ -148,6 +169,7 @@ public class Search extends Thread {
 	
 	
 	private void search() {
+		blockSeen = false;
 		lastAngle = position.getDirection(CoordinateSystem.POLAR_DEG);
 		clockwise = true;
 		boolean firstTime = true;
@@ -237,32 +259,58 @@ public class Search extends Thread {
 			driver.travelDistance(-1.0);
 			driver.rotate(Math.PI, CoordinateSystem.POLAR_RAD);
 			driver.travelDistance(-Math.abs(BUMPER_TO_CENTER-US_TO_CENTER));
-			leftMotor.rotate(-180, false);
-			rightMotor.rotate(-180, false);
-			leftMotor.rotate(-180, false);
-			rightMotor.rotate(-180, false);
+			if (clockwise) {
+				leftMotor.rotate(-180, false);
+				rightMotor.rotate(-180, false);
+				leftMotor.rotate(-180, false);
+				rightMotor.rotate(-180, false);
+			} else {
+				rightMotor.rotate(-180, false);
+				leftMotor.rotate(-180, false);
+				rightMotor.rotate(-180, false);
+				leftMotor.rotate(-180, false);
+			}
 			
 			// grab the block
 			grabMotor.rotate(200, false);
 			liftMotor.rotate(-450, false);
 			
 			
-			// return to the zone
-			driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, searchPoint.x, searchPoint.y)));
-			double nextAngle = (lastAngle + 10)%360.0;
-			driver.turnTo(nextAngle, CoordinateSystem.POLAR_DEG);
+			// return to the center of the builder zone
+			driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, (builderZone.getCenterX()+BUMPER_TO_CENTER), builderZone.getCenterY())));
 			
+			// turn to the 0 degrees to drop the block
+			driver.turnTo(0, CoordinateSystem.POLAR_DEG, false);
+			
+			// drop the block
 			liftMotor.rotate(450, false);
 			grabMotor.rotate(-200, false);
 			
+			
+			/*
+			 * 
+			 * FOR DEMO ONLY, STOP THE PROGRAM AFTER GETTING ONE BLOCK
+			 * 
+			 */
+			
+			// Make EV3 beep when it stops following the wall
+			Audio audio = LocalEV3.get().getAudio();
+			audio.systemSound(2);
+			
+			
+			/*
+			double nextAngle = (lastAngle + 10)%360.0;
+			driver.turnTo(nextAngle, CoordinateSystem.POLAR_DEG);
+			
 			clockwise = true;
 			search();
+			*/
 		}
 		else {
 			System.out.println("Not Block");
 			driver.travelDistance(-BUMPER_TO_CENTER);
 			driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, searchPoint.x, searchPoint.y)));
-			double nextAngle = (lastAngle + 10)%360.0;
+			double nextAngle = (lastAngle + 25)%360.0;
 			driver.turnTo(nextAngle, CoordinateSystem.POLAR_DEG);
 			clockwise = true;
 			search();
