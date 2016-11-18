@@ -18,7 +18,7 @@ public class Search extends Thread {
 	private Driver driver;
 	private boolean blockSeen = false;
 	private int blockDistanceCap = 5;
-	private int searchCap = 50;
+	private int searchCap = 70;
 	private double lastAngle;
 	private boolean clockwise = true; 				//if true will rotate clockwise, else counter Clockwise
 	private double angleDifference, actualAngle;
@@ -200,7 +200,6 @@ public class Search extends Thread {
 				}
 			} else if (blockSeen) {
 				//we went too far, re-initialize values so its at initial state (no block seen) and turn the other way around.
-				System.out.println("\n\n\n\n\n" + lastAngle + "\n" + position.getDirection(CoordinateSystem.POLAR_DEG));
 				actualAngle = position.getDirection(CoordinateSystem.POLAR_DEG);
 				angleDifference = Math.abs(actualAngle-lastAngle);
 				if (angleDifference >= 180) {
@@ -277,7 +276,7 @@ public class Search extends Thread {
 			
 			
 			// return to the center of the builder zone
-			driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, (builderZone.getCenterX()+BUMPER_TO_CENTER), builderZone.getCenterY())));
+			driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, (builderZone.getCenterX()+BUMPER_TO_CENTER+4.0), builderZone.getCenterY())));
 			
 			// turn to the 0 degrees to drop the block
 			driver.turnTo(0, CoordinateSystem.POLAR_DEG, false);

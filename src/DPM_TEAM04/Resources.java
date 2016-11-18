@@ -26,7 +26,7 @@ import lejos.utility.Delay;
 public class Resources {
 	
 	//Wifi
-	public static final String SERVER_IP = "192.168.2.8";
+	public static final String SERVER_IP = "192.168.2.15";
 	public static final int TEAM_NUMBER = 4;
 	public static boolean isBuilder;
 	public static int startingCorner;

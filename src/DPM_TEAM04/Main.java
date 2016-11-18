@@ -159,7 +159,7 @@ public class Main {
 				
 				// get the center of the builder zone to know it is in which quarter (compared to the center of the map)
 				
-				mapCenter = new Point2D.Double((MAP_DIMENSION/2)*30.48, (MAP_DIMENSION/2)*30.48);
+				mapCenter = new Point2D.Double(((MAP_DIMENSION/2.0)-1.0)*30.48, ((MAP_DIMENSION/2.0)-1.0)*30.48);
 				
 				
 				// Determines the stack point
@@ -222,9 +222,6 @@ public class Main {
 				
 				
 				
-				
-				// prints the center of the builder zone
-				System.out.println("\n\n\n\n\n(" + searchPoint.x + "," + searchPoint.y + ")");
 				
 				
 				
