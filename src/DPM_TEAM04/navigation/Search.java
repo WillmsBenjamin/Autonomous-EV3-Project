@@ -11,6 +11,7 @@ import lejos.hardware.Audio;
 import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.robotics.geometry.Point2D;
+import lejos.robotics.geometry.Rectangle2D;
 
 public class Search extends Thread {
 	
@@ -39,13 +40,17 @@ public class Search extends Thread {
 		grabMotor.setSpeed(SPEED_GRAB);
 		liftMotor.setSpeed(SPEED_LIFT);
 		
-		//searchPoint = new Point2D.Double(0.0, 0.0);
+		searchPoint = new Point2D.Double(1.0*TILE_WIDTH, 1.0*TILE_WIDTH);
+		mapCenter = new Point2D.Double(((MAP_DIMENSION/2.0)-1.0)*30.48, ((MAP_DIMENSION/2.0)-1.0)*30.48);
+		builderZone = new Rectangle2D.Double(1.0*TILE_WIDTH, 1.0*TILE_WIDTH, TILE_WIDTH, TILE_WIDTH);
 		
 		startSearchAngle = 0;
 		endSearchAngle = 90;
 		
+		
 		// Go to the search point
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, searchPoint.x, searchPoint.y)));
+		
 		
 		if (searchPoint.x < mapCenter.x) {
 			if (searchPoint.y < mapCenter.y) {
@@ -68,9 +73,12 @@ public class Search extends Thread {
 		
 		
 		
+		
 		search();
 		
+		
 		/*
+		
 		leftMotor.flt();
 		rightMotor.flt();
 		
@@ -79,10 +87,11 @@ public class Search extends Thread {
 		double x;
 		double y;
 		
+		
 
 		do {
 			
-			theta = position.getDirection(CoordinateSystem.POLAR_RAD);
+			theta = position.getDirection(CoordinateSystem.POLAR_DEG);
 			x = position.getX();
 			y = position.getY();
 			
@@ -132,8 +141,8 @@ public class Search extends Thread {
 			
 			
 		} while (true);
-		*/
 		
+		*/
 		
 		// Close to block at this point
 		
@@ -185,7 +194,7 @@ public class Search extends Thread {
 				leftMotor.stop(true);
 				rightMotor.stop(false);
 				break;
-			} else if (USDistance <= searchCap) {
+			} else if (isObjectSeen(USDistance)) {
 				blockSeen = true;
 				// move forward
 				leftMotor.setSpeed(SPEED_TURNING_MEDIUM);
@@ -227,6 +236,33 @@ public class Search extends Thread {
 		scanBlock();
 		
 	}
+	private boolean isObjectSeen(double USDistance) {
+		
+		if (USDistance <= searchCap) {
+			
+			double theta = position.getDirection(CoordinateSystem.CARTESIAN);
+			Point2D.Double ObjectPoint = new Point2D.Double(USDistance*Math.cos(theta)+TILE_WIDTH, USDistance*Math.sin(theta)+TILE_WIDTH);
+			Rectangle2D.Double goodMap = new Rectangle2D.Double(0.0, 0.0, (MAP_DIMENSION-2.0)*TILE_WIDTH, (MAP_DIMENSION-2.0)*TILE_WIDTH);
+			
+			//System.out.println("\n\n\n\n\n" + ObjectPoint.x + "\n" + ObjectPoint.y);
+			System.out.println("\n\n\n\n\n" + theta);
+			
+			if (goodMap.contains(ObjectPoint)) {
+				// good
+				//System.out.println("\n\n\n\n\nIn the map!");
+				return true;
+			} else {
+				// is too close to a wall
+				//System.out.println("\n\n\n\n\nToo close to wall!");
+				wallSeen();
+				return false;
+			}
+			
+		} else {
+			return false;
+		}
+		
+	}
 	private void scanning(){
 		if (clockwise){
 			leftMotor.setSpeed(SPEED_SCANNING);
@@ -257,18 +293,15 @@ public class Search extends Thread {
 			// Place the block in a good direction
 			driver.travelDistance(-1.0);
 			driver.rotate(Math.PI, CoordinateSystem.POLAR_RAD);
-			driver.travelDistance(-Math.abs(BUMPER_TO_CENTER-US_TO_CENTER));
+			driver.travelDistance(-Math.abs(BUMPER_TO_CENTER-US_TO_CENTER)-2.0);
+			
+			// orient the block to make it easier to grab
 			if (clockwise) {
-				leftMotor.rotate(-180, false);
-				rightMotor.rotate(-180, false);
-				leftMotor.rotate(-180, false);
-				rightMotor.rotate(-180, false);
+				rightMotor.rotate(-40, false);
 			} else {
-				rightMotor.rotate(-180, false);
-				leftMotor.rotate(-180, false);
-				rightMotor.rotate(-180, false);
-				leftMotor.rotate(-180, false);
+				leftMotor.rotate(-40, false);
 			}
+			driver.travelDistance(-4.0);
 			
 			// grab the block
 			grabMotor.rotate(200, false);
@@ -285,35 +318,33 @@ public class Search extends Thread {
 			liftMotor.rotate(450, false);
 			grabMotor.rotate(-200, false);
 			
-			
-			/*
-			 * 
-			 * FOR DEMO ONLY, STOP THE PROGRAM AFTER GETTING ONE BLOCK
-			 * 
-			 */
-			
-			// Make EV3 beep when it stops following the wall
-			Audio audio = LocalEV3.get().getAudio();
-			audio.systemSound(2);
-			
-			
-			/*
-			double nextAngle = (lastAngle + 10)%360.0;
+			// turn to the next angle to search
+			double nextAngle = (lastAngle + 25)%360.0;
 			driver.turnTo(nextAngle, CoordinateSystem.POLAR_DEG);
 			
 			clockwise = true;
 			search();
-			*/
+			
 		}
 		else {
 			System.out.println("Not Block");
-			driver.travelDistance(-BUMPER_TO_CENTER);
-			driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, searchPoint.x, searchPoint.y)));
-			double nextAngle = (lastAngle + 25)%360.0;
-			driver.turnTo(nextAngle, CoordinateSystem.POLAR_DEG);
-			clockwise = true;
-			search();
+			notBlock();
 		}
+	}
+	private void notBlock() {
+		driver.travelDistance(-BUMPER_TO_CENTER);
+		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, searchPoint.x, searchPoint.y)));
+		double nextAngle = (lastAngle + 25)%360.0;
+		driver.turnTo(nextAngle, CoordinateSystem.POLAR_DEG);
+		clockwise = true;
+		search();
+	}
+	private void wallSeen() {
+		double theta = position.getDirection(CoordinateSystem.POLAR_DEG);
+		theta = (theta + 25)%360.0;
+		driver.turnTo(theta, CoordinateSystem.POLAR_DEG);
+		clockwise = true;
+		search();
 	}
 	
 	

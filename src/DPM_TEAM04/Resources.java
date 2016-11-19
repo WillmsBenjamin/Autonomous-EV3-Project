@@ -26,7 +26,7 @@ import lejos.utility.Delay;
 public class Resources {
 	
 	//Wifi
-	public static final String SERVER_IP = "192.168.2.3";
+	public static final String SERVER_IP = "192.168.2.14";
 	public static final int TEAM_NUMBER = 4;
 	public static boolean isBuilder;
 	public static int startingCorner;
@@ -63,10 +63,10 @@ public class Resources {
 	public static final EV3LargeRegulatedMotor liftMotor;
 	
 	//Motor Constants
-	public static final int SPEED_FORWARD = 200, SPEED_TURNING_FAST = 140, SPEED_TURNING_SLOW = 60, ACCELERATION_FAST = 4000;
+	public static final int SPEED_FORWARD = 200, SPEED_TURNING_FAST = 140, SPEED_TURNING_SLOW = 60;
 	public static final int SPEED_TURNING_MEDIUM = 100, SPEED_SCANNING = 30;
 	public static final int SPEED_GRAB = 100, SPEED_LIFT = 100;
-	public static final int ACCELERATION_SMOOTH = 400;
+	public static final int ACCELERATION_FAST = 4000, ACCELERATION_MEDIUM = 700, ACCELERATION_SMOOTH = 400;
 
 	//Ultrasonic sensors
 	private static final String US_FRONT_PORT = "S1";
