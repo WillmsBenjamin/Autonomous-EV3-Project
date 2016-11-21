@@ -48,7 +48,7 @@ public class Search extends Thread {
 		grabMotor.setSpeed(SPEED_GRAB);
 		liftMotor.setSpeed(SPEED_LIFT);
 		
-		searchPoint = new Point2D.Double(1.0*TILE_WIDTH, 1.0*TILE_WIDTH);
+		searchPoint = new Point2D.Double(2.0*TILE_WIDTH, 2.0*TILE_WIDTH);
 		mapCenter = new Point2D.Double(((MAP_DIMENSION/2.0)-1.0)*30.48, ((MAP_DIMENSION/2.0)-1.0)*30.48);
 		builderZone = new Rectangle2D.Double(1.0*TILE_WIDTH, 1.0*TILE_WIDTH, TILE_WIDTH, TILE_WIDTH);
 		
@@ -270,7 +270,13 @@ public class Search extends Thread {
 			} else {
 				// is too close to a wall
 				//System.out.println("\n\n\n\n\nToo close to wall!");
-				wallSeen();
+				if (blockSeen) {
+					// If an object was seen, search the other way than the wall
+					clockwise = !clockwise;
+					search();
+				} else {
+					wallSeen();
+				}
 				return false;
 			}
 			
@@ -310,43 +316,7 @@ public class Search extends Thread {
 		//driver.travelDistance(blockDistanceCap);
 		float[] colorRGB = getColorRGB();
 		if(colorRGB[1] > colorRGB[0] && colorRGB[1] > colorRGB[2]) {
-			System.out.println("Block!");
-			
-			// Place the block in a good direction
-			driver.travelDistance(-1.0);
-			driver.rotate(Math.PI, CoordinateSystem.POLAR_RAD);
-			driver.travelDistance(-Math.abs(BUMPER_TO_CENTER-US_TO_CENTER)-2.0);
-			
-			// orient the block to make it easier to grab
-			if (clockwise) {
-				rightMotor.rotate(-40, false);
-			} else {
-				leftMotor.rotate(-40, false);
-			}
-			driver.travelDistance(-4.0);
-			
-			// grab the block
-			grabMotor.rotate(200, false);
-			liftMotor.rotate(-450, false);
-			
-			
-			// return to the center of the builder zone
-			driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, (builderZone.getCenterX()+BUMPER_TO_CENTER+4.0), builderZone.getCenterY())));
-			
-			// turn to the 0 degrees to drop the block
-			driver.turnTo(0, CoordinateSystem.POLAR_DEG, false);
-			
-			// drop the block
-			liftMotor.rotate(450, false);
-			grabMotor.rotate(-200, false);
-			
-			// turn to the next angle to search
-			double nextAngle = (lastAngle + nextAngleDelta)%360.0;
-			driver.turnTo(nextAngle, CoordinateSystem.POLAR_DEG);
-			
-			clockwise = true;
-			search();
-			
+			captureBlock();
 		}
 		else {
 			System.out.println("Not Block");
@@ -373,6 +343,80 @@ public class Search extends Thread {
 		driver.turnTo(theta, CoordinateSystem.POLAR_DEG);
 		clockwise = true;
 		search();
+	}
+	
+	private void captureBlock() {
+		
+		System.out.println("Block!");
+		
+		// Reset the lift position to the bumper
+		if (liftPosition != 0) {
+			liftMotor.rotate(-liftPosition, false);
+			liftPosition = 0;
+		}
+		
+		// Set the angles according to the tower height
+		int liftAngle = 0, unliftAngle = 0;
+		if (towerHeight == 0) {
+			liftAngle = -450;
+			unliftAngle = 450;
+		} else if (towerHeight == 1) {
+			liftAngle = -500;
+			unliftAngle = 50;
+		} else if (towerHeight == 2) {
+			liftAngle = -800;
+			unliftAngle = 50;
+		}
+		liftPosition = liftAngle + unliftAngle;
+		
+		// Place the block in a good direction
+		driver.travelDistance(-1.0);
+		driver.rotate(Math.PI, CoordinateSystem.POLAR_RAD);
+		driver.travelDistance(-Math.abs(BUMPER_TO_CENTER-US_TO_CENTER)-2.0);
+		
+		// orient the block to make it easier to grab
+		if (clockwise) {
+			rightMotor.rotate(-90, false);
+			leftMotor.rotate(-90, true);
+		} else {
+			leftMotor.rotate(-90, false);
+			rightMotor.rotate(-90, true);
+		}
+		
+		// grab the block
+		grabMotor.rotate(200, false);
+		liftMotor.rotate(liftAngle, true);
+		
+		// return to the center of the builder zone by going to the search point first
+		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, searchPoint.x, searchPoint.y)));
+		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, (builderZone.getCenterX()+BUMPER_TO_CENTER+4.0), builderZone.getCenterY())));
+		
+		// turn to the 0 degrees to drop the block
+		driver.turnTo(0, CoordinateSystem.POLAR_DEG, false);
+		
+		// drop the block
+		liftMotor.rotate(unliftAngle, false);
+		grabMotor.rotate(-150, false);
+		driver.travelDistance(1.0);
+		// Reposition the bumper
+		if (liftPosition != 0) {
+			liftMotor.rotate(-liftPosition, false);
+			liftPosition = 0;
+		}
+		grabMotor.rotate(-50, false);
+		
+		// Go back to the search point
+		driver.travelDistance(4.0);
+		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, searchPoint.x, searchPoint.y)));
+		
+		// turn to the next angle to search
+		double nextAngle = (lastAngle + nextAngleDelta)%360.0;
+		driver.turnTo(nextAngle, CoordinateSystem.POLAR_DEG);
+		
+		towerHeight++;
+		clockwise = true;
+		search();
+		
 	}
 	
 	

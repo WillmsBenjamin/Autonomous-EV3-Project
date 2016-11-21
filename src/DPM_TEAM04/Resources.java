@@ -99,6 +99,8 @@ public class Resources {
  
 	// Threads
 	public static boolean isLocalizing = true;
+	public static int towerHeight = 0;
+	public static int liftPosition = 0;
 	
 	
 	
