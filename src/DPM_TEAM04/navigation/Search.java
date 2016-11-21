@@ -13,6 +13,13 @@ import lejos.hardware.ev3.LocalEV3;
 import lejos.robotics.geometry.Point2D;
 import lejos.robotics.geometry.Rectangle2D;
 
+/**
+ * Once the localization is done, the search thread is started. It starts searching optimally and drives to the first object 
+ * it sees. It then analyses if it is a styrofoam block or an obstacle. It picks the styrofoam blocks and brings it back to its zone. 
+ * Otherwise it goes back to its searching point and keep searching for styrofoam blocks.
+ * @author alexisgj
+ *
+ */
 public class Search extends Thread {
 	
 	private DirectedCoordinate position;
@@ -20,6 +27,7 @@ public class Search extends Thread {
 	private boolean blockSeen = false;
 	private int blockDistanceCap = 5;
 	private int searchCap = 70;
+	private int nextAngleDelta = 25;
 	private double lastAngle;
 	private boolean clockwise = true; 				//if true will rotate clockwise, else counter Clockwise
 	private double angleDifference, actualAngle;
@@ -176,7 +184,10 @@ public class Search extends Thread {
 		}*/
 	}
 	
-	
+	/**
+	 * Performs the search. Scans with the front ultrasonic sensor until it gets close enough to a block. Once it is close to a block 
+	 * it calls scanBlock() to analyse the block.
+	 */
 	private void search() {
 		blockSeen = false;
 		lastAngle = position.getDirection(CoordinateSystem.POLAR_DEG);
@@ -236,6 +247,11 @@ public class Search extends Thread {
 		scanBlock();
 		
 	}
+	/**
+	 * Interprets the data from the front ultrasonic sensor to determine if there is an object seen or if it is a wall.
+	 * @param USDistance Data from the ultrasonic sensor.
+	 * @return Returns true if there is an objet seen. Returns false if no objet is seen.
+	 */
 	private boolean isObjectSeen(double USDistance) {
 		
 		if (USDistance <= searchCap) {
@@ -263,6 +279,9 @@ public class Search extends Thread {
 		}
 		
 	}
+	/**
+	 * Turn the robot either clockwise or counter-clockwise.
+	 */
 	private void scanning(){
 		if (clockwise){
 			leftMotor.setSpeed(SPEED_SCANNING);
@@ -278,6 +297,9 @@ public class Search extends Thread {
 		return;
 	}
 	
+	/**
+	 * Scan an object to know if it is an obstacle or a styrofoam block.
+	 */
 	private void scanBlock() {
 		//purposely collide into block
 		if (clockwise) {
@@ -319,7 +341,7 @@ public class Search extends Thread {
 			grabMotor.rotate(-200, false);
 			
 			// turn to the next angle to search
-			double nextAngle = (lastAngle + 25)%360.0;
+			double nextAngle = (lastAngle + nextAngleDelta)%360.0;
 			driver.turnTo(nextAngle, CoordinateSystem.POLAR_DEG);
 			
 			clockwise = true;
@@ -331,14 +353,20 @@ public class Search extends Thread {
 			notBlock();
 		}
 	}
+	/**
+	 * If it not a block, go back to the search point and continue searching.
+	 */
 	private void notBlock() {
 		driver.travelDistance(-BUMPER_TO_CENTER);
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, searchPoint.x, searchPoint.y)));
-		double nextAngle = (lastAngle + 25)%360.0;
+		double nextAngle = (lastAngle + nextAngleDelta)%360.0;
 		driver.turnTo(nextAngle, CoordinateSystem.POLAR_DEG);
 		clockwise = true;
 		search();
 	}
+	/**
+	 * If the object is too close to a wall, turn instantly.
+	 */
 	private void wallSeen() {
 		double theta = position.getDirection(CoordinateSystem.POLAR_DEG);
 		theta = (theta + 25)%360.0;

@@ -19,12 +19,13 @@ import lejos.robotics.geometry.Rectangle2D;
 import wifi.WifiConnection;
 
 /**
+ * Main thread. Initializes and starts subsequent threads.
  * 
  * @author Tristan Toupin, Alexis GJ
  */
 public class Main {
 
-	public static final int VERSION_NB = 2;
+	public static final double VERSION_NB = 2.3;
 
 	public static LCDLogger lcdLog;
 	

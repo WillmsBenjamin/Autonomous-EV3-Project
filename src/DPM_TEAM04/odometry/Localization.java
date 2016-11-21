@@ -40,85 +40,61 @@ public class Localization extends Thread {
 	 */
 	public void run() {
 		
-		
-		
-		
-		
-		
 		position = Odometer.getOdometer().getPosition();
-		
 		Driver driver = new Driver();
 		
-		
-
+		// Initializes the minimal distance and angle
 		this.minDistance = Resources.getFrontUSData();
 		this.minDistAngle = Odometer.getOdometer().getPosition().getDirection(CoordinateSystem.POLAR_RAD);
-
-		//navigator.turnAround(true);
+		
+		// Rotate 360 degrees to "scan"
 		driver.rotate(360, CoordinateSystem.POLAR_DEG, true);
 		
-		//wait a little to get motors started
+		// wait a little to get motors started
 		Delay.msDelay(100);
 		
+		// while the motors are moving (the robot is turning), save the distance seen and at which angle
 		while (leftMotor.isMoving() && rightMotor.isMoving()) {
 			saveDistance();
 		}
 
-		int index = getMinimalDistance();
-		isLeftWall = determineWallSeen(index);
-
+		// get the minimal distance and add 180 degrees as the bumper is on the back of the robot
+		// turn to the minimal distance (+180 deg) and bump into the wall
 		this.minDistAngle = (this.minDistAngle + Math.PI) % (2.0 * Math.PI);
-
 		driver.turnTo(this.minDistAngle, CoordinateSystem.POLAR_RAD);
-		
 		driver.travelDistance(-(this.minDistance - Resources.BUMPER_TO_CENTER + Resources.US_TO_CENTER + 12.0));
 
+		// Once bumped into the wall, check the side sensor to see if there is a wall on its left.
 		if (getSideUSData() < TILE_WIDTH) {
 			isLeftWall = false;
 		} else {
 			isLeftWall = true;
 		}
 
+		// Correct the odometry from the first bump
 		setNewCoordinates();
 		
+		// Once the odometry is corrected, move from the wall and rotate to bump into the other wall (according to its position)
 		if (isLeftWall) {
-			
-			
 			driver.travelDistance(6.0);
-
 			driver.rotate(Math.PI/2.0, CoordinateSystem.POLAR_RAD);
-
 		} else {
-			
-
-
 			driver.travelDistance(6.0);
-
 			driver.rotate(-Math.PI/2.0, CoordinateSystem.POLAR_RAD);
-
 		}
 
-		// Go forward to the next wall
-		//navigator.goForward(-(Resources.TILE_WIDTH - Resources.BUMPER_TO_CENTER + 6.0));
+		// Go to the next wall and bump into it.
 		driver.travelDistance(-(this.minDistance - Resources.BUMPER_TO_CENTER + Resources.US_TO_CENTER + 12.0));
 		
+		// Reset the boolean to set the other coordinates
 		if(isLeftWall){
 			isLeftWall = false;
 		}else {
 			isLeftWall = true;
 		}
 		
+		// Correct the odometry
 		setNewCoordinates();
-
-		/*if (isLeftWall) {
-			// Now it bumped the right wall
-			position.setY(-Resources.TILE_WIDTH + Resources.BUMPER_TO_CENTER);
-			position.setDirection(Math.PI/2.0, CoordinateSystem.POLAR_RAD);
-		} else {
-			// Now it bumped the left wall
-			position.setX(-Resources.TILE_WIDTH + Resources.BUMPER_TO_CENTER);
-			position.setDirection(0.0, CoordinateSystem.POLAR_RAD);
-		}*/
 
 		/*
 		 * 
@@ -126,21 +102,12 @@ public class Localization extends Thread {
 		 * 
 		 */
 
-		// Make EV3 beep when it stops following the wall
+		// Make EV3 beep when it localized
 		Audio audio = LocalEV3.get().getAudio();
 		audio.systemSound(0);
 
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-		}
-
-		//navigator.goForward(10.0);
+		// Move away from the wall
 		driver.travelDistance(10.0);
-		
-		//navigator.travelToMapCoordinates(Resources.wifiData.get("LGZx"), Resources.wifiData.get("LGZy"));
-		//driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, 0, 0)));
-		
 		
 		isLocalizing = false;
 
@@ -158,8 +125,12 @@ public class Localization extends Thread {
 	 * |---------------|
 	 * 
 	 */
+	/**
+	 * This method corrects the coordinates (x,y and heading) of the robot depending on its stating corner and on the wall it has bumped into.
+	 */
 	private void setNewCoordinates(){
 		
+		// Correct the odometry according to its starting corner and the wall it has bumped into.
 		if (isLeftWall){
 			if (startingCorner == 1){
 				position.setX(-TILE_WIDTH + BUMPER_TO_CENTER);
@@ -245,38 +216,6 @@ public class Localization extends Thread {
 		}
 
 		return index;
-
-	}
-
-	/**
-	 * Determines if the wall seen is the left or the right wall. It basically
-	 * checks the smallest distance at 90 degrees from the minimal distance.
-	 * 
-	 * @param index
-	 *            Inputs the index of the minimal distance in the ArrayList of
-	 *            distances.
-	 * @return Returns true if it is the left wall. Returns false if it is the
-	 *         right wall.
-	 */
-	private boolean determineWallSeen(int index) {
-
-		// return true if facing the left wall, false if it is the "right" wall
-
-		int quarterOfArraylist = (int) (this.listOfDistances.size() / 4.0);
-		int choice1 = index - quarterOfArraylist;
-		int choice2 = (index + quarterOfArraylist) % this.listOfDistances.size();
-
-		if (choice1 < 0) {
-			choice1 += this.listOfDistances.size();
-		}
-
-		// Check which distance is smaller, either 90 degrees from the smallest
-		// distance or
-		// -90 degrees from the smallest distance
-		if (this.listOfDistances.get(choice1).getDistance() <= this.listOfDistances.get(choice2).getDistance()) {
-			return true;
-		}
-		return false;
 
 	}
 
