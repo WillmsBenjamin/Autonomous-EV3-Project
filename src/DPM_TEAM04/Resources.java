@@ -65,7 +65,8 @@ public class Resources {
 	//Motor Constants
 	public static final int SPEED_FORWARD = 200, SPEED_TURNING_FAST = 140, SPEED_TURNING_SLOW = 60;
 	public static final int SPEED_TURNING_MEDIUM = 100, SPEED_SCANNING = 30;
-	public static final int SPEED_GRAB = 100, SPEED_LIFT = 100;
+	public static final int SPEED_GRAB = 100, SPEED_LIFT = 300;
+	public static final int SPEED_AVOIDING_MIN = 50, SPEED_AVOIDING_MAX = 200, SPEED_AVOIDING_INBETWEEN = (SPEED_AVOIDING_MIN +SPEED_AVOIDING_MAX)/2;
 	public static final int ACCELERATION_FAST = 4000, ACCELERATION_MEDIUM = 700, ACCELERATION_SMOOTH = 400;
 
 	//Ultrasonic sensors

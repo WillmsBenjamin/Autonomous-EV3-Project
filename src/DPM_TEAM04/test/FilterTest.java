@@ -69,7 +69,7 @@ public class FilterTest {
 //		lcdLog.start();
 		
 		FileLogger fileLog = new FileLogger("US Filter Test.csv", DISPLAY_PERIOD, tProvider, usFrontRawProvider, usFrontProvider);
-		Driver driver = new Driver();
+		Driver driver = Driver.getDriver();
 		fileLog.start();
 		driver.rotate(360, CoordinateSystem.POLAR_DEG);
 		Button.waitForAnyPress();

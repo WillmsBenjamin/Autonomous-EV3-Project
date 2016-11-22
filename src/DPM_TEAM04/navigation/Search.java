@@ -12,6 +12,7 @@ import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.robotics.geometry.Point2D;
 import lejos.robotics.geometry.Rectangle2D;
+import lejos.utility.Delay;
 
 /**
  * Once the localization is done, the search thread is started. It starts searching optimally and drives to the first object 
@@ -40,7 +41,7 @@ public class Search extends Thread {
 	
 	public void run() {
 		
-		driver = new Driver();
+		driver = Driver.getDriver();
 		position = Odometer.getOdometer().getPosition();
 		
 		grabMotor.setAcceleration(ACCELERATION_SMOOTH);
@@ -48,140 +49,49 @@ public class Search extends Thread {
 		grabMotor.setSpeed(SPEED_GRAB);
 		liftMotor.setSpeed(SPEED_LIFT);
 		
-		searchPoint = new Point2D.Double(2.0*TILE_WIDTH, 2.0*TILE_WIDTH);
+		searchPoint = new Point2D.Double(1.0*TILE_WIDTH, 1.0*TILE_WIDTH);
 		mapCenter = new Point2D.Double(((MAP_DIMENSION/2.0)-1.0)*30.48, ((MAP_DIMENSION/2.0)-1.0)*30.48);
-		builderZone = new Rectangle2D.Double(1.0*TILE_WIDTH, 1.0*TILE_WIDTH, TILE_WIDTH, TILE_WIDTH);
+		builderZone = new Rectangle2D.Double(TILE_WIDTH, TILE_WIDTH, TILE_WIDTH, TILE_WIDTH);
 		
 		startSearchAngle = 0;
-		endSearchAngle = 90;
+		endSearchAngle = 360;
 		
 		
 		// Go to the search point
-		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, searchPoint.x, searchPoint.y)));
+		//driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, searchPoint.x, searchPoint.y)));
 		
 		
 		if (searchPoint.x < mapCenter.x) {
 			if (searchPoint.y < mapCenter.y) {
 				// Bottom left quadrant
-				driver.turnTo(0, CoordinateSystem.POLAR_DEG, false);
+				startSearchAngle = 0;
+				endSearchAngle = 90;
 			} else {
 				// Top left quadrant
-				driver.turnTo(270, CoordinateSystem.POLAR_DEG, false);
+				startSearchAngle = 270;
+				endSearchAngle = 180;
 			}
 		} else {
 			if (searchPoint.y < mapCenter.y) {
 				// Bottom right quadrant
-				driver.turnTo(90, CoordinateSystem.POLAR_DEG, false);
-				
+				startSearchAngle = 90;
+				endSearchAngle = 0;
 			} else {
 				// Top right quadrant
-				driver.turnTo(180, CoordinateSystem.POLAR_DEG, false);
+				startSearchAngle = 180;
+				endSearchAngle = 90;
 			}
 		}
-		
-		
+
+		driver.turnTo(startSearchAngle, CoordinateSystem.POLAR_DEG, false);
 		
 		
 		search();
+	
 		
 		
-		/*
-		
-		leftMotor.flt();
-		rightMotor.flt();
-		
-		double distanceToTheWall;
-		double theta;
-		double x;
-		double y;
 		
 		
-
-		do {
-			
-			theta = position.getDirection(CoordinateSystem.POLAR_DEG);
-			x = position.getX();
-			y = position.getY();
-			
-			distanceToTheWall = -1;
-			
-			if ((theta > 7.0/4.0*Math.PI && theta <= 0) || (theta >= 0 && theta <= 1.0/4.0*Math.PI)) {
-				// Facing front wall
-				
-				distanceToTheWall = (MAP_DIMENSION*TILE_WIDTH - y)/Math.cos(theta);
-				
-			} else if (theta > 1.0/4.0*Math.PI && theta <= 3.0/4.0*Math.PI) {
-				// Facing right wall
-				
-				distanceToTheWall = (MAP_DIMENSION*TILE_WIDTH - x)/Math.cos(theta);
-				
-			} else if (theta > 3.0/4.0*Math.PI && theta <= 5.0/4.0*Math.PI) {
-				// Facing back wall
-				
-				distanceToTheWall = y/Math.cos(theta);
-				
-			} else if (theta > 5.0/4.0*Math.PI && theta <= 7.0/4.0*Math.PI) {
-				// Facing left wall
-				
-				distanceToTheWall = x/Math.cos(theta);
-				
-			}
-			
-			
-			theta = theta*360/(2*Math.PI);
-			
-			
-			
-			// clear the display
-			lcd.clear();
-			
-			lcd.drawString("Theta:  ", 0, 0);
-			lcd.drawInt((int)theta, 7, 0);
-			lcd.drawString("Wall distance:  ", 0, 1);
-			lcd.drawInt((int)distanceToTheWall, 0, 2);
-			lcd.drawString("cm              ", 0, 3);
-			
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {}
-			
-			
-			
-			
-		} while (true);
-		
-		*/
-		
-		// Close to block at this point
-		
-		/*
-		if (searchPoint.x < builderZone.getCenterX()) {
-			if (searchPoint.y < builderZone.getCenterY()) {
-				// Bottom left quadrant
-				driver.turnTo(90, CoordinateSystem.POLAR_DEG);
-				driver.turnTo(180, CoordinateSystem.POLAR_DEG);
-				driver.turnTo(270, CoordinateSystem.POLAR_DEG);
-				driver.turnTo(0, CoordinateSystem.POLAR_DEG);
-			} else {
-				// Top left quadrant
-				driver.turnTo(0, CoordinateSystem.POLAR_DEG);
-				driver.turnTo(90, CoordinateSystem.POLAR_DEG);
-				driver.turnTo(180, CoordinateSystem.POLAR_DEG);
-				driver.turnTo(270, CoordinateSystem.POLAR_DEG);
-			}
-		} else {
-			if (searchPoint.y < builderZone.getCenterY()) {
-				// Bottom right quadrant
-				driver.turnTo(180, CoordinateSystem.POLAR_DEG);
-				driver.turnTo(270, CoordinateSystem.POLAR_DEG);
-				driver.turnTo(0, CoordinateSystem.POLAR_DEG);
-				driver.turnTo(90, CoordinateSystem.POLAR_DEG);
-			} else {
-				// Top right quadrant
-				driver.turnTo(270, CoordinateSystem.POLAR_DEG);
-				driver.rotate(180, CoordinateSystem.POLAR_DEG);
-			}
-		}*/
 	}
 	
 	/**
@@ -193,11 +103,25 @@ public class Search extends Thread {
 		lastAngle = position.getDirection(CoordinateSystem.POLAR_DEG);
 		clockwise = true;
 		boolean firstTime = true;
+		double actualAngle = lastAngle;
 		
 		while(true){
 			double USDistance = Resources.getFrontUSData();
 			
 			if (!blockSeen || USDistance > searchCap) {
+				actualAngle = position.getDirection(CoordinateSystem.POLAR_DEG);
+				if (endSearchAngle < startSearchAngle) {
+					endSearchAngle += 360;
+				}
+				if (actualAngle < startSearchAngle) {
+					actualAngle += 360;
+				}
+				if (actualAngle > endSearchAngle && clockwise) {
+					clockwise = !clockwise;
+				}
+				/*
+				 * Right now it only deals with one case
+				 */
 				scanning();
 			}
 			
@@ -208,8 +132,8 @@ public class Search extends Thread {
 			} else if (isObjectSeen(USDistance)) {
 				blockSeen = true;
 				// move forward
-				leftMotor.setSpeed(SPEED_TURNING_MEDIUM);
-				rightMotor.setSpeed(SPEED_TURNING_MEDIUM);
+				leftMotor.setSpeed(SPEED_FORWARD);
+				rightMotor.setSpeed(SPEED_FORWARD);
 				leftMotor.forward();
 				rightMotor.forward();
 				lastAngle = position.getDirection(CoordinateSystem.POLAR_DEG);
@@ -218,6 +142,10 @@ public class Search extends Thread {
 					firstAngle = lastAngle;
 					firstTime = false;
 				}
+				
+				// Delay before next poll
+				Delay.msDelay(50);
+				
 			} else if (blockSeen) {
 				//we went too far, re-initialize values so its at initial state (no block seen) and turn the other way around.
 				actualAngle = position.getDirection(CoordinateSystem.POLAR_DEG);
@@ -235,13 +163,12 @@ public class Search extends Thread {
 				if (angleDifference > 25) {
 					
 					blockSeen = false;
-					if (clockwise){
-						clockwise = false;
-					}else {
-						clockwise = true;
-					}
+					clockwise = !clockwise;
+					
 				}
 			}
+			
+			
 		}
 		
 		scanBlock();
@@ -307,6 +234,10 @@ public class Search extends Thread {
 	 * Scan an object to know if it is an obstacle or a styrofoam block.
 	 */
 	private void scanBlock() {
+		
+		// get closer to the block
+		driver.travelDistance(2.0);
+		
 		//purposely collide into block
 		if (clockwise) {
 			driver.rotate(7, CoordinateSystem.POLAR_DEG);
@@ -361,11 +292,14 @@ public class Search extends Thread {
 			liftAngle = -450;
 			unliftAngle = 450;
 		} else if (towerHeight == 1) {
-			liftAngle = -500;
-			unliftAngle = 50;
+			liftAngle = -900;
+			unliftAngle = 100;
 		} else if (towerHeight == 2) {
-			liftAngle = -800;
-			unliftAngle = 50;
+			liftAngle = -1800;
+			unliftAngle = 100;
+		} else if (towerHeight == 3) {
+			liftAngle = -2600;
+			unliftAngle = 100;
 		}
 		liftPosition = liftAngle + unliftAngle;
 		
@@ -397,7 +331,7 @@ public class Search extends Thread {
 		// drop the block
 		liftMotor.rotate(unliftAngle, false);
 		grabMotor.rotate(-150, false);
-		driver.travelDistance(1.0);
+		driver.travelDistance(3.0);
 		// Reposition the bumper
 		if (liftPosition != 0) {
 			liftMotor.rotate(-liftPosition, false);

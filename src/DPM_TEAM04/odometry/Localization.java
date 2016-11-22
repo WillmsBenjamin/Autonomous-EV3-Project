@@ -41,7 +41,7 @@ public class Localization extends Thread {
 	public void run() {
 		
 		position = Odometer.getOdometer().getPosition();
-		Driver driver = new Driver();
+		Driver driver = Driver.getDriver();
 		
 		// Initializes the minimal distance and angle
 		this.minDistance = Resources.getFrontUSData();

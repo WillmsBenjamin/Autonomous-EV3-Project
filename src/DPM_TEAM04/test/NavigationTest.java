@@ -55,7 +55,7 @@ public class NavigationTest {
 		odometer.start();
 		lcdLog.start();
 
-		Driver driver = new Driver();
+		Driver driver = Driver.getDriver();
 		
 		driver.travelTo(new Coordinate(CoordinateSystem.CARTESIAN, 1*TILE_WIDTH, 0));
 		Button.waitForAnyPress();

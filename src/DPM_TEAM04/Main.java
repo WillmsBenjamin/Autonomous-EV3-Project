@@ -72,7 +72,7 @@ public class Main {
 
 		// Initialize the localization thread
 		Localization localization = new Localization();
-		Driver driver = new Driver();
+		Driver driver = Driver.getDriver();
 		Search search = new Search();
 
 		/*

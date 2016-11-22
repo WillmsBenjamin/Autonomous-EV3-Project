@@ -1,12 +1,6 @@
 package DPM_TEAM04.navigation;
 
-import static DPM_TEAM04.Resources.ACCELERATION_SMOOTH;
-import static DPM_TEAM04.Resources.SPEED_FORWARD;
-import static DPM_TEAM04.Resources.SPEED_TURNING_FAST;
-import static DPM_TEAM04.Resources.TRACK;
-import static DPM_TEAM04.Resources.WHEEL_RADIUS;
-import static DPM_TEAM04.Resources.leftMotor;
-import static DPM_TEAM04.Resources.rightMotor;
+import static DPM_TEAM04.Resources.*;
 
 import java.util.Queue;
 
@@ -34,13 +28,28 @@ import DPM_TEAM04.odometry.Odometer;
 public class Driver extends Thread{
 	
 	public Queue<Coordinate> waypoints;
+	private Coordinate destination;
+	private Object lock;
+	
+	private static Driver driverInstance;
+	
+	public static Driver getDriver() {
+		if(driverInstance == null) {
+			driverInstance = new Driver();
+		}
+		return driverInstance;
+	}
 
-	public Driver() {
+	private Driver() {
+		lock = new Object();
+		destination = new Coordinate(CoordinateSystem.CARTESIAN, 0.0,0.0);
+		
 		leftMotor.stop();
 		leftMotor.setAcceleration(ACCELERATION_SMOOTH);
 		
 		rightMotor.stop();
 		rightMotor.setAcceleration(ACCELERATION_SMOOTH);
+		
 	}
 	
 	@Override
@@ -70,6 +79,11 @@ public class Driver extends Thread{
 	 * @param dest The Coordinate to travel to
 	 */
 	public void travelTo(Coordinate dest) {
+		destination = dest;
+		//destination.setCoordinate(CoordinateSystem.CARTESIAN,dest.getX(),dest.getY());
+		
+		//destination = dest.getCoordinates(CoordinateSystem.CARTESIAN);
+		
 		//clear lines
 		/*
 		LCD.drawString("                  ", 0, 5); 
@@ -99,6 +113,7 @@ public class Driver extends Thread{
 		leftMotor.stop();
 		rightMotor.stop();
 	}
+
 
 	public void rotate(double angle, CoordinateSystem angleUnit) {
 		rotate(angle, angleUnit, false);
@@ -167,6 +182,10 @@ public class Driver extends Thread{
 	// converts a turning circle HEADING_DEG displacement into a motor rotation angluar displacement
 	private static int convertAngle(double radius, double width, double angle) {
 		return convertDistance(radius, Math.PI * width * angle / 360.0);
+	}
+	
+	public Coordinate getDestination(){
+		return destination;
 	}
 
 }
