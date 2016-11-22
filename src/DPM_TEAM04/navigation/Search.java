@@ -49,16 +49,16 @@ public class Search extends Thread {
 		grabMotor.setSpeed(SPEED_GRAB);
 		liftMotor.setSpeed(SPEED_LIFT);
 		
-		searchPoint = new Point2D.Double(1.0*TILE_WIDTH, 1.0*TILE_WIDTH);
-		mapCenter = new Point2D.Double(((MAP_DIMENSION/2.0)-1.0)*30.48, ((MAP_DIMENSION/2.0)-1.0)*30.48);
-		builderZone = new Rectangle2D.Double(TILE_WIDTH, TILE_WIDTH, TILE_WIDTH, TILE_WIDTH);
+		//searchPoint = new Point2D.Double(1.0*TILE_WIDTH, 1.0*TILE_WIDTH);
+		//mapCenter = new Point2D.Double(((MAP_DIMENSION/2.0)-1.0)*30.48, ((MAP_DIMENSION/2.0)-1.0)*30.48);
+		//builderZone = new Rectangle2D.Double(TILE_WIDTH, TILE_WIDTH, TILE_WIDTH, TILE_WIDTH);
 		
 		startSearchAngle = 0;
 		endSearchAngle = 360;
 		
 		
 		// Go to the search point
-		//driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, searchPoint.x, searchPoint.y)));
+		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, searchPoint.x, searchPoint.y)));
 		
 		
 		if (searchPoint.x < mapCenter.x) {
@@ -234,9 +234,6 @@ public class Search extends Thread {
 	 * Scan an object to know if it is an obstacle or a styrofoam block.
 	 */
 	private void scanBlock() {
-		
-		// get closer to the block
-		driver.travelDistance(2.0);
 		
 		//purposely collide into block
 		if (clockwise) {

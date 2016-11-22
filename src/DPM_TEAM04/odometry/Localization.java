@@ -57,6 +57,9 @@ public class Localization extends Thread {
 		while (leftMotor.isMoving() && rightMotor.isMoving()) {
 			saveDistance();
 		}
+		
+		// set the minimal distance
+		getMinimalDistance();
 
 		// get the minimal distance and add 180 degrees as the bumper is on the back of the robot
 		// turn to the minimal distance (+180 deg) and bump into the wall
@@ -182,6 +185,7 @@ public class Localization extends Thread {
 		if (actualDist > 1) {
 			Distance d = new Distance(actualDist, position.getDirection(CoordinateSystem.POLAR_RAD));
 			this.listOfDistances.add(d);
+			System.out.println("\n\n\n\n\n" + actualDist);
 		}
 
 	}
@@ -192,7 +196,7 @@ public class Localization extends Thread {
 	 * @return Returns the index of the minimal distance in the ArrayList of
 	 *         distances.
 	 */
-	private int getMinimalDistance() {
+	private void getMinimalDistance() {
 
 		int index = 0;
 
@@ -214,8 +218,6 @@ public class Localization extends Thread {
 
 			}
 		}
-
-		return index;
 
 	}
 

@@ -45,29 +45,29 @@ public class ObstacleAvoidance extends Thread {
 
 				double firstAng = position.getDirection(CoordinateSystem.POLAR_DEG);
 
-				rightMotor.setAcceleration(1000);
-				leftMotor.setAcceleration(1000);
 				
 				leftMotor.stop(true);
 				rightMotor.stop(false);
+				leftMotor.setAcceleration(ACCELERATION_FAST);
+				rightMotor.setAcceleration(ACCELERATION_FAST);
 				
 				driver.rotate(-90, CoordinateSystem.POLAR_DEG);
-				leftMotor.stop(true);
-				rightMotor.stop(false);
-				
-				while (Math.abs((firstAng + 360) - position.getDirection(CoordinateSystem.POLAR_DEG)) % 360 > 25) {
-					avoidBlock();
+				if (getFrontUSData() > 1.0 * TILE_WIDTH){
+					while (Math.abs((firstAng + 360) - position.getDirection(CoordinateSystem.POLAR_DEG)) % 360 > 25) {
+						avoidBlock();
+					}
+					leftMotor.stop(true);
+					rightMotor.stop(false);
+					driver.travelTo(driver.getDestination());
+				} else {
+					driver.rotate(180, CoordinateSystem.POLAR_DEG);
+					driver.travelDistance(getFrontUSData());
+					leftMotor.stop(true);
+					rightMotor.stop(false);
+					driver.travelTo(driver.getDestination());
 				}
-				
-				leftMotor.stop(true);
-				rightMotor.stop(false);
-				driver.travelTo(driver.getDestination());
-
 			}
 		}
-
-		// break;
-
 	}
 
 	private void isThereObstacle() {

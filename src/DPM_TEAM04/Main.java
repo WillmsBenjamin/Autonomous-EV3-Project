@@ -10,6 +10,7 @@ import DPM_TEAM04.logging.DataEntryProvider;
 import DPM_TEAM04.logging.FileLogger;
 import DPM_TEAM04.logging.LCDLogger;
 import DPM_TEAM04.navigation.Driver;
+import DPM_TEAM04.navigation.ObstacleAvoidance;
 import DPM_TEAM04.navigation.Search;
 import DPM_TEAM04.odometry.Localization;
 import DPM_TEAM04.odometry.Odometer;
@@ -276,7 +277,7 @@ public class Main {
 		FileLogger fileLog = new FileLogger("Log_Test.csv", 50, angleProvider, usFrontProvider, usSideProvider);
 
 		// start logger
-//		fileLog.start();
+		//fileLog.start();
 		localization.start();
 		try {
 			localization.join();
@@ -285,9 +286,13 @@ public class Main {
 			e.printStackTrace();
 		}
 		search.start();
-		// driver.travelTo(new Coordinate(CoordinateSystem.CARTESIAN, 1*TILE_WIDTH, 0));
+		
+		
+		(new ObstacleAvoidance()).start();
+		
+
 		// save and close logger
-//		fileLog.interrupt();
+		//fileLog.interrupt();
 
 		Button.waitForAnyPress();
 		System.exit(0);

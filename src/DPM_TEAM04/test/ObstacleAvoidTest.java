@@ -22,16 +22,15 @@ public class ObstacleAvoidTest {
 
 		// Initialize the odometer
 		final Odometer odometer = Odometer.getOdometer();
-//		Driver driver = new Driver()
 		Driver driver = Driver.getDriver();
 		
 		// Initialize the display
-				DataEntryProvider versionProvider = new DataEntryProvider("Version") {
-					@Override
-					public double getEntry() {
-						return 3.1415;
-					}
-				};
+		DataEntryProvider versionProvider = new DataEntryProvider("Version") {
+			@Override
+			public double getEntry() {
+				return 3.1415;
+			}
+		};
 				
 		DataEntryProvider xProvider = new DataEntryProvider("X") {
 			@Override

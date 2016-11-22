@@ -79,6 +79,12 @@ public class Driver extends Thread{
 	 * @param dest The Coordinate to travel to
 	 */
 	public void travelTo(Coordinate dest) {
+		
+		leftMotor.stop();
+		rightMotor.stop();
+		leftMotor.setAcceleration(ACCELERATION_SMOOTH);
+		rightMotor.setAcceleration(ACCELERATION_SMOOTH);
+		
 		destination = dest;
 		//destination.setCoordinate(CoordinateSystem.CARTESIAN,dest.getX(),dest.getY());
 		
