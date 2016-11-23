@@ -46,20 +46,24 @@ public class NavigationTest {
 		DataEntryProvider tProvider = new DataEntryProvider("T") {
 			@Override
 			public double getEntry() {
-				return odometer.getPosition().getDirection(CoordinateSystem.POLAR_DEG);
+				return odometer.getPosition().getDirection(
+						CoordinateSystem.POLAR_DEG);
 			}
 		};
 
-		LCDLogger lcdLog = new LCDLogger(DISPLAY_PERIOD, 2, versionProvider, xProvider, yProvider, tProvider);
+		LCDLogger lcdLog = new LCDLogger(DISPLAY_PERIOD, 2, versionProvider,
+				xProvider, yProvider, tProvider);
 
 		odometer.start();
 		lcdLog.start();
 
 		Driver driver = Driver.getDriver();
-		
-		driver.travelTo(new Coordinate(CoordinateSystem.CARTESIAN, 1*TILE_WIDTH, 0));
+
+		driver.travelTo(new Coordinate(CoordinateSystem.CARTESIAN,
+				1 * TILE_WIDTH, 0));
 		Button.waitForAnyPress();
-		driver.travelTo(new Coordinate(CoordinateSystem.CARTESIAN, 2*TILE_WIDTH, 2*TILE_WIDTH));
+		driver.travelTo(new Coordinate(CoordinateSystem.CARTESIAN,
+				2 * TILE_WIDTH, 2 * TILE_WIDTH));
 		Button.waitForAnyPress();
 		driver.travelTo(new Coordinate(CoordinateSystem.CARTESIAN, 0, 0));
 

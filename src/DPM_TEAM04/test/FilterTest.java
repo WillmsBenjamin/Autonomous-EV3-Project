@@ -14,7 +14,7 @@ import lejos.hardware.Button;
 public class FilterTest {
 
 	public static final float VERSION_NB = 1;
-	
+
 	public static void main(String[] args) {
 		Resources.initialize = true;
 
@@ -45,30 +45,35 @@ public class FilterTest {
 		DataEntryProvider tProvider = new DataEntryProvider("T") {
 			@Override
 			public double getEntry() {
-				return odometer.getPosition().getDirection(CoordinateSystem.POLAR_DEG);
+				return odometer.getPosition().getDirection(
+						CoordinateSystem.POLAR_DEG);
 			}
 		};
-		
+
 		DataEntryProvider usFrontRawProvider = new DataEntryProvider("US Raw") {
-			
+
 			@Override
 			public double getEntry() {
 				return Resources.getFrontUSRawData();
 			}
 		};
-		
+
 		DataEntryProvider usFrontProvider = new DataEntryProvider("US Filter") {
-			
+
 			@Override
 			public double getEntry() {
 				return Resources.getFrontUSData();
 			}
 		};
 
-//		LCDLogger lcdLog = new LCDLogger(DISPLAY_PERIOD, 2, versionProvider, xProvider, yProvider, tProvider, usFrontRawProvider, usFrontProvider);
-//		lcdLog.start();
-		
-		FileLogger fileLog = new FileLogger("US Filter Test.csv", DISPLAY_PERIOD, tProvider, usFrontRawProvider, usFrontProvider);
+		// LCDLogger lcdLog = new LCDLogger(DISPLAY_PERIOD, 2, versionProvider,
+		// xProvider, yProvider, tProvider, usFrontRawProvider,
+		// usFrontProvider);
+		// lcdLog.start();
+
+		FileLogger fileLog = new FileLogger("US Filter Test.csv",
+				DISPLAY_PERIOD, tProvider, usFrontRawProvider, usFrontProvider);
+
 		Driver driver = Driver.getDriver();
 		fileLog.start();
 		driver.rotate(360, CoordinateSystem.POLAR_DEG);

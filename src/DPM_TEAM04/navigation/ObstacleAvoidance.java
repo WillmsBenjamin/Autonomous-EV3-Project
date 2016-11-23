@@ -10,6 +10,14 @@ import lejos.hardware.Sound;
 import lejos.hardware.Audio;
 import lejos.robotics.geometry.Point2D;
 
+
+/**
+ * 
+ * 
+ * @author Tristan Toupin & alexisgj
+ *
+ */
+
 public class ObstacleAvoidance extends Thread {
 
 	private DirectedCoordinate position;
@@ -28,7 +36,6 @@ public class ObstacleAvoidance extends Thread {
 			Thread.sleep(300);
 		} catch (InterruptedException e) {
 		}
-		searchPoint = new Point2D.Double(6 * TILE_WIDTH, 0.0);
 
 		while (true) {
 			position = Odometer.getOdometer().getPosition();
@@ -37,34 +44,38 @@ public class ObstacleAvoidance extends Thread {
 				isThereObstacle();
 			}
 
-			if (isAvoiding) {
+			if (isAvoiding && driver.isTravelling) {
 				synchronized (driver) {
 					driver.interrupt();
 				}
 				Sound.beep();
 
-				double firstAng = position.getDirection(CoordinateSystem.POLAR_DEG);
+				double firstAng = position
+						.getDirection(CoordinateSystem.POLAR_DEG);
 
-				
 				leftMotor.stop(true);
 				rightMotor.stop(false);
 				leftMotor.setAcceleration(ACCELERATION_FAST);
 				rightMotor.setAcceleration(ACCELERATION_FAST);
-				
+
 				driver.rotate(-90, CoordinateSystem.POLAR_DEG);
-				if (getFrontUSData() > 1.0 * TILE_WIDTH){
+				leftMotor.stop(true);
+				rightMotor.stop(false);
+				if (getFrontUSData() > 1.0 * TILE_WIDTH) {
 					while (Math.abs((firstAng + 360) - position.getDirection(CoordinateSystem.POLAR_DEG)) % 360 > 25) {
 						avoidBlock();
 					}
 					leftMotor.stop(true);
 					rightMotor.stop(false);
-					driver.travelTo(driver.getDestination());
+					driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN,
+							searchPoint.x, searchPoint.y)));
 				} else {
 					driver.rotate(180, CoordinateSystem.POLAR_DEG);
 					driver.travelDistance(getFrontUSData());
 					leftMotor.stop(true);
 					rightMotor.stop(false);
-					driver.travelTo(driver.getDestination());
+					driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN,
+							searchPoint.x, searchPoint.y)));
 				}
 			}
 		}

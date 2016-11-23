@@ -28,7 +28,7 @@ public class Localization extends Thread {
 	private double minDistance, minDistAngle;
 	private ArrayList<Distance> listOfDistances;
 	private boolean isLeftWall;
-	
+
 	private DirectedCoordinate position;
 
 	public Localization() {
@@ -39,35 +39,39 @@ public class Localization extends Thread {
 	 * Code executed when the Thread is started.
 	 */
 	public void run() {
-		
+
 		position = Odometer.getOdometer().getPosition();
 		Driver driver = Driver.getDriver();
-		
-		// Initializes the minimal distance and angle
+
 		this.minDistance = Resources.getFrontUSData();
-		this.minDistAngle = Odometer.getOdometer().getPosition().getDirection(CoordinateSystem.POLAR_RAD);
-		
+		this.minDistAngle = Odometer.getOdometer().getPosition()
+				.getDirection(CoordinateSystem.POLAR_RAD);
+
 		// Rotate 360 degrees to "scan"
 		driver.rotate(360, CoordinateSystem.POLAR_DEG, true);
-		
+
 		// wait a little to get motors started
 		Delay.msDelay(100);
-		
-		// while the motors are moving (the robot is turning), save the distance seen and at which angle
+
+		// while the motors are moving (the robot is turning), save the distance
+		// seen and at which angle
 		while (leftMotor.isMoving() && rightMotor.isMoving()) {
 			saveDistance();
 		}
-		
+
 		// set the minimal distance
 		getMinimalDistance();
 
-		// get the minimal distance and add 180 degrees as the bumper is on the back of the robot
+		// get the minimal distance and add 180 degrees as the bumper is on the
+		// back of the robot
 		// turn to the minimal distance (+180 deg) and bump into the wall
 		this.minDistAngle = (this.minDistAngle + Math.PI) % (2.0 * Math.PI);
 		driver.turnTo(this.minDistAngle, CoordinateSystem.POLAR_RAD);
-		driver.travelDistance(-(this.minDistance - Resources.BUMPER_TO_CENTER + Resources.US_TO_CENTER + 12.0));
+		driver.travelDistance(-(this.minDistance - Resources.BUMPER_TO_CENTER
+				+ Resources.US_TO_CENTER + 12.0));
 
-		// Once bumped into the wall, check the side sensor to see if there is a wall on its left.
+		// Once bumped into the wall, check the side sensor to see if there is a
+		// wall on its left.
 		if (getSideUSData() < TILE_WIDTH) {
 			isLeftWall = false;
 		} else {
@@ -76,33 +80,34 @@ public class Localization extends Thread {
 
 		// Correct the odometry from the first bump
 		setNewCoordinates();
-		
-		// Once the odometry is corrected, move from the wall and rotate to bump into the other wall (according to its position)
+
+		// Once the odometry is corrected, move from the wall and rotate to bump
+		// into the other wall (according to its position)
 		if (isLeftWall) {
 			driver.travelDistance(6.0);
-			driver.rotate(Math.PI/2.0, CoordinateSystem.POLAR_RAD);
+			driver.rotate(Math.PI / 2.0, CoordinateSystem.POLAR_RAD);
 		} else {
 			driver.travelDistance(6.0);
-			driver.rotate(-Math.PI/2.0, CoordinateSystem.POLAR_RAD);
+			driver.rotate(-Math.PI / 2.0, CoordinateSystem.POLAR_RAD);
 		}
 
 		// Go to the next wall and bump into it.
-		driver.travelDistance(-(this.minDistance - Resources.BUMPER_TO_CENTER + Resources.US_TO_CENTER + 12.0));
-		
+		driver.travelDistance(-(this.minDistance - Resources.BUMPER_TO_CENTER
+				+ Resources.US_TO_CENTER + 12.0));
+
 		// Reset the boolean to set the other coordinates
-		if(isLeftWall){
+		if (isLeftWall) {
 			isLeftWall = false;
-		}else {
+		} else {
 			isLeftWall = true;
 		}
-		
+
 		// Correct the odometry
 		setNewCoordinates();
 
 		/*
 		 * 
 		 * END OF LOCALIZATION
-		 * 
 		 */
 
 		// Make EV3 beep when it localized
@@ -111,69 +116,63 @@ public class Localization extends Thread {
 
 		// Move away from the wall
 		driver.travelDistance(10.0);
-		
+
 		isLocalizing = false;
 
-
 	}
-	
+
 	/*
-	 * |---------------|	
-	 * | 4 + + + + + 3 |	
-	 * | + + + + + + + |	
-	 * | + + + + + + + |	^y
-	 * | + + + + + + + |	|
-	 * | + + + + + + + |	|
-	 * | 1 + + + + + 2 |	|______>x
+	 * |---------------| | 4 + + + + + 3 | | + + + + + + + | | + + + + + + + |
+	 * ^y | + + + + + + + | | | + + + + + + + | | | 1 + + + + + 2 | |______>x
 	 * |---------------|
-	 * 
 	 */
 	/**
-	 * This method corrects the coordinates (x,y and heading) of the robot depending on its stating corner and on the wall it has bumped into.
+	 * This method corrects the coordinates (x,y and heading) of the robot
+	 * depending on its stating corner and on the wall it has bumped into.
 	 */
-	private void setNewCoordinates(){
-		
-		// Correct the odometry according to its starting corner and the wall it has bumped into.
-		if (isLeftWall){
-			if (startingCorner == 1){
+	private void setNewCoordinates() {
+
+		// Correct the odometry according to its starting corner and the wall it
+		// has bumped into.
+		if (isLeftWall) {
+			if (startingCorner == 1) {
 				position.setX(-TILE_WIDTH + BUMPER_TO_CENTER);
 				position.setDirection(0.0, CoordinateSystem.POLAR_RAD);
-			}else if (startingCorner == 2){
+			} else if (startingCorner == 2) {
 				position.setY(-TILE_WIDTH + BUMPER_TO_CENTER);
-				position.setDirection((Math.PI/2), CoordinateSystem.POLAR_RAD);
+				position.setDirection((Math.PI / 2), CoordinateSystem.POLAR_RAD);
 
-			}else if (startingCorner == 3){
+			} else if (startingCorner == 3) {
 				position.setX((MAP_DIMENSION - 1) * TILE_WIDTH);
 				position.setDirection((Math.PI), CoordinateSystem.POLAR_RAD);
 
-			}else {
+			} else {
 				position.setY((MAP_DIMENSION - 1) * TILE_WIDTH);
-				position.setDirection((3*Math.PI/2), CoordinateSystem.POLAR_RAD);
+				position.setDirection((3 * Math.PI / 2),
+						CoordinateSystem.POLAR_RAD);
 
 			}
-		}else{	//right wall
-			if (startingCorner == 1){
+		} else { // right wall
+			if (startingCorner == 1) {
 				position.setY(-TILE_WIDTH + BUMPER_TO_CENTER);
-				position.setDirection(Math.PI/2, CoordinateSystem.POLAR_RAD);
-			}else if (startingCorner == 2){
+				position.setDirection(Math.PI / 2, CoordinateSystem.POLAR_RAD);
+			} else if (startingCorner == 2) {
 				position.setX((MAP_DIMENSION - 1) * TILE_WIDTH);
 				position.setDirection((Math.PI), CoordinateSystem.POLAR_RAD);
 
-			}else if (startingCorner == 3){
+			} else if (startingCorner == 3) {
 				position.setY((MAP_DIMENSION - 1) * TILE_WIDTH);
-				position.setDirection((3*Math.PI/2), CoordinateSystem.POLAR_RAD);
+				position.setDirection((3 * Math.PI / 2),
+						CoordinateSystem.POLAR_RAD);
 
-			}else {
+			} else {
 				position.setX(-TILE_WIDTH + BUMPER_TO_CENTER);
 				position.setDirection(0.0, CoordinateSystem.POLAR_RAD);
 
 			}
 		}
-		
-		
+
 	}
-	
-	
 
 	/**
 	 * Saves the distance seen by the ultrasonic sensor and the angle at which
@@ -183,7 +182,8 @@ public class Localization extends Thread {
 
 		float actualDist = Resources.getFrontUSData();
 		if (actualDist > 1) {
-			Distance d = new Distance(actualDist, position.getDirection(CoordinateSystem.POLAR_RAD));
+			Distance d = new Distance(actualDist,
+					position.getDirection(CoordinateSystem.POLAR_RAD));
 			this.listOfDistances.add(d);
 			System.out.println("\n\n\n\n\n" + actualDist);
 		}

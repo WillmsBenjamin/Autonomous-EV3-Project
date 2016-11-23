@@ -7,16 +7,16 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
 public class CollectingGrabbingTest {
 
-	private static final EV3LargeRegulatedMotor centerMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
-	
+	private static final EV3LargeRegulatedMotor centerMotor = new EV3LargeRegulatedMotor(
+			LocalEV3.get().getPort("A"));
 
 	public static void main(String[] args) {
 		int buttonChoice;
 
 		// some objects that need to be instantiated
-		
+
 		final TextLCD t = LocalEV3.get().getTextLCD();
-		
+
 		ExitThreadForCollectingGrabbingTest exit = new ExitThreadForCollectingGrabbingTest();
 		exit.start();
 
@@ -27,23 +27,23 @@ public class CollectingGrabbingTest {
 			// ask the user whether the motor should turn forward or backward
 			t.drawString("Rotate | Rotate ", 0, 1);
 			t.drawString("forward|backward", 0, 0);
-			
-			
+
 			buttonChoice = Button.waitForAnyPress();
-			
+
 		} while (buttonChoice != Button.ID_LEFT
 				&& buttonChoice != Button.ID_RIGHT);
-		
+
 		centerMotor.setSpeed(30);
-		while(buttonChoice == Button.ID_LEFT || buttonChoice == Button.ID_RIGHT) {
+		while (buttonChoice == Button.ID_LEFT
+				|| buttonChoice == Button.ID_RIGHT) {
 			if (buttonChoice == Button.ID_LEFT) {
-				centerMotor.rotate(190); //turn the motor forward 190 degrees
+				centerMotor.rotate(190); // turn the motor forward 190 degrees
 			} else {
-				centerMotor.rotate(-190); //turn the motor backward 190 degrees
+				centerMotor.rotate(-190); // turn the motor backward 190 degrees
 			}
 			buttonChoice = Button.waitForAnyPress();
 		}
-		
+
 	}
 
 }

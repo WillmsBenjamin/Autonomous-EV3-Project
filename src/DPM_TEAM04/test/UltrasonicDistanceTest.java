@@ -10,41 +10,42 @@ public class UltrasonicDistanceTest {
 	public static void main(String[] args) {
 
 		Resources.initialize = true;
-		
+
 		DataEntryProvider usRawProvider = new DataEntryProvider("F Raw") {
-			
+
 			@Override
 			public double getEntry() {
 				return Resources.getFrontUSRawData();
 			}
 		};
-		
+
 		DataEntryProvider usFilteredProvider = new DataEntryProvider("F Filter") {
-			
+
 			@Override
 			public double getEntry() {
 				return Resources.getFrontUSData();
 			}
 		};
-		
+
 		DataEntryProvider usRawSide = new DataEntryProvider("S Raw") {
-			
+
 			@Override
 			public double getEntry() {
 				return Resources.getSideUSRawData();
 			}
 		};
-		
+
 		DataEntryProvider usFilteredSide = new DataEntryProvider("S Filtered") {
-			
+
 			@Override
 			public double getEntry() {
 				return Resources.getSideUSData();
 			}
 		};
-		
-		LCDLogger lcdLog = new LCDLogger(10, 2, usRawProvider, usFilteredProvider, usRawSide, usFilteredSide);
-		
+
+		LCDLogger lcdLog = new LCDLogger(10, 2, usRawProvider,
+				usFilteredProvider, usRawSide, usFilteredSide);
+
 		lcdLog.start();
 		Button.waitForAnyPress();
 		System.exit(0);
