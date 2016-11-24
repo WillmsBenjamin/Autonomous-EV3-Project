@@ -41,7 +41,6 @@ public class Driver extends Thread {
 
 		rightMotor.stop();
 		rightMotor.setAcceleration(ACCELERATION_SMOOTH);
-
 	}
 
 	@Override

@@ -293,8 +293,7 @@ public class Main {
 			}
 		};
 
-		FileLogger fileLog = new FileLogger("Log_Test.csv", 50, angleProvider,
-				usFrontProvider, usSideProvider);
+		//FileLogger fileLog = new FileLogger("Log_Test.csv", 50, angleProvider,usFrontProvider, usSideProvider);
 
 		// start logger
 		// fileLog.start();
@@ -302,12 +301,11 @@ public class Main {
 		try {
 			localization.join();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		search.start();
 
-		(new ObstacleAvoidance()).start();
+		//(new ObstacleAvoidance()).start();
 
 		// save and close logger
 		// fileLog.interrupt();
