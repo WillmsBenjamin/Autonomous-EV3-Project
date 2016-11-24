@@ -42,7 +42,7 @@ public class Resources {
 			HALF_TILE_WIDTH = TILE_WIDTH / 2.0;
 	public static final double CS_TO_CENTER = 14.7, US_TO_CENTER = 20.1,
 			BUMPER_TO_CENTER = 9.1;
-	public static final double TRACK = 11.25, WHEEL_RADIUS = 2.03,
+	public static final double TRACK = 11.75, WHEEL_RADIUS = 2.03,
 			LEFT_WHEEL_RADIUS = WHEEL_RADIUS,
 			RIGHT_WHEEL_RADIUS = WHEEL_RADIUS;
 
