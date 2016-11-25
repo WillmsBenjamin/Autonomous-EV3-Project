@@ -63,7 +63,7 @@ public class TrackWidthTest {
 		// To test the Track
 		while (true) {
 			coordinate.setCoordinate(CoordinateSystem.POLAR_DEG, 0.0, 0.0);
-			driver.rotate(-360.0*5.0, CoordinateSystem.HEADING_DEG);
+			driver.rotate(-360.0*10.0, CoordinateSystem.HEADING_DEG);
 
 			// if not escape, break while loop and repeat
 			while (true) {

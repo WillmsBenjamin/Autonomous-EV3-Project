@@ -20,7 +20,7 @@ import DPM_TEAM04.odometry.Odometer;
 public class Driver extends Thread {
 
 	public Queue<Coordinate> waypoints;
-	private Coordinate destination;
+	public Coordinate destination;
 	private Object lock;
 	public boolean isTravelling;
 	private static Driver driverInstance;
@@ -114,6 +114,52 @@ public class Driver extends Thread {
 		isTravelling = false;
 
 	}
+	public void travelTo(Coordinate dest, boolean immediateReturn) {
+		isTravelling = true;
+		leftMotor.stop();
+		rightMotor.stop();
+		leftMotor.setAcceleration(ACCELERATION_SMOOTH);
+		rightMotor.setAcceleration(ACCELERATION_SMOOTH);
+
+		destination = dest;
+
+		// get distance and heading changes
+		double distanceToC = Odometer.getOdometer().getPosition()
+				.distanceTo(dest);
+		double changeInHeading = Odometer.getOdometer().getPosition()
+				.angleTo(dest, CoordinateSystem.HEADING_DEG);
+
+		// Orient to destination
+		rotate(changeInHeading, CoordinateSystem.HEADING_DEG);
+
+		// Travel to destination
+		travelDistance(distanceToC, immediateReturn);
+
+		//isTravelling = false;
+
+	}
+	public void travelToWithoutSavingDestination(Coordinate dest) {
+		isTravelling = true;
+		leftMotor.stop();
+		rightMotor.stop();
+		leftMotor.setAcceleration(ACCELERATION_SMOOTH);
+		rightMotor.setAcceleration(ACCELERATION_SMOOTH);
+
+		// get distance and heading changes
+		double distanceToC = Odometer.getOdometer().getPosition()
+				.distanceTo(dest);
+		double changeInHeading = Odometer.getOdometer().getPosition()
+				.angleTo(dest, CoordinateSystem.HEADING_DEG);
+
+		// Orient to destination
+		rotate(changeInHeading, CoordinateSystem.HEADING_DEG);
+
+		// Travel to destination
+		travelDistance(distanceToC);
+
+		//isTravelling = false;
+
+	}
 
 	public void rotate(double angle, CoordinateSystem angleUnit) {
 		rotate(angle, angleUnit, false);
@@ -165,6 +211,17 @@ public class Driver extends Thread {
 		rotate(changeInAngle, angleUnit, immediateReturn);
 	}
 
+	public void setIsTravelling(boolean boolValue) {
+		synchronized (lock) {
+			isTravelling = boolValue;
+		}
+	}
+	public boolean getIsTravelling() {
+		synchronized (lock) {
+			return isTravelling;
+		}
+	}
+	
 	/**
 	 * Travels a distance in cm
 	 * 

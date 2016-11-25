@@ -26,17 +26,17 @@ import lejos.utility.Delay;
  */
 public class Search extends Thread {
 
-	private DirectedCoordinate position;
-	private Driver driver;
-	private boolean blockSeen = false;
-	private int blockDistanceCap = 5;
-	private int searchCap = 70;
-	private int nextAngleDelta = 25;
-	private double lastAngle;
-	private boolean clockwise = true; // if true will rotate clockwise, else
+	public static DirectedCoordinate position;
+	public static Driver driver = Driver.getDriver();
+	public static boolean blockSeen = false;
+	public static int blockDistanceCap = 5;
+	public static int searchCap = 70;
+	public static int nextAngleDelta = 25;
+	public static double lastAngle;
+	public static boolean clockwise = true; // if true will rotate clockwise, else
 										// counter Clockwise
-	private double angleDifference, actualAngle;
-	private double firstAngle, startSearchAngle, endSearchAngle;
+	public static double angleDifference, actualAngle;
+	public static double firstAngle, startSearchAngle, endSearchAngle;
 
 	public Search() {
 
@@ -44,7 +44,7 @@ public class Search extends Thread {
 
 	public void run() {
 
-		driver = Driver.getDriver();
+		//driver = Driver.getDriver();
 		position = Odometer.getOdometer().getPosition();
 
 		grabMotor.setAcceleration(ACCELERATION_SMOOTH);
@@ -64,6 +64,16 @@ public class Search extends Thread {
 		// Go to the search point
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN,
 				searchPoint.x, searchPoint.y)));
+		
+		Point2D actualPoint = new Point2D.Double(position.getX(), position.getY());
+		while(searchPoint.distanceSq(actualPoint)  > 4.0) {
+			actualPoint = new Point2D.Double(position.getX(), position.getY());
+		}
+		/*
+		 * 
+		 * NEED TO STOP OBSTACLE AVOIDANCE HERE
+		 * 
+		 */
 
 		if (searchPoint.x < mapCenter.x) {
 			if (searchPoint.y < mapCenter.y) {
@@ -97,7 +107,7 @@ public class Search extends Thread {
 	 * close enough to a block. Once it is close to a block it calls scanBlock()
 	 * to analyse the block.
 	 */
-	private void search() {
+	public static void search() {
 		blockSeen = false;
 		lastAngle = position.getDirection(CoordinateSystem.POLAR_DEG);
 		clockwise = true;
@@ -185,22 +195,20 @@ public class Search extends Thread {
 	 * @return Returns true if there is an objet seen. Returns false if no objet
 	 *         is seen.
 	 */
-	private boolean isObjectSeen(double USDistance) {
+	public static boolean isObjectSeen(double USDistance) {
 
 		if (USDistance <= searchCap) {
 
-			double theta = position.getDirection(CoordinateSystem.CARTESIAN);
-			Point2D.Double ObjectPoint = new Point2D.Double(USDistance
-					* Math.cos(theta) + TILE_WIDTH, USDistance
-					* Math.sin(theta) + TILE_WIDTH);
-			Rectangle2D.Double goodMap = new Rectangle2D.Double(0.0, 0.0,
-					(MAP_DIMENSION - 2.0) * TILE_WIDTH, (MAP_DIMENSION - 2.0)
-							* TILE_WIDTH);
+			double theta = position.getDirection(CoordinateSystem.POLAR_RAD);
+			Point2D.Double ObjectPoint = new Point2D.Double((USDistance
+					* Math.cos(theta)) + TILE_WIDTH, (USDistance
+					* Math.sin(theta)) + TILE_WIDTH);
+			
 
 			// System.out.println("\n\n\n\n\n" + ObjectPoint.x + "\n" +
 			// ObjectPoint.y);
 
-			if (goodMap.contains(ObjectPoint)) {
+			if (mapWithoutWalls.contains(ObjectPoint)) {
 				// good
 				// System.out.println("\n\n\n\n\nIn the map!");
 				return true;
@@ -226,7 +234,7 @@ public class Search extends Thread {
 	/**
 	 * Turn the robot either clockwise or counter-clockwise.
 	 */
-	private void scanning() {
+	public static void scanning() {
 		if (clockwise) {
 			leftMotor.setSpeed(SPEED_SCANNING);
 			rightMotor.setSpeed(SPEED_SCANNING);
@@ -244,7 +252,7 @@ public class Search extends Thread {
 	/**
 	 * Scan an object to know if it is an obstacle or a styrofoam block.
 	 */
-	private void scanBlock() {
+	public static void scanBlock() {
 
 		// purposely collide into block
 		if (clockwise) {
@@ -254,7 +262,7 @@ public class Search extends Thread {
 		}
 		// driver.travelDistance(blockDistanceCap);
 		float[] colorRGB = getColorRGB();
-		if (colorRGB[1] > colorRGB[0] && colorRGB[1] > colorRGB[2]) {
+		if (colorRGB[1] > colorRGB[0] /*&& colorRGB[1] > colorRGB[2]*/) {
 			captureBlock();
 		} else {
 			System.out.println("Not Block");
@@ -265,7 +273,7 @@ public class Search extends Thread {
 	/**
 	 * If it not a block, go back to the search point and continue searching.
 	 */
-	private void notBlock() {
+	public static void notBlock() {
 		driver.travelDistance(-BUMPER_TO_CENTER);
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN,
 				searchPoint.x, searchPoint.y)));
@@ -278,7 +286,7 @@ public class Search extends Thread {
 	/**
 	 * If the object is too close to a wall, turn instantly.
 	 */
-	private void wallSeen() {
+	public static void wallSeen() {
 		double theta = position.getDirection(CoordinateSystem.POLAR_DEG);
 		theta = (theta + 25) % 360.0;
 		driver.turnTo(theta, CoordinateSystem.POLAR_DEG);
@@ -286,7 +294,9 @@ public class Search extends Thread {
 		search();
 	}
 
-	private void captureBlock() {
+	public static void captureBlock() {
+		
+		isHoldingBlock = true;
 
 		System.out.println("Block!");
 
@@ -361,10 +371,66 @@ public class Search extends Thread {
 		// turn to the next angle to search
 		double nextAngle = (lastAngle + nextAngleDelta) % 360.0;
 		driver.turnTo(nextAngle, CoordinateSystem.POLAR_DEG);
+		
+		isHoldingBlock = false;
 
 		towerHeight++;
 		clockwise = true;
 		search();
 
 	}
+	
+	
+	public static void captureBlockWhileAvoiding() {
+		
+		isHoldingBlock = true;
+
+		System.out.println("Block!");
+
+		// Reset the lift position to the bumper
+		if (liftPosition != 0) {
+			liftMotor.rotate(-liftPosition, false);
+			liftPosition = 0;
+		}
+
+		// Set the angles according to the tower height
+		int liftAngle = 0, unliftAngle = 0;
+		if (towerHeight == 0) {
+			liftAngle = -450;
+			unliftAngle = 450;
+		} else if (towerHeight == 1) {
+			liftAngle = -900;
+			unliftAngle = 100;
+		} else if (towerHeight == 2) {
+			liftAngle = -1800;
+			unliftAngle = 100;
+		} else if (towerHeight == 3) {
+			liftAngle = -2600;
+			unliftAngle = 100;
+		}
+		liftPosition = liftAngle + unliftAngle;
+
+		// Place the block in a good direction
+		driver.travelDistance(-1.0);
+		driver.rotate(Math.PI, CoordinateSystem.POLAR_RAD);
+		driver.travelDistance(-Math.abs(BUMPER_TO_CENTER - US_TO_CENTER) - 2.0);
+
+		// orient the block to make it easier to grab
+		if (clockwise) {
+			rightMotor.rotate(-90, false);
+			leftMotor.rotate(-90, true);
+		} else {
+			leftMotor.rotate(-90, false);
+			rightMotor.rotate(-90, true);
+		}
+
+		// grab the block
+		grabMotor.rotate(200, false);
+		liftMotor.rotate(liftAngle, true);
+
+		towerHeight++;
+
+	}
+	
+	
 }

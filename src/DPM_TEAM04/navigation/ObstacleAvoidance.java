@@ -22,9 +22,9 @@ public class ObstacleAvoidance extends Thread {
 
 	private DirectedCoordinate position;
 	private Driver driver = Driver.getDriver();
-	private Object Audio;
 	public static Object lock;
-	public static boolean isAvoiding = false;
+	private static boolean isAvoiding = false;
+	private Coordinate pointBefore;
 
 	public ObstacleAvoidance() {
 		lock = new Object();
@@ -40,13 +40,16 @@ public class ObstacleAvoidance extends Thread {
 		while (true) {
 			position = Odometer.getOdometer().getPosition();
 
-			while (!isAvoiding) {
-				isThereObstacle();
+			while (!getIsAvoiding()) {
+				if (driver.getIsTravelling()) {
+					isThereObstacle();
+				}
 			}
 
-			if (isAvoiding && driver.isTravelling) {
+			if (getIsAvoiding()) {
 				synchronized (driver) {
 					driver.interrupt();
+					driver.setIsTravelling(false);
 				}
 				Sound.beep();
 
@@ -61,37 +64,90 @@ public class ObstacleAvoidance extends Thread {
 				driver.rotate(-90, CoordinateSystem.POLAR_DEG);
 				leftMotor.stop(true);
 				rightMotor.stop(false);
-				if (getFrontUSData() > 1.0 * TILE_WIDTH) {
+				if (getFrontUSData() > (2.0 * TILE_WIDTH)) {
+					
 					while (Math.abs((firstAng + 360) - position.getDirection(CoordinateSystem.POLAR_DEG)) % 360 > 25) {
 						avoidBlock();
+						if (getFrontUSData() < 10) {
+							leftMotor.stop(true);
+							rightMotor.stop(false);
+							driver.rotate(-90, CoordinateSystem.POLAR_DEG);
+						} 
 					}
-					leftMotor.stop(true);
-					rightMotor.stop(false);
-					driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN,
-							searchPoint.x, searchPoint.y)));
+					
 				} else {
-					driver.rotate(180, CoordinateSystem.POLAR_DEG);
-					driver.travelDistance(getFrontUSData());
+					
 					leftMotor.stop(true);
 					rightMotor.stop(false);
-					driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN,
-							searchPoint.x, searchPoint.y)));
+					leftMotor.setAcceleration(ACCELERATION_SMOOTH);
+					rightMotor.setAcceleration(ACCELERATION_SMOOTH);
+					pointBefore = new Coordinate(CoordinateSystem.CARTESIAN, position.getX(), position.getY());
+					if (!isHoldingBlock) {
+						leftMotor.forward();
+						rightMotor.forward();
+						while(getFrontUSData() > 4.0) {
+							
+						}
+						leftMotor.stop(true);
+						rightMotor.stop(false);
+						
+					}
+					float[] colorRGB = getColorRGB();
+					if (colorRGB[1] > colorRGB[0] /*&& colorRGB[1] > colorRGB[2]*/ && !isHoldingBlock) {
+						Search.captureBlockWhileAvoiding();
+						leftMotor.stop(true);
+						rightMotor.stop(false);
+						driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, driver.destination.getX(), driver.destination.getY())), true);
+					} else {
+						leftMotor.setAcceleration(ACCELERATION_SMOOTH);
+						rightMotor.setAcceleration(ACCELERATION_SMOOTH);
+						
+						driver.rotate(180, CoordinateSystem.POLAR_DEG);
+						
+						driver.travelToWithoutSavingDestination(pointBefore);
+						double USDistance = getFrontUSData();
+						if (USDistance > (2.0*TILE_WIDTH)) {
+							USDistance = 2.0*TILE_WIDTH;
+						}
+						USDistance -= (US_TO_CENTER+5.0);
+						driver.travelDistance(USDistance);
+					}
+					
 				}
+				
+				Sound.beep();
+				
+				leftMotor.stop(true);
+				rightMotor.stop(false);
+				leftMotor.setAcceleration(ACCELERATION_SMOOTH);
+				rightMotor.setAcceleration(ACCELERATION_SMOOTH);
+				
+				driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, driver.destination.getX(), driver.destination.getY())), true);
+				
+				setIsAvoiding(false);
 			}
 		}
 	}
 
 	private void isThereObstacle() {
 		if (getFrontUSData() > 10) {
-			synchronized (lock) {
-				isAvoiding = false;
-			}
+			setIsAvoiding(false);
 		} else {
-			synchronized (lock) {
-				isAvoiding = true;
-			}
 			leftMotor.stop(true);
 			rightMotor.stop(false);
+			leftMotor.setAcceleration(ACCELERATION_SMOOTH);
+			rightMotor.setAcceleration(ACCELERATION_SMOOTH);
+			driver.travelDistance(getFrontUSData() - 1.0);
+			float[] colorRGB = getColorRGB();
+			if (colorRGB[1] > colorRGB[0] /*&& colorRGB[1] > colorRGB[2]*/ && !isHoldingBlock) {
+				Search.captureBlockWhileAvoiding();
+				leftMotor.stop(true);
+				rightMotor.stop(false);
+				driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, driver.destination.getX(), driver.destination.getY())), true);
+			} else {
+				setIsAvoiding(true);
+			}
+
 		}
 	}
 
@@ -117,4 +173,17 @@ public class ObstacleAvoidance extends Thread {
 		} catch (InterruptedException e) {
 		}
 	}
+	
+	public static void setIsAvoiding(boolean boolValue) {
+		synchronized (lock) {
+			isAvoiding = boolValue;
+		}
+	}
+	public static boolean getIsAvoiding() {
+		synchronized (lock) {
+			return isAvoiding;
+		}
+	}
+	
+	
 }

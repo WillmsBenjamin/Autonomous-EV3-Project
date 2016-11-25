@@ -12,6 +12,7 @@ import DPM_TEAM04.navigation.Driver;
 import DPM_TEAM04.navigation.ObstacleAvoidance;
 import DPM_TEAM04.odometry.Odometer;
 import lejos.hardware.Button;
+import lejos.robotics.geometry.Point2D;
 
 public class ObstacleAvoidTest {
 
@@ -64,13 +65,22 @@ public class ObstacleAvoidTest {
 		odometer.start();
 		lcdLog.start();
 
+		searchPoint = new Point2D.Double((6.0*TILE_WIDTH), 0.0);
+		
+		Coordinate position = odometer.getOdometer().getPosition();
+		
 		(new ObstacleAvoidance()).start();
 
-		driver.travelTo(new Coordinate(CoordinateSystem.CARTESIAN,
-				6 * TILE_WIDTH, 0));
-		Button.waitForAnyPress();
-		driver.travelTo(new Coordinate(CoordinateSystem.CARTESIAN, 0, 0));
+		driver.travelTo(new Coordinate(CoordinateSystem.CARTESIAN, (6.0 * TILE_WIDTH), 0.0));
+		Point2D destPoint = new Point2D.Double((6.0 * TILE_WIDTH), 0.0);
+		Point2D actualPoint = new Point2D.Double(position.getX(), position.getY());
+		while(destPoint.distanceSq(actualPoint)  > 4.0) {
+			actualPoint = new Point2D.Double(position.getX(), position.getY());
+		}
+		
+		driver.travelTo(new Coordinate(CoordinateSystem.CARTESIAN, 0.0, 0.0));
 
 	}
+	
 
 }

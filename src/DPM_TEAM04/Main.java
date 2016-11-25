@@ -170,6 +170,9 @@ public class Main {
 				mapCenter = new Point2D.Double(
 						((MAP_DIMENSION / 2.0) - 1.0) * 30.48,
 						((MAP_DIMENSION / 2.0) - 1.0) * 30.48);
+				mapWithoutWalls = new Rectangle2D.Double(0.0, 0.0,
+						((MAP_DIMENSION-2) * TILE_WIDTH), ((MAP_DIMENSION-2)
+								* TILE_WIDTH));
 
 				// Determines the stack point
 				// Is is the "corner" of the builder zone that is in the
@@ -305,7 +308,7 @@ public class Main {
 		}
 		search.start();
 
-		//(new ObstacleAvoidance()).start();
+		(new ObstacleAvoidance()).start();
 
 		// save and close logger
 		// fileLog.interrupt();
