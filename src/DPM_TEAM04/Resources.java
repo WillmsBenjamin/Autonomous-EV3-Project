@@ -28,7 +28,7 @@ public class Resources {
 
 	// Wifi
 
-	public static final String SERVER_IP = "192.168.2.7";
+	public static final String SERVER_IP = "192.168.2.14";
 	public static final int TEAM_NUMBER = 4;
 	public static boolean isBuilder;
 	public static int startingCorner;
@@ -112,10 +112,12 @@ public class Resources {
 	private static float previousValue;
 
 	// Threads
+	private static Object lock;
 	public static boolean isLocalizing = true;
 	public static int towerHeight = 0;
 	public static int liftPosition = 0;
 	public static boolean isHoldingBlock = false;
+	public static boolean isSearching = false;
 
 	// LCD
 	public static final TextLCD lcd;
@@ -248,4 +250,5 @@ public class Resources {
 
 		return csDataDown[0];
 	}
+	
 }

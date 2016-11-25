@@ -148,20 +148,29 @@ public class Main {
 				double collectorHeight = (connData.get("URZy") - connData
 						.get("LRZy")) * TILE_WIDTH;
 
-				// we create rectangles for the 2 zones
-				builderZone = new Rectangle2D.Double(connData.get("LGZx")
-						* TILE_WIDTH, connData.get("LGZy") * TILE_WIDTH,
-						builderWidth, builderHeight);
-				collectorZone = new Rectangle2D.Double(connData.get("LRZx")
-						* TILE_WIDTH, connData.get("LRZy") * TILE_WIDTH,
-						collectorWidth, collectorHeight);
 
 				if (connData.get("BTN") == TEAM_NUMBER) {
 					isBuilder = true;
 					startingCorner = connData.get("BSC");
+					
+					// we create rectangles for the 2 zones
+					builderZone = new Rectangle2D.Double(connData.get("LGZx")
+							* TILE_WIDTH, connData.get("LGZy") * TILE_WIDTH,
+							builderWidth, builderHeight);
+					collectorZone = new Rectangle2D.Double(connData.get("LRZx")
+							* TILE_WIDTH, connData.get("LRZy") * TILE_WIDTH,
+							collectorWidth, collectorHeight);
 				} else {
 					isBuilder = false;
 					startingCorner = connData.get("CSC");
+					
+					// we create rectangles for the 2 zones
+					collectorZone = new Rectangle2D.Double(connData.get("LGZx")
+							* TILE_WIDTH, connData.get("LGZy") * TILE_WIDTH,
+							builderWidth, builderHeight);
+					builderZone = new Rectangle2D.Double(connData.get("LRZx")
+							* TILE_WIDTH, connData.get("LRZy") * TILE_WIDTH,
+							collectorWidth, collectorHeight);
 				}
 
 				// get the center of the builder zone to know it is in which
@@ -177,29 +186,29 @@ public class Main {
 				// Determines the stack point
 				// Is is the "corner" of the builder zone that is in the
 				// orientation of the red zone
-				if (builderZone.getCenterX() < collectorZone.getCenterX()) {
-					if (builderZone.getCenterY() < collectorZone.getCenterY()) {
+				if (builderZone.getCenterX() < mapCenter.x) {
+					if (builderZone.getCenterY() < mapCenter.y) {
 						// Bottom left quadrant
-						stackPoint = new Point2D.Double(builderZone.getMaxX()
-								- HALF_TILE_WIDTH, builderZone.getMaxY()
-								- HALF_TILE_WIDTH);
-					} else {
-						// Top left quadrant
-						stackPoint = new Point2D.Double(builderZone.getMaxX()
-								- HALF_TILE_WIDTH, builderZone.getMinY()
-								+ HALF_TILE_WIDTH);
-					}
-				} else {
-					if (builderZone.getCenterY() < collectorZone.getCenterY()) {
-						// Bottom right quadrant
-						stackPoint = new Point2D.Double(builderZone.getMinX()
-								+ HALF_TILE_WIDTH, builderZone.getMaxY()
-								- HALF_TILE_WIDTH);
-					} else {
-						// Top right quadrant
 						stackPoint = new Point2D.Double(builderZone.getMinX()
 								+ HALF_TILE_WIDTH, builderZone.getMinY()
 								+ HALF_TILE_WIDTH);
+					} else {
+						// Top left quadrant
+						stackPoint = new Point2D.Double(builderZone.getMinX()
+								+ HALF_TILE_WIDTH, builderZone.getMaxY()
+								- HALF_TILE_WIDTH);
+					}
+				} else {
+					if (builderZone.getCenterY() < mapCenter.y) {
+						// Bottom right quadrant
+						stackPoint = new Point2D.Double(builderZone.getMaxX()
+								- HALF_TILE_WIDTH, builderZone.getMinY()
+								+ HALF_TILE_WIDTH);
+					} else {
+						// Top right quadrant
+						stackPoint = new Point2D.Double(builderZone.getMaxX()
+								- HALF_TILE_WIDTH, builderZone.getMaxY()
+								- HALF_TILE_WIDTH);
 					}
 				}
 
@@ -232,24 +241,7 @@ public class Main {
 					}
 				}
 
-				if (searchPoint.x == stackPoint.x) {
-					if (searchPoint.x == (builderZone.getMaxX() - HALF_TILE_WIDTH)) {
-						searchPoint.x = builderZone.getMinX() + HALF_TILE_WIDTH;
-					} else {
-						searchPoint.x = builderZone.getMaxX() - HALF_TILE_WIDTH;
-					}
-				}
-
-				// Y doesn't need to be changed because X has been changed
-				// before (unless the zone has only 1 tile of width)
-				if (searchPoint.y == stackPoint.y
-						&& builderZone.getWidth() <= 1) {
-					if (searchPoint.y == (builderZone.getMaxY() - HALF_TILE_WIDTH)) {
-						searchPoint.y = builderZone.getMinY() + HALF_TILE_WIDTH;
-					} else {
-						searchPoint.y = builderZone.getMaxY() - HALF_TILE_WIDTH;
-					}
-				}
+				
 
 			}
 		}
@@ -308,7 +300,6 @@ public class Main {
 		}
 		search.start();
 
-		(new ObstacleAvoidance()).start();
 
 		// save and close logger
 		// fileLog.interrupt();

@@ -115,6 +115,7 @@ public class Driver extends Thread {
 
 	}
 	public void travelTo(Coordinate dest, boolean immediateReturn) {
+
 		isTravelling = true;
 		leftMotor.stop();
 		rightMotor.stop();

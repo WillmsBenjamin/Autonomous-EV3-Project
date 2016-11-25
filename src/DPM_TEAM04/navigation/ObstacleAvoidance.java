@@ -40,7 +40,7 @@ public class ObstacleAvoidance extends Thread {
 		while (true) {
 			position = Odometer.getOdometer().getPosition();
 
-			while (!getIsAvoiding()) {
+			while (!isSearching && !getIsAvoiding()) {
 				if (driver.getIsTravelling()) {
 					isThereObstacle();
 				}
@@ -52,9 +52,7 @@ public class ObstacleAvoidance extends Thread {
 					driver.setIsTravelling(false);
 				}
 				Sound.beep();
-
-				double firstAng = position
-						.getDirection(CoordinateSystem.POLAR_DEG);
+				double firstAng = position.getDirection(CoordinateSystem.POLAR_DEG);
 
 				leftMotor.stop(true);
 				rightMotor.stop(false);
@@ -64,7 +62,7 @@ public class ObstacleAvoidance extends Thread {
 				driver.rotate(-90, CoordinateSystem.POLAR_DEG);
 				leftMotor.stop(true);
 				rightMotor.stop(false);
-				if (getFrontUSData() > (2.0 * TILE_WIDTH)) {
+				if (getFrontUSData() > (1.5 * TILE_WIDTH)) {
 					
 					while (Math.abs((firstAng + 360) - position.getDirection(CoordinateSystem.POLAR_DEG)) % 360 > 25) {
 						avoidBlock();
@@ -79,8 +77,10 @@ public class ObstacleAvoidance extends Thread {
 					
 					leftMotor.stop(true);
 					rightMotor.stop(false);
+					/*
 					leftMotor.setAcceleration(ACCELERATION_SMOOTH);
 					rightMotor.setAcceleration(ACCELERATION_SMOOTH);
+					
 					pointBefore = new Coordinate(CoordinateSystem.CARTESIAN, position.getX(), position.getY());
 					if (!isHoldingBlock) {
 						leftMotor.forward();
@@ -93,26 +93,24 @@ public class ObstacleAvoidance extends Thread {
 						
 					}
 					float[] colorRGB = getColorRGB();
-					if (colorRGB[1] > colorRGB[0] /*&& colorRGB[1] > colorRGB[2]*/ && !isHoldingBlock) {
+					if (colorRGB[1] > colorRGB[0] && colorRGB[1] > colorRGB[2] && !isHoldingBlock) {
 						Search.captureBlockWhileAvoiding();
 						leftMotor.stop(true);
 						rightMotor.stop(false);
 						driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, driver.destination.getX(), driver.destination.getY())), true);
-					} else {
+					} else {*/
 						leftMotor.setAcceleration(ACCELERATION_SMOOTH);
 						rightMotor.setAcceleration(ACCELERATION_SMOOTH);
 						
 						driver.rotate(180, CoordinateSystem.POLAR_DEG);
 						
-						driver.travelToWithoutSavingDestination(pointBefore);
+						//driver.travelToWithoutSavingDestination(pointBefore);
 						double USDistance = getFrontUSData();
 						if (USDistance > (2.0*TILE_WIDTH)) {
 							USDistance = 2.0*TILE_WIDTH;
 						}
 						USDistance -= (US_TO_CENTER+5.0);
 						driver.travelDistance(USDistance);
-					}
-					
 				}
 				
 				Sound.beep();
@@ -133,34 +131,42 @@ public class ObstacleAvoidance extends Thread {
 		if (getFrontUSData() > 10) {
 			setIsAvoiding(false);
 		} else {
+			/*
 			leftMotor.stop(true);
 			rightMotor.stop(false);
 			leftMotor.setAcceleration(ACCELERATION_SMOOTH);
 			rightMotor.setAcceleration(ACCELERATION_SMOOTH);
-			driver.travelDistance(getFrontUSData() - 1.0);
+			driver.travelDistance(getFrontUSData() - 2.0);
 			float[] colorRGB = getColorRGB();
-			if (colorRGB[1] > colorRGB[0] /*&& colorRGB[1] > colorRGB[2]*/ && !isHoldingBlock) {
+			if (colorRGB[1] > colorRGB[0] && !isHoldingBlock) {
 				Search.captureBlockWhileAvoiding();
 				leftMotor.stop(true);
 				rightMotor.stop(false);
 				driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, driver.destination.getX(), driver.destination.getY())), true);
 			} else {
+				driver.travelDistance(-2.0);
 				setIsAvoiding(true);
-			}
+			}*/
+			setIsAvoiding(true);
 
 		}
 	}
 
+	//STEP PCONTROLLER FCT
 	private void avoidBlock() {
 		double distance;
 		double speed;
 		leftMotor.setSpeed(SPEED_AVOIDING_INBETWEEN);
 		distance = getSideUSData();
-		speed = (35 * (distance) - 600);
-		if (speed > SPEED_AVOIDING_MAX) {
+		
+		
+		//change distance max and min
+		if (distance > 30){				//max distance
 			speed = SPEED_AVOIDING_MAX;
-		} else if (speed < SPEED_AVOIDING_MIN) {
+		} else if (distance < 10){		//min distance
 			speed = SPEED_AVOIDING_MIN;
+		}else {							//in between
+			speed = SPEED_AVOIDING_INBETWEEN;
 		}
 
 		rightMotor.setSpeed((float) speed);
@@ -183,6 +189,10 @@ public class ObstacleAvoidance extends Thread {
 		synchronized (lock) {
 			return isAvoiding;
 		}
+	}
+
+	public static void stopObsAvoid() throws InterruptedException {
+		Thread.sleep(50000000);
 	}
 	
 	

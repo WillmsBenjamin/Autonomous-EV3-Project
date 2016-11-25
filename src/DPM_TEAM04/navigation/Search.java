@@ -1,7 +1,6 @@
 package DPM_TEAM04.navigation;
 
 import static DPM_TEAM04.Resources.*;
-
 import DPM_TEAM04.Resources;
 import DPM_TEAM04.geometry.Coordinate;
 import DPM_TEAM04.geometry.CoordinateSystem;
@@ -37,12 +36,20 @@ public class Search extends Thread {
 										// counter Clockwise
 	public static double angleDifference, actualAngle;
 	public static double firstAngle, startSearchAngle, endSearchAngle;
+	private static Object lock;
 
 	public Search() {
-
+		
 	}
 
 	public void run() {
+		
+		
+		ObstacleAvoidance obsAvoid = new ObstacleAvoidance();
+		obsAvoid.start();
+		
+		
+		//long startTime = System.currentTimeMillis();
 
 		//driver = Driver.getDriver();
 		position = Odometer.getOdometer().getPosition();
@@ -69,6 +76,19 @@ public class Search extends Thread {
 		while(searchPoint.distanceSq(actualPoint)  > 4.0) {
 			actualPoint = new Point2D.Double(position.getX(), position.getY());
 		}
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// Not expected to be interrupted
+		}
+		
+		
+		//long endTime = System.currentTimeMillis();
+		//System.out.print("\n\n\n\n\n" + (endTime-startTime));
+
+		leftMotor.stop();
+		rightMotor.stop();
+		
 		/*
 		 * 
 		 * NEED TO STOP OBSTACLE AVOIDANCE HERE
@@ -93,12 +113,12 @@ public class Search extends Thread {
 			} else {
 				// Top right quadrant
 				startSearchAngle = 180;
-				endSearchAngle = 90;
+				endSearchAngle = 270;
 			}
 		}
 
 		driver.turnTo(startSearchAngle, CoordinateSystem.POLAR_DEG, false);
-
+		isSearching = true;
 		search();
 	}
 
@@ -113,7 +133,7 @@ public class Search extends Thread {
 		clockwise = true;
 		boolean firstTime = true;
 		double actualAngle = lastAngle;
-
+		
 		while (true) {
 			double USDistance = Resources.getFrontUSData();
 
@@ -208,6 +228,7 @@ public class Search extends Thread {
 			// System.out.println("\n\n\n\n\n" + ObjectPoint.x + "\n" +
 			// ObjectPoint.y);
 
+			/*
 			if (mapWithoutWalls.contains(ObjectPoint)) {
 				// good
 				// System.out.println("\n\n\n\n\nIn the map!");
@@ -215,6 +236,8 @@ public class Search extends Thread {
 			} else {
 				// is too close to a wall
 				// System.out.println("\n\n\n\n\nToo close to wall!");
+				 
+				 
 				if (blockSeen) {
 					// If an object was seen, search the other way than the wall
 					clockwise = !clockwise;
@@ -223,7 +246,10 @@ public class Search extends Thread {
 					wallSeen();
 				}
 				return false;
-			}
+			*/
+			
+			return true;
+			
 
 		} else {
 			return false;
@@ -343,15 +369,10 @@ public class Search extends Thread {
 
 		// return to the center of the builder zone by going to the search point
 		// first
-		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN,
-				searchPoint.x, searchPoint.y)));
-		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN,
-				(builderZone.getCenterX() + BUMPER_TO_CENTER + 4.0),
-				builderZone.getCenterY())));
-
-		// turn to the 0 degrees to drop the block
-		driver.turnTo(0, CoordinateSystem.POLAR_DEG, false);
-
+		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, searchPoint.x, searchPoint.y)));
+		driver.turnTo(startSearchAngle + 45, CoordinateSystem.HEADING_DEG);
+		driver.travelDistance(-(Math.hypot(HALF_TILE_WIDTH, HALF_TILE_WIDTH)));
+		
 		// drop the block
 		liftMotor.rotate(unliftAngle, false);
 		grabMotor.rotate(-150, false);
@@ -364,7 +385,6 @@ public class Search extends Thread {
 		grabMotor.rotate(-50, false);
 
 		// Go back to the search point
-		driver.travelDistance(4.0);
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN,
 				searchPoint.x, searchPoint.y)));
 
