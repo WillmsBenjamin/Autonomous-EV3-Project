@@ -16,7 +16,7 @@ public class OdometryCorrection {
 
 	private static final long CORRECTION_PERIOD = 50;
 	//private static final int ROTATION_SPEED = 100;
-	private static final double CS_DISTANCE = 15.2; //in cm
+	private static final double CS_DISTANCE = Math.hypot(14, 6.7); //in cm
 	//private static final double CS_ANGLE = 15.0; //in degrees
 	
 	private double currentSampleDifference;
@@ -35,6 +35,7 @@ public class OdometryCorrection {
 		this.lineCounter = 0;
 		this.firstTime = true;
 		this.samples = new LinkedList<AngleCSDataPair>();
+		this.position = Odometer.getOdometer().getPosition();
 	}
 	
 	public void doCorrection() {
@@ -54,7 +55,8 @@ public class OdometryCorrection {
 			correctionStart = System.currentTimeMillis();
 			
 			currentSample = getDownCSData()*1000;
-			sampleAngle = Odometer.getOdometer().getPosition().getDirection(CoordinateSystem.POLAR_RAD);
+			sampleAngle = position.getDirection(CoordinateSystem.POLAR_RAD);
+			//sampleAngle = (sampleAngle-(30.0*2.0*Math.PI/360.0))%(2.0*Math.PI);
 			
 			// Fetch the data from the color sensor
 			if (firstTime) {
@@ -75,7 +77,7 @@ public class OdometryCorrection {
 			if (samples.size() > 20) {
 				// If the list contains more than 20 sample pairs, remove the oldest one (at the beginning)
 				samples.removeFirst();
-			} else if(samples.size() < 20) {
+			} else if(samples.size() <= 20) {
 				continue;
 			}
 			
@@ -85,6 +87,7 @@ public class OdometryCorrection {
 			// Numbers were found by experimentation to detect the line
 			maxPair = getMaxSamplePair(samples);
 			minPair = getMinSamplePair(samples);
+
 			
 			if (maxPair.getcsDifference() >= 90 && minPair.getcsDifference() <= -30) {
 				
@@ -103,7 +106,7 @@ public class OdometryCorrection {
 				}
 			}
 			
-			if(leftMotor.isMoving() && rightMotor.isMoving()) {
+			if(!leftMotor.isMoving() && !rightMotor.isMoving()) {
 				break;	//The 360 degree turn is finished
 			}
 			
@@ -112,8 +115,7 @@ public class OdometryCorrection {
 			correctionEnd = System.currentTimeMillis();
 			if (correctionEnd - correctionStart < CORRECTION_PERIOD) {
 				try {
-					Thread.sleep(CORRECTION_PERIOD
-							- (correctionEnd - correctionStart));
+					Thread.sleep(CORRECTION_PERIOD - (correctionEnd - correctionStart));
 				} catch (InterruptedException e) {
 					// there is nothing to be done here because it is not
 					// expected that the odometry correction will be
@@ -126,7 +128,6 @@ public class OdometryCorrection {
 		
 		
 		// After the while loop stops, compute trigonometry to correct it's position and heading
-		
 		if(this.lineCounter > 4 || this.lineCounter < 4) {
 			//DO NOTHINGGGGG!!!!
 			Audio audio = LocalEV3.get().getAudio();
@@ -147,14 +148,14 @@ public class OdometryCorrection {
 			deltaAngle = (1.0/2.0)*Math.PI - bottomYLineOrientation + halfAngleBetweenY;
 			
 			//get the theta that the robot actually stopped at.
-			double currentAngle = Odometer.getOdometer().getPosition().getDirection(CoordinateSystem.POLAR_RAD);
+			double currentAngle = position.getDirection(CoordinateSystem.POLAR_RAD);
 			
 			//compute the current true orientation
 			thetaCorrected = (currentAngle + deltaAngle)%(2*Math.PI);
 			
 			//update the odometer
-			position.setDirection(thetaCorrected, CoordinateSystem.POLAR_RAD);
-			position.setX(xPosition);  //TODO: Add this x/y position to a the coordinate of the corner.
+			position.setDirection(0.0, CoordinateSystem.POLAR_RAD);
+			position.setX(xPosition); 
 			position.setY(yPosition);
 		}
 		
@@ -165,7 +166,7 @@ public class OdometryCorrection {
 		double angleBetween;
 		
 		if (angleOne > angleTwo) {	//This happens in the case where angleTwo overlaps to around 360.
-			angleTwo = 2*Math.PI - angleOne;	//The true positive angle from the original 0 point is 360-angleOne.
+			angleOne = 2*Math.PI - angleOne;	//The true positive angle from the original 0 point is 360-angleOne.
 			angleBetween = angleOne + angleTwo;	//The total angle between the orientations in this case is the sum of the corrected angleOne, and angleTwo.
 		} else if (angleTwo > angleOne) {	// angleOne and angleTwo are positive, with Two > One.
 			angleBetween = angleTwo - angleOne;	//The total angle between the walls is the difference between angleOne and angleTwo.

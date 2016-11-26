@@ -246,7 +246,7 @@ public class Resources {
 	}
 
 	public static float getDownCSData() {
-		// csDownFilter.fetchSample(csDataDown, 0);
+		csDown.fetchSample(csDataDown, 0);
 
 		return csDataDown[0];
 	}
