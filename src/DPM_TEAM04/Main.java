@@ -240,6 +240,14 @@ public class Main {
 								+ HALF_TILE_WIDTH);
 					}
 				}
+				
+				/*
+				 * 
+				 * RESET THE STACK POINT TO THE SEARCH POINT, THE ROBOT IS GOING TO STACK FROM THIS POINT
+				 * 
+				 */
+				
+				stackPoint = new Point2D.Double(searchPoint.x, searchPoint.y);
 
 				
 

@@ -161,6 +161,7 @@ public class Search extends Thread {
 				 */
 				
 				if (searchStep == 1) {
+					
 					if (builderZoneCorner == 1) {
 						searchPoint = new Point2D.Double(searchPoint.x+TILE_WIDTH, searchPoint.y+TILE_WIDTH);
 					} else if (builderZoneCorner == 2) {
@@ -170,6 +171,43 @@ public class Search extends Thread {
 					} else if (builderZoneCorner == 4) {
 						searchPoint = new Point2D.Double(searchPoint.x+TILE_WIDTH, searchPoint.y-TILE_WIDTH);
 					}
+					
+					
+					driver.turnTo((startSearchAngle+45.0), CoordinateSystem.POLAR_DEG);
+					if (getFrontUSData() < 40.0) {
+						
+						// If there's an obstacle in the middle, move to another point.
+
+						if (builderZoneCorner == 1) {
+							searchPoint = new Point2D.Double(searchPoint.x+TILE_WIDTH, searchPoint.y);
+						} else if (builderZoneCorner == 2) {
+							searchPoint = new Point2D.Double(searchPoint.x, searchPoint.y+TILE_WIDTH);
+						} else if (builderZoneCorner == 3) {
+							searchPoint = new Point2D.Double(searchPoint.x-TILE_WIDTH, searchPoint.y);
+						} else if (builderZoneCorner == 4) {
+							searchPoint = new Point2D.Double(searchPoint.x, searchPoint.y-TILE_WIDTH);
+						}
+						
+						driver.turnTo((startSearchAngle), CoordinateSystem.POLAR_DEG);
+						if (getFrontUSData() < 40.0) {
+
+							if (builderZoneCorner == 1) {
+								searchPoint = new Point2D.Double(searchPoint.x, searchPoint.y+TILE_WIDTH);
+							} else if (builderZoneCorner == 2) {
+								searchPoint = new Point2D.Double(searchPoint.x-TILE_WIDTH, searchPoint.y);
+							} else if (builderZoneCorner == 3) {
+								searchPoint = new Point2D.Double(searchPoint.x, searchPoint.y-TILE_WIDTH);
+							} else if (builderZoneCorner == 4) {
+								searchPoint = new Point2D.Double(searchPoint.x+TILE_WIDTH, searchPoint.y);
+							}
+							
+						}
+					}
+					
+					
+					
+					
+					
 					driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN,
 							searchPoint.x, searchPoint.y)));
 					driver.turnTo(startSearchAngle, CoordinateSystem.POLAR_DEG);
