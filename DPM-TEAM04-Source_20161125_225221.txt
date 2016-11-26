@@ -1,0 +1,13 @@
+ERROR - 22:52:21: java.net.MalformedURLException: unknown protocol: pathmap
+ERROR - 22:52:37: java.io.FileNotFoundException: /DPM-TEAM04-Source/bin/DPM_TEAM04/geometry/Coordinate.class (No such file or directory)
+ERROR - 22:52:37: java.io.FileNotFoundException: /DPM-TEAM04-Source/bin/DPM_TEAM04/geometry/Coordinate.class (No such file or directory)
+ERROR - 22:52:46: java.io.FileNotFoundException: /DPM-TEAM04-Source/bin/DPM_TEAM04/geometry/Coordinate.class (No such file or directory)
+ERROR - 22:52:46: java.io.FileNotFoundException: /DPM-TEAM04-Source/bin/DPM_TEAM04/geometry/Coordinate.class (No such file or directory)
+ERROR - 22:52:59: java.io.FileNotFoundException: /DPM-TEAM04-Source/bin/DPM_TEAM04/geometry/Coordinate.class (No such file or directory)
+ERROR - 22:52:59: java.io.FileNotFoundException: /DPM-TEAM04-Source/bin/DPM_TEAM04/geometry/Coordinate.class (No such file or directory)
+ERROR - 22:53:04: java.io.FileNotFoundException: /DPM-TEAM04-Source/bin/DPM_TEAM04/geometry/CoordinateSystem.class (No such file or directory)
+ERROR - 22:53:04: java.io.FileNotFoundException: /DPM-TEAM04-Source/bin/DPM_TEAM04/geometry/CoordinateSystem.class (No such file or directory)
+ERROR - 22:55:51: java.io.FileNotFoundException: /DPM-TEAM04-Source/src/DPM_TEAM04/navigation/Search.java (No such file or directory)
+ERROR - 22:55:51: java.io.FileNotFoundException: /DPM-TEAM04-Source/src/DPM_TEAM04/navigation/Search.java (No such file or directory)
+ERROR - 23:04:23: java.io.FileNotFoundException: /DPM-TEAM04-Source/src/DPM_TEAM04/navigation/Search.java (No such file or directory)
+ERROR - 23:04:23: java.io.FileNotFoundException: /DPM-TEAM04-Source/src/DPM_TEAM04/navigation/Search.java (No such file or directory)
