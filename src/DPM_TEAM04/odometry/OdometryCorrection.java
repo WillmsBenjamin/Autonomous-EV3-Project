@@ -13,11 +13,13 @@ import lejos.hardware.ev3.LocalEV3;
 import lejos.robotics.SampleProvider;
 
 public class OdometryCorrection {
-
+	
 	private static final long CORRECTION_PERIOD = 50;
 	//private static final int ROTATION_SPEED = 100;
 	private static final double CS_DISTANCE = 20; //in cm
-	//private static final double CS_ANGLE = 15.0; //in degrees
+	private static final double CS_ANGLE = 20.0; //in degrees
+	
+	private boolean isCorrectionFinished;
 	
 	private double currentSampleDifference;
 	private double lastSample, currentSample, sampleAngle;
@@ -43,12 +45,13 @@ public class OdometryCorrection {
 		// rotate to 270 degrees, and start doing a 360 degree turn (counter-clockwise),
 		// clock all the gridlines, and
 		// do trig to compute position and heading
-		
+		this.isCorrectionFinished = false;
 		
 		this.firstTime = true;
 		long correctionStart, correctionEnd;
 		AngleCSDataPair maxPair, minPair;
-		double bottomYLineOrientation = 0.0;
+		double bottomYLineOrientation = 0.0, firstXLineOrientation = 0.0, cornerX = 0.0, cornerY = 0.0;
+		//TODO: Set corner x and y to the coordinates of the corner we are running correction at.
 		
 		
 		while (true) {
@@ -56,7 +59,7 @@ public class OdometryCorrection {
 			
 			currentSample = getDownCSData()*1000;
 			sampleAngle = position.getDirection(CoordinateSystem.POLAR_RAD);
-			sampleAngle = (sampleAngle-(30.0*2.0*Math.PI/360.0))%(2.0*Math.PI);
+			//sampleAngle = (sampleAngle-(30.0*2.0*Math.PI/360.0))%(2.0*Math.PI);
 			
 			// Fetch the data from the color sensor
 			if (firstTime) {
@@ -102,7 +105,9 @@ public class OdometryCorrection {
 				this.lineCounter++;
 				this.angleList.add((maxPair.getAngle() + angleBetween(maxPair.getAngle(), minPair.getAngle()))%(2*Math.PI));
 				if(lineCounter == 1) {
-					bottomYLineOrientation = (maxPair.getAngle() + angleBetween(maxPair.getAngle(), minPair.getAngle()))%(2*Math.PI);
+					bottomYLineOrientation = (maxPair.getAngle() + angleBetween(maxPair.getAngle(), minPair.getAngle()))%(2*Math.PI); //Keep track of the robot's orientation when detecting the first y line
+				} else if(lineCounter == 2) {
+					firstXLineOrientation = (maxPair.getAngle() + angleBetween(maxPair.getAngle(), minPair.getAngle()))%(2*Math.PI); //Keep track of the robot's orientation when detecting the first x line
 				}
 			}
 			
@@ -134,7 +139,7 @@ public class OdometryCorrection {
 		    audio.systemSound(2);
 		} else {
 			// Initialize variables
-			double halfAngleBetweenX, halfAngleBetweenY, xPosition, yPosition, deltaAngle, thetaCorrected;
+			double halfAngleBetweenX, halfAngleBetweenY, xPosition, yPosition, deltaAngleY, deltaAngleX, averageDeltaAngle, thetaCorrected;
 			
 			// Determine angle between x and y angles that have been stored
 			halfAngleBetweenY = (1.0/2.0)*(angleBetween(angleList.get(0), angleList.get(2)));
@@ -145,22 +150,29 @@ public class OdometryCorrection {
 			yPosition = (-1.0)*CS_DISTANCE*Math.cos(halfAngleBetweenX);
 			
 			// Compute the error between the true orientation, and the odometer's orientation
-			deltaAngle = (1.0/2.0)*Math.PI - bottomYLineOrientation + halfAngleBetweenY;
+			deltaAngleY = (2.0)*Math.PI - ((bottomYLineOrientation + CS_ANGLE)%(2*Math.PI))- halfAngleBetweenY;
+			deltaAngleX = (1.0/2.0)*Math.PI - ((firstXLineOrientation + CS_ANGLE)%(2*Math.PI))- halfAngleBetweenX;
+			
+			averageDeltaAngle = (deltaAngleY + deltaAngleX)/(2.0);
 			
 			//get the theta that the robot actually stopped at.
 			double currentAngle = position.getDirection(CoordinateSystem.POLAR_RAD);
 			
 			//compute the current true orientation
-			thetaCorrected = (currentAngle + deltaAngle)%(2*Math.PI);
+			thetaCorrected = (currentAngle + averageDeltaAngle)%(2*Math.PI);
 			
 			//update the odometer
-			position.setDirection(0.0, CoordinateSystem.POLAR_RAD);
-			position.setX(xPosition); 
-			position.setY(yPosition);
+			position.setDirection(thetaCorrected, CoordinateSystem.POLAR_RAD);
+			position.setX(xPosition + cornerX); 
+			position.setY(yPosition + cornerY);
+			this.isCorrectionFinished = true;
 		}
 		
 	}
 	
+	public boolean getIsCorrectionFinished() {
+		return this.isCorrectionFinished;
+	}
 	
 	private Double angleBetween(double angleOne, double angleTwo) {
 		double angleBetween;
