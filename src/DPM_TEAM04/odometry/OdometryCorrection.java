@@ -164,10 +164,9 @@ public class OdometryCorrection {
 			//update the odometer
 			position.setDirection(thetaCorrected, CoordinateSystem.POLAR_RAD);
 			position.setX(xPosition + cornerX); 
-			position.setY(yPosition + cornerY);
-			this.isCorrectionFinished = true;
+			position.setY(yPosition + cornerY);			
 		}
-		
+		this.isCorrectionFinished = true;
 	}
 	
 	public boolean getIsCorrectionFinished() {
