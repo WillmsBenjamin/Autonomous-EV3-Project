@@ -49,7 +49,7 @@ public class Search extends Thread {
 		obsAvoid.start();
 		
 		
-		//long startTime = System.currentTimeMillis();
+		long startTime = System.currentTimeMillis();
 
 		//driver = Driver.getDriver();
 		position = Odometer.getOdometer().getPosition();
@@ -58,12 +58,6 @@ public class Search extends Thread {
 		liftMotor.setAcceleration(ACCELERATION_SMOOTH);
 		grabMotor.setSpeed(SPEED_GRAB);
 		liftMotor.setSpeed(SPEED_LIFT);
-
-		// searchPoint = new Point2D.Double(1.0*TILE_WIDTH, 1.0*TILE_WIDTH);
-		// mapCenter = new Point2D.Double(((MAP_DIMENSION/2.0)-1.0)*30.48,
-		// ((MAP_DIMENSION/2.0)-1.0)*30.48);
-		// builderZone = new Rectangle2D.Double(TILE_WIDTH, TILE_WIDTH,
-		// TILE_WIDTH, TILE_WIDTH);
 
 		startSearchAngle = 0;
 		endSearchAngle = 360;
@@ -83,8 +77,10 @@ public class Search extends Thread {
 		}
 		
 		
-		//long endTime = System.currentTimeMillis();
-		//System.out.print("\n\n\n\n\n" + (endTime-startTime));
+		// Time it took to get to the green zone
+		long endTime = System.currentTimeMillis();
+		TIME_LEFT = (int)(endTime-startTime);
+		System.out.println(TIME_LEFT);
 
 		leftMotor.stop();
 		rightMotor.stop();
@@ -162,6 +158,9 @@ public class Search extends Thread {
 				
 				if (searchStep == 1) {
 					
+					leftMotor.stop(true);
+					rightMotor.stop(false);
+					
 					if (builderZoneCorner == 1) {
 						searchPoint = new Point2D.Double(searchPoint.x+TILE_WIDTH, searchPoint.y+TILE_WIDTH);
 					} else if (builderZoneCorner == 2) {
@@ -212,6 +211,7 @@ public class Search extends Thread {
 							searchPoint.x, searchPoint.y)));
 					driver.turnTo(startSearchAngle, CoordinateSystem.POLAR_DEG);
 					clockwise = true;
+					blockSeen = false;
 					searchStep = 0;
 				}
 				
@@ -444,10 +444,9 @@ public class Search extends Thread {
 		grabMotor.rotate(200, false);
 		liftMotor.rotate(liftAngle, true);
 
-		// return to the center of the builder zone by going to the search point
-		// first
-		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, searchPoint.x, searchPoint.y)));
-		driver.turnTo(startSearchAngle + 45, CoordinateSystem.HEADING_DEG);
+		// return to the center of the builder zone by going to the original search point (which is now called stack point)
+		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, stackPoint.x, stackPoint.y)));
+		driver.turnTo((startSearchAngle + 45.0), CoordinateSystem.HEADING_DEG);
 		driver.travelDistance(-(Math.hypot(HALF_TILE_WIDTH, HALF_TILE_WIDTH)));
 		
 		// drop the block

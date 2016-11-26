@@ -119,6 +119,7 @@ public class Resources {
 	public static boolean isHoldingBlock = false;
 	public static boolean isSearching = false;
 	public static int searchStep = 0;
+	public static int TIME_LEFT = (270 * 1000);
 
 	// LCD
 	public static final TextLCD lcd;
