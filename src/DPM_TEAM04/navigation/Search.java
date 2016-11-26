@@ -28,7 +28,7 @@ public class Search extends Thread {
 	public static DirectedCoordinate position;
 	public static Driver driver = Driver.getDriver();
 	public static boolean blockSeen = false;
-	public static int blockDistanceCap = 5;
+	public static int blockDistanceCap = 5, builderZoneCorner = 0;
 	public static int searchCap = 70;
 	public static int nextAngleDelta = 25;
 	public static double lastAngle;
@@ -100,20 +100,24 @@ public class Search extends Thread {
 				// Bottom left quadrant
 				startSearchAngle = 0;
 				endSearchAngle = 90;
+				builderZoneCorner = 1;
 			} else {
 				// Top left quadrant
 				startSearchAngle = 270;
-				endSearchAngle = 180;
+				endSearchAngle = 0;
+				builderZoneCorner = 4;
 			}
 		} else {
 			if (searchPoint.y < mapCenter.y) {
 				// Bottom right quadrant
 				startSearchAngle = 90;
-				endSearchAngle = 0;
+				endSearchAngle = 180;
+				builderZoneCorner = 2;
 			} else {
 				// Top right quadrant
 				startSearchAngle = 180;
 				endSearchAngle = 270;
+				builderZoneCorner = 3;
 			}
 		}
 
@@ -147,7 +151,33 @@ public class Search extends Thread {
 				}
 				if (actualAngle > endSearchAngle && clockwise) {
 					clockwise = !clockwise;
+					searchStep++;
 				}
+				
+				/*
+				 * 
+				 * IF WE REACH THE END ANGLE, MOVE THE SEARCH POINT
+				 *  
+				 */
+				
+				if (searchStep == 1) {
+					if (builderZoneCorner == 1) {
+						searchPoint = new Point2D.Double(searchPoint.x+TILE_WIDTH, searchPoint.y+TILE_WIDTH);
+					} else if (builderZoneCorner == 2) {
+						searchPoint = new Point2D.Double(searchPoint.x-TILE_WIDTH, searchPoint.y+TILE_WIDTH);
+					} else if (builderZoneCorner == 3) {
+						searchPoint = new Point2D.Double(searchPoint.x-TILE_WIDTH, searchPoint.y-TILE_WIDTH);
+					} else if (builderZoneCorner == 4) {
+						searchPoint = new Point2D.Double(searchPoint.x+TILE_WIDTH, searchPoint.y-TILE_WIDTH);
+					}
+					driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN,
+							searchPoint.x, searchPoint.y)));
+					driver.turnTo(startSearchAngle, CoordinateSystem.POLAR_DEG);
+					clockwise = true;
+					searchStep = 0;
+				}
+				
+				
 				/*
 				 * Right now it only deals with one case
 				 */
@@ -221,14 +251,20 @@ public class Search extends Thread {
 
 			double theta = position.getDirection(CoordinateSystem.POLAR_RAD);
 			Point2D.Double ObjectPoint = new Point2D.Double((USDistance
-					* Math.cos(theta)) + TILE_WIDTH, (USDistance
-					* Math.sin(theta)) + TILE_WIDTH);
+					* Math.cos(theta)) + position.getX(), (USDistance
+					* Math.sin(theta)) + position.getY());
+			
+			
+			if (collectorZone.contains(ObjectPoint) || collectorZone.contains(ObjectPoint)) {
+				wallSeen();
+				return false;
+			}
 			
 
 			// System.out.println("\n\n\n\n\n" + ObjectPoint.x + "\n" +
 			// ObjectPoint.y);
 
-			/*
+			
 			if (mapWithoutWalls.contains(ObjectPoint)) {
 				// good
 				// System.out.println("\n\n\n\n\nIn the map!");
@@ -246,9 +282,9 @@ public class Search extends Thread {
 					wallSeen();
 				}
 				return false;
-			*/
+			}
 			
-			return true;
+			//return true;
 			
 
 		} else {
@@ -314,9 +350,12 @@ public class Search extends Thread {
 	 */
 	public static void wallSeen() {
 		double theta = position.getDirection(CoordinateSystem.POLAR_DEG);
-		theta = (theta + 25) % 360.0;
+		if (clockwise) {
+			theta = (theta + 25.0) % 360.0;
+		} else {
+			theta = (theta + 385.0) % 360.0;
+		}
 		driver.turnTo(theta, CoordinateSystem.POLAR_DEG);
-		clockwise = true;
 		search();
 	}
 
