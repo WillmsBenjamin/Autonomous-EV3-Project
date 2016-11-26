@@ -16,7 +16,7 @@ public class OdometryCorrection {
 
 	private static final long CORRECTION_PERIOD = 50;
 	//private static final int ROTATION_SPEED = 100;
-	private static final double CS_DISTANCE = Math.hypot(14, 6.7); //in cm
+	private static final double CS_DISTANCE = 20; //in cm
 	//private static final double CS_ANGLE = 15.0; //in degrees
 	
 	private double currentSampleDifference;
@@ -56,7 +56,7 @@ public class OdometryCorrection {
 			
 			currentSample = getDownCSData()*1000;
 			sampleAngle = position.getDirection(CoordinateSystem.POLAR_RAD);
-			//sampleAngle = (sampleAngle-(30.0*2.0*Math.PI/360.0))%(2.0*Math.PI);
+			sampleAngle = (sampleAngle-(30.0*2.0*Math.PI/360.0))%(2.0*Math.PI);
 			
 			// Fetch the data from the color sensor
 			if (firstTime) {
