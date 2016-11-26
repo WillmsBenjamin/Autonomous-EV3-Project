@@ -29,7 +29,7 @@ public class OdometryCorrection {
 	
 	private DirectedCoordinate position;
 	
-	public OdometryCorrection(Odometer odo, SampleProvider colorSensor, float[] colorData) {
+	public OdometryCorrection() {
 		
 		// Initialize variables and the list of sample pairs
 		this.lineCounter = 0;
@@ -48,6 +48,7 @@ public class OdometryCorrection {
 		long correctionStart, correctionEnd;
 		AngleCSDataPair maxPair, minPair;
 		double bottomYLineOrientation = 0.0;
+		
 		
 		while (true) {
 			correctionStart = System.currentTimeMillis();

@@ -178,8 +178,7 @@ public class Driver extends Thread {
 	 */
 
 	@SuppressWarnings("incomplete-switch")
-	public void rotate(double angle, CoordinateSystem angleUnit,
-			boolean immediateReturn) {
+	public void rotate(double angle, CoordinateSystem angleUnit, boolean immediateReturn) {
 		leftMotor.setSpeed(SPEED_TURNING_FAST);
 		rightMotor.setSpeed(SPEED_TURNING_FAST);
 
