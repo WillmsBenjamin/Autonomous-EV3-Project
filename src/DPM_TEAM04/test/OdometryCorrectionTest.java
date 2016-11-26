@@ -65,9 +65,6 @@ public class OdometryCorrectionTest {
 		driver.rotate(360, CoordinateSystem.POLAR_DEG, true);
 		odoCorrection.doCorrection();
 
-		while(!odoCorrection.getIsCorrectionFinished()) {
-			//wait for it to be finished.
-		}
 		driver.travelTo(new Coordinate(CoordinateSystem.CARTESIAN, 0, 0));
 		driver.turnTo(0.0, CoordinateSystem.HEADING_DEG);
 		

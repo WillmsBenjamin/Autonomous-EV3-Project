@@ -19,8 +19,6 @@ public class OdometryCorrection {
 	private static final double CS_DISTANCE = 20; //in cm
 	private static final double CS_ANGLE = 20.0; //in degrees
 	
-	private boolean isCorrectionFinished;
-	
 	private double currentSampleDifference;
 	private double lastSample, currentSample, sampleAngle;
 	private boolean firstTime;
@@ -45,7 +43,6 @@ public class OdometryCorrection {
 		// rotate to 270 degrees, and start doing a 360 degree turn (counter-clockwise),
 		// clock all the gridlines, and
 		// do trig to compute position and heading
-		this.isCorrectionFinished = false;
 		
 		this.firstTime = true;
 		long correctionStart, correctionEnd;
@@ -166,11 +163,6 @@ public class OdometryCorrection {
 			position.setX(xPosition + cornerX); 
 			position.setY(yPosition + cornerY);			
 		}
-		this.isCorrectionFinished = true;
-	}
-	
-	public boolean getIsCorrectionFinished() {
-		return this.isCorrectionFinished;
 	}
 	
 	private Double angleBetween(double angleOne, double angleTwo) {
