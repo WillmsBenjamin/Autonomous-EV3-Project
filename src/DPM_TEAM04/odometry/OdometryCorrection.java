@@ -19,8 +19,8 @@ public class OdometryCorrection {
 	
 	private static final long CORRECTION_PERIOD = 50;
 	//private static final int ROTATION_SPEED = 100;
-	private static final double CS_DISTANCE = 20; //in cm
-	private static final double CS_ANGLE = 20.0*Math.PI/180.0; //in rads
+	private static final double CS_DISTANCE = 15.8; //in cm
+	private static final double CS_ANGLE = 34.0*Math.PI/180.0; //in rads
 	
 	private double currentSampleDifference;
 	private double lastSample, currentSample, sampleAngle;
