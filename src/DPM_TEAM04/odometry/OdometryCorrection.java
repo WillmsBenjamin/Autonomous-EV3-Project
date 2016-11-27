@@ -20,7 +20,7 @@ public class OdometryCorrection {
 	private static final long CORRECTION_PERIOD = 50;
 	//private static final int ROTATION_SPEED = 100;
 	private static final double CS_DISTANCE = 20; //in cm
-	private static final double CS_ANGLE = 15.0; //in degrees
+	private static final double CS_ANGLE = 20.0*Math.PI/180.0; //in rads
 	
 	private double currentSampleDifference;
 	private double lastSample, currentSample, sampleAngle;
@@ -29,6 +29,8 @@ public class OdometryCorrection {
 	private LinkedList<AngleCSDataPair> samples;
 	private LinkedList<Double> angleList = new LinkedList<Double>();		// 0 and 2 are x angles and 1 and 3 are y angles
 	private AngleCSDataPair currentPair;
+	
+	private double errorY = 0.0, errorX = 0.0, currentAngle = 0.0, correctedAngle = 0.0;
 	
 	private DirectedCoordinate position;
 	
@@ -63,6 +65,50 @@ public class OdometryCorrection {
 		// start logger
 		fileLog.start();
 		*/
+		
+		DataEntryProvider errorYProvider = new DataEntryProvider("ErrorY") {
+
+			@Override
+			public double getEntry() {
+				return getErrorY();
+			}
+		};
+		
+		DataEntryProvider errorXProvider = new DataEntryProvider("ErrorX") {
+
+			@Override
+			public double getEntry() {
+				return getErrorX();
+			}
+		};
+		
+		DataEntryProvider currentAngleProvider = new DataEntryProvider("currentAngle") {
+
+			@Override
+			public double getEntry() {
+				return getCurrentAngle();
+			}
+		};
+		
+		DataEntryProvider correctedAngleProvider = new DataEntryProvider("correctedAngle") {
+
+			@Override
+			public double getEntry() {
+				return getCorrectedAngle();
+			}
+		};
+		
+		
+
+		FileLogger fileLog = new FileLogger("Poop.csv", 50,
+				errorYProvider, errorXProvider, currentAngleProvider, correctedAngleProvider);
+
+		// start logger
+					fileLog.start();
+	
+
+		
+		
 		this.firstTime = true;
 		long correctionStart, correctionEnd;
 		AngleCSDataPair maxPair, minPair;
@@ -146,8 +192,6 @@ public class OdometryCorrection {
 		}
 		
 
-		// save and close logger
-		//fileLog.interrupt();
 		
 		
 		// After the while loop stops, compute trigonometry to correct it's position and heading
@@ -167,17 +211,54 @@ public class OdometryCorrection {
 			xPosition = (-1.0)*CS_DISTANCE*Math.cos(halfAngleBetweenY);
 			yPosition = (-1.0)*CS_DISTANCE*Math.cos(halfAngleBetweenX);
 			
+			bottomYLineOrientation -= CS_ANGLE;
+			firstXLineOrientation -= CS_ANGLE;
+			if(firstXLineOrientation < 0.0) {
+				firstXLineOrientation += 2.0*Math.PI;
+			}
+			if(bottomYLineOrientation < 0.0) {
+				bottomYLineOrientation += 2.0*Math.PI;
+			}
 			// Compute the error between the true orientation, and the odometer's orientation
-			deltaAngleY = (2.0)*Math.PI - ((bottomYLineOrientation + CS_ANGLE)%(2*Math.PI))- halfAngleBetweenY;
-			deltaAngleX = (1.0/2.0)*Math.PI - ((firstXLineOrientation + CS_ANGLE)%(2*Math.PI))- halfAngleBetweenX;
+			deltaAngleY = (2.0)*Math.PI - ((bottomYLineOrientation)%(2*Math.PI))- halfAngleBetweenY;
+			deltaAngleX = (1.0/2.0)*Math.PI - ((firstXLineOrientation)%(2*Math.PI))- halfAngleBetweenX;
+			/*
+			if (deltaAngleY < 0.0) {
+				deltaAngleY += 2.0*Math.PI;
+			}
+			if (deltaAngleX < 0.0) {
+				deltaAngleX += 2.0*Math.PI;
+			}*/
+			
+			
+			errorY = deltaAngleY;
+			errorX = deltaAngleX;
+			
 			
 			averageDeltaAngle = (deltaAngleY + deltaAngleX)/(2.0);
 			
 			//get the theta that the robot actually stopped at.
 			double currentAngle = position.getDirection(CoordinateSystem.POLAR_RAD);
 			
+			this.currentAngle = currentAngle;
+			
 			//compute the current true orientation
-			thetaCorrected = (currentAngle + averageDeltaAngle)%(2*Math.PI);
+			thetaCorrected = (currentAngle + averageDeltaAngle)%(2.0*Math.PI);
+			
+			correctedAngle = thetaCorrected;
+			
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// there is nothing to be done here because it is not
+				// expected that the odometry correction will be
+				// interrupted by another thread
+			}
+			
+			// save and close logger
+			fileLog.interrupt();
+			
 			
 			//update the odometer
 			position.setDirection(thetaCorrected, CoordinateSystem.POLAR_RAD);
@@ -190,7 +271,7 @@ public class OdometryCorrection {
 		double angleBetween;
 		
 		if (angleOne > angleTwo) {	//This happens in the case where angleTwo overlaps to around 360.
-			angleOne = 2*Math.PI - angleOne;	//The true positive angle from the original 0 point is 360-angleOne.
+			angleOne = (2.0*Math.PI) - angleOne;	//The true positive angle from the original 0 point is 360-angleOne.
 			angleBetween = angleOne + angleTwo;	//The total angle between the orientations in this case is the sum of the corrected angleOne, and angleTwo.
 		} else if (angleTwo > angleOne) {	// angleOne and angleTwo are positive, with Two > One.
 			angleBetween = angleTwo - angleOne;	//The total angle between the walls is the difference between angleOne and angleTwo.
@@ -200,6 +281,22 @@ public class OdometryCorrection {
 		
 		return angleBetween;		// return the angle between the two inputs
 		
+	}
+	
+	public double getErrorY() {
+		return this.errorY;
+	}
+	
+	public double getErrorX() {
+		return this.errorX;
+	}
+	
+	public double getCurrentAngle() {
+		return this.currentAngle;
+	}
+	
+	public double getCorrectedAngle() {
+		return this.correctedAngle;
 	}
 	
 	public double getCurrentSampleDifference() {
