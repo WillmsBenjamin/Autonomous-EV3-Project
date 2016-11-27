@@ -5,10 +5,13 @@ import java.util.LinkedList;
 
 import DPM_TEAM04.geometry.CoordinateSystem;
 import DPM_TEAM04.geometry.DirectedCoordinate;
+import DPM_TEAM04.logging.DataEntryProvider;
+import DPM_TEAM04.logging.FileLogger;
 
 import static DPM_TEAM04.Resources.*;
 
 import lejos.hardware.Audio;
+import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.robotics.SampleProvider;
 
@@ -43,6 +46,22 @@ public class OdometryCorrection {
 		// rotate to 270 degrees, and start doing a 360 degree turn (counter-clockwise),
 		// clock all the gridlines, and
 		// do trig to compute position and heading
+		
+
+		DataEntryProvider sampleDifferenceProvider = new DataEntryProvider("Sample Difference") {
+
+			@Override
+			public double getEntry() {
+				return getCurrentSampleDifference();
+			}
+		};
+		
+
+		FileLogger fileLog = new FileLogger("Sample_Difference_Test.csv", 50,
+				sampleDifferenceProvider);
+
+		// start logger
+		fileLog.start();
 		
 		this.firstTime = true;
 		long correctionStart, correctionEnd;
@@ -126,7 +145,9 @@ public class OdometryCorrection {
 			}
 		}
 		
-		
+
+		// save and close logger
+		fileLog.interrupt();
 		
 		
 		// After the while loop stops, compute trigonometry to correct it's position and heading
@@ -181,6 +202,9 @@ public class OdometryCorrection {
 		
 	}
 	
+	public double getCurrentSampleDifference() {
+		return this.currentSampleDifference;
+	}
 	
 	// Loops through the list to find the pair with the maximum CS value
 	// It sets the max if the value is greater than the actual max

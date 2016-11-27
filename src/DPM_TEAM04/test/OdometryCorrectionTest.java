@@ -2,6 +2,8 @@ package DPM_TEAM04.test;
 
 import static DPM_TEAM04.Resources.DISPLAY_PERIOD;
 import static DPM_TEAM04.Resources.TILE_WIDTH;
+import static DPM_TEAM04.Resources.getFrontUSData;
+
 import DPM_TEAM04.Resources;
 import DPM_TEAM04.geometry.Coordinate;
 import DPM_TEAM04.geometry.CoordinateSystem;
