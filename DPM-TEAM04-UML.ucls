@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.12" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="true" nesting-relationships="true" router="FAN">  
+  <class id="1" language="java" name="DPM_TEAM04.Main" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/Main.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="117" width="158" x="711" y="-231"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="DPM_TEAM04.Resources" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/Resources.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="1611" width="261" x="-175" y="-260"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="DPM_TEAM04.odometry.Odometer" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/odometry/Odometer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="189" x="732" y="161"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="DPM_TEAM04.odometry.Localization" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/odometry/Localization.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="536" y="247"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="DPM_TEAM04.navigation.Driver" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/navigation/Driver.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1021" y="720"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="DPM_TEAM04.navigation.Search" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/navigation/Search.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="374" y="678"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="DPM_TEAM04.geometry.Coordinate" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/geometry/Coordinate.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="441" width="382" x="1415" y="102"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="DPM_TEAM04.geometry.DirectedCoordinate" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/geometry/DirectedCoordinate.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="261" width="456" x="1231" y="1055"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <enumeration id="9" language="java" name="DPM_TEAM04.geometry.CoordinateSystem" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/geometry/CoordinateSystem.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="279" width="223" x="1563" y="646"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </enumeration>  
+  <class id="10" language="java" name="DPM_TEAM04.navigation.ObstacleAvoidance" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/navigation/ObstacleAvoidance.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="674" y="832"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="wifi.ParseTransmission" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/wifi/ParseTransmission.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="117" width="294" x="299" y="-134"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <enumeration id="12" language="java" name="wifi.StartCorner" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/wifi/StartCorner.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="351" width="175" x="119" y="-267"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </enumeration>  
+  <class id="13" language="java" name="wifi.WifiConnection" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/wifi/WifiConnection.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="117" width="206" x="336" y="-272"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="DPM_TEAM04.logging.LCDLogger" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/logging/LCDLogger.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="189" width="266" x="160" y="1001"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="DPM_TEAM04.logging.FileLogger" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/logging/FileLogger.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="153" width="243" x="516" y="1004"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="DPM_TEAM04.logging.DataEntryProvider" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/logging/DataEntryProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="462" y="1278"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="DPM_TEAM04.odometry.OdometryCorrection.AngleCSDataPair" 
+    project="DPM-TEAM04-Source" file="/DPM-TEAM04-Source/src/DPM_TEAM04/odometry/OdometryCorrection.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="171" width="193" x="1487" y="-155"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="18" language="java" name="DPM_TEAM04.odometry.OdometryCorrection" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/odometry/OdometryCorrection.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="513" width="364" x="1006" y="-279"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="19" language="java" name="DPM_TEAM04.odometry.Localization.Distance" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/odometry/Localization.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="249" y="277"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <dependency id="20">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <association id="21">    
+    <bendpoint x="1105" y="516"/>    
+    <end type="SOURCE" refId="5" navigable="false" variant="ASSOCIATION">      
+      <attribute id="22" name="destination">        
+        <position height="18" width="62" x="1351" y="368"/>      
+      </attribute>      
+      <multiplicity id="23" minimum="0" maximum="1">        
+        <position height="16" width="23" x="1370" y="388"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="24">    
+    <bendpoint x="470" y="960"/>    
+    <bendpoint x="226" y="962"/>    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <association id="25">    
+    <bendpoint x="1406" y="9"/>    
+    <end type="SOURCE" refId="18" navigable="false" variant="ASSOCIATION">      
+      <attribute id="26" name="samples">        
+        <position height="18" width="48" x="1416" y="-16"/>      
+      </attribute>      
+      <multiplicity id="27" minimum="0" maximum="2147483647">        
+        <position height="16" width="21" x="1431" y="13"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="28">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="10"/>  
+  </dependency>  
+  <dependency id="29">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="30">    
+    <bendpoint x="765" y="77"/>    
+    <bendpoint x="338" y="74"/>    
+    <bendpoint x="202" y="137"/>    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="31">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <association id="32">    
+    <bendpoint x="1237" y="360"/>    
+    <end type="SOURCE" refId="3" navigable="false" variant="ASSOCIATION">      
+      <attribute id="33" name="position">        
+        <position height="18" width="45" x="1373" y="1028"/>      
+      </attribute>      
+      <multiplicity id="34" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-536" y="399"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="35">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="8"/>  
+  </dependency>  
+  <association id="36">    
+    <end type="SOURCE" refId="4" navigable="false" variant="ASSOCIATION">      
+      <attribute id="37" name="listOfDistances">        
+        <position height="18" width="81" x="331" y="244"/>      
+      </attribute>      
+      <multiplicity id="38" minimum="0" maximum="2147483647">        
+        <position height="16" width="21" x="343" y="271"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="19" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="39">    
+    <bendpoint x="412" y="149"/>    
+    <bendpoint x="412" y="364"/>    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <association id="40">    
+    <end type="SOURCE" refId="5" navigable="false" variant="ASSOCIATION">      
+      <attribute id="41" name="waypoints">        
+        <position height="0" width="0" x="-266" y="20"/>      
+      </attribute>      
+      <multiplicity id="42" minimum="0" maximum="2147483647">        
+        <position height="16" width="21" x="1371" y="453"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="43">    
+    <end type="SOURCE" refId="5" navigable="false" variant="ASSOCIATION">      
+      <attribute id="44" name="driverInstance">        
+        <position height="18" width="77" x="1064" y="934"/>      
+      </attribute>      
+      <multiplicity id="45" minimum="0" maximum="1">        
+        <position height="16" width="23" x="1145" y="937"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="46">    
+    <end type="SOURCE" refId="10" navigable="false" variant="ASSOCIATION">      
+      <attribute id="47" name="driver">        
+        <position height="18" width="36" x="835" y="749"/>      
+      </attribute>      
+      <multiplicity id="48" minimum="0" maximum="1">        
+        <position height="16" width="23" x="853" y="778"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="49">    
+    <end type="SOURCE" refId="18" navigable="false" variant="ASSOCIATION">      
+      <attribute id="50" name="currentPair">        
+        <position height="18" width="61" x="1408" y="-73"/>      
+      </attribute>      
+      <multiplicity id="51" minimum="0" maximum="1">        
+        <position height="16" width="23" x="1453" y="-47"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="52">    
+    <bendpoint x="854" y="972"/>    
+    <bendpoint x="1198" y="974"/>    
+    <end type="SOURCE" refId="10" navigable="false" variant="ASSOCIATION">      
+      <attribute id="53" name="pointBefore">        
+        <position height="18" width="64" x="1384" y="551"/>      
+      </attribute>      
+      <multiplicity id="54" minimum="0" maximum="1">        
+        <position height="16" width="23" x="1412" y="574"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="55">    
+    <bendpoint x="964" y="22"/>    
+    <bendpoint x="974" y="286"/>    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <dependency id="56">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <dependency id="57">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="58">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="59">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="60">    
+    <bendpoint x="1016" y="-303"/>    
+    <bendpoint x="-46" y="-304"/>    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="61">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="62">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <association id="63">    
+    <end type="SOURCE" refId="3" navigable="false" variant="ASSOCIATION">      
+      <attribute id="64" name="odometerInstance">        
+        <position height="18" width="94" x="883" y="347"/>      
+      </attribute>      
+      <multiplicity id="65" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-64" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="66">    
+    <bendpoint x="297" y="1261"/>    
+    <end type="SOURCE" refId="14" navigable="false" variant="ASSOCIATION">      
+      <attribute id="67" name="dataProviders">        
+        <position height="18" width="75" x="545" y="1246"/>      
+      </attribute>      
+      <multiplicity id="68" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="-1066" y="-18"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="69">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="7"/>  
+  </generalization>  
+  <dependency id="70">    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="71">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="11"/>  
+  </dependency>  
+  <nesting id="72">    
+    <bendpoint x="371" y="214"/>    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="19"/>  
+  </nesting>  
+  <association id="73">    
+    <bendpoint x="762" y="670"/>    
+    <end type="SOURCE" refId="6" navigable="false" variant="ASSOCIATION">      
+      <attribute id="74" name="driver">        
+        <position height="18" width="38" x="843" y="664"/>      
+      </attribute>      
+      <multiplicity id="75" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-94" y="-24"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="76">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <association id="77">    
+    <bendpoint x="631" y="1264"/>    
+    <end type="SOURCE" refId="15" navigable="false" variant="ASSOCIATION">      
+      <attribute id="78" name="dataProviders">        
+        <position height="18" width="75" x="306" y="1246"/>      
+      </attribute>      
+      <multiplicity id="79" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="-1066" y="-18"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="80">    
+    <bendpoint x="696" y="-292"/>    
+    <bendpoint x="2" y="-295"/>    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="81">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="82">    
+    <bendpoint x="1149" y="389"/>    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <nesting id="83">    
+    <bendpoint x="1401" y="-110"/>    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="17"/>  
+  </nesting>  
+  <association id="84">    
+    <bendpoint x="680" y="-282"/>    
+    <bendpoint x="104" y="-284"/>    
+    <bendpoint x="106" y="1062"/>    
+    <end type="SOURCE" refId="1" navigable="false" variant="ASSOCIATION">      
+      <attribute id="85" name="lcdLog">        
+        <position height="18" width="42" x="111" y="1042"/>      
+      </attribute>      
+      <multiplicity id="86" minimum="0" maximum="1">        
+        <position height="16" width="23" x="118" y="1073"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="87">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
