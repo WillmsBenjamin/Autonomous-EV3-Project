@@ -62,55 +62,14 @@ public class ObstacleAvoidance extends Thread {
 				driver.rotate(-90, CoordinateSystem.POLAR_DEG);
 				leftMotor.stop(true);
 				rightMotor.stop(false);
-				if (getFrontUSData() > (1.5 * TILE_WIDTH)) {
-					
-					while (Math.abs((firstAng + 360) - position.getDirection(CoordinateSystem.POLAR_DEG)) % 360 > 25) {
-						avoidBlock();
-						if (getFrontUSData() < 10) {
-							leftMotor.stop(true);
-							rightMotor.stop(false);
-							driver.rotate(-90, CoordinateSystem.POLAR_DEG);
-						} 
-					}
-					
-				} else {
-					
-					leftMotor.stop(true);
-					rightMotor.stop(false);
-					/*
-					leftMotor.setAcceleration(ACCELERATION_SMOOTH);
-					rightMotor.setAcceleration(ACCELERATION_SMOOTH);
-					
-					pointBefore = new Coordinate(CoordinateSystem.CARTESIAN, position.getX(), position.getY());
-					if (!isHoldingBlock) {
-						leftMotor.forward();
-						rightMotor.forward();
-						while(getFrontUSData() > 4.0) {
-							
-						}
+				
+				while (Math.abs((firstAng + 360) - position.getDirection(CoordinateSystem.POLAR_DEG)) % 360 > 25) {
+					avoidBlock();
+					if (getFrontUSData() < 10) {
 						leftMotor.stop(true);
 						rightMotor.stop(false);
-						
-					}
-					float[] colorRGB = getColorRGB();
-					if (colorRGB[1] > colorRGB[0] && colorRGB[1] > colorRGB[2] && !isHoldingBlock) {
-						Search.captureBlockWhileAvoiding();
-						leftMotor.stop(true);
-						rightMotor.stop(false);
-						driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, driver.destination.getX(), driver.destination.getY())), true);
-					} else {*/
-						leftMotor.setAcceleration(ACCELERATION_SMOOTH);
-						rightMotor.setAcceleration(ACCELERATION_SMOOTH);
-						
-						driver.rotate(180, CoordinateSystem.POLAR_DEG);
-						
-						//driver.travelToWithoutSavingDestination(pointBefore);
-						double USDistance = getFrontUSData();
-						if (USDistance > (2.0*TILE_WIDTH)) {
-							USDistance = 2.0*TILE_WIDTH;
-						}
-						USDistance -= (US_TO_CENTER+5.0);
-						driver.travelDistance(USDistance);
+						driver.rotate(-90, CoordinateSystem.POLAR_DEG);
+					} 
 				}
 				
 				Sound.beep();
