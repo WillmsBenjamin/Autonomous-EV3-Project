@@ -12,7 +12,7 @@ public class Odometer extends Thread {
 
 	private int leftMotorTachoCount, rightMotorTachoCount;
 
-	private static Odometer theInstance;
+	private static Odometer odometerInstance;
 
 	// default constructor
 	private Odometer() {
@@ -23,10 +23,10 @@ public class Odometer extends Thread {
 	}
 
 	public static Odometer getOdometer() {
-		if (theInstance == null) {
-			theInstance = new Odometer();
+		if (odometerInstance == null) {
+			odometerInstance = new Odometer();
 		}
-		return theInstance;
+		return odometerInstance;
 	}
 
 	// run method (required for Thread)

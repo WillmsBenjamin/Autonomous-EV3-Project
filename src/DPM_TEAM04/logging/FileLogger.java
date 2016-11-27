@@ -23,7 +23,7 @@ public class FileLogger extends Thread {
 	private String fileName;
 	private int refreshPeriod;
 
-	private DataEntryProvider[] entryProviders;
+	private DataEntryProvider[] dataProviders;
 
 	/**
 	 * Creates a new FileLogger
@@ -39,7 +39,7 @@ public class FileLogger extends Thread {
 			DataEntryProvider... dataEntryProviders) {
 		this.fileName = fileName;
 		this.refreshPeriod = refreshPeriod;
-		this.entryProviders = dataEntryProviders;
+		this.dataProviders = dataEntryProviders;
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class FileLogger extends Thread {
 				long start = System.currentTimeMillis();
 				String dataLine = "";
 
-				for (DataEntryProvider data : entryProviders)
+				for (DataEntryProvider data : dataProviders)
 					dataLine += data.getEntry() + ", ";
 
 				writer.write(dataLine + "\n");
@@ -91,7 +91,7 @@ public class FileLogger extends Thread {
 	 */
 	public void writeHeadings(BufferedWriter writer) throws IOException {
 		String heading = "";
-		for (DataEntryProvider data : entryProviders)
+		for (DataEntryProvider data : dataProviders)
 			heading += data.HEADING + ", ";
 
 		writer.write(heading + "\n");

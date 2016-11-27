@@ -1,14 +1,20 @@
 package DPM_TEAM04.odometry;
 
+import static DPM_TEAM04.Resources.BUMPER_TO_CENTER;
+import static DPM_TEAM04.Resources.MAP_DIMENSION;
+import static DPM_TEAM04.Resources.TILE_WIDTH;
+import static DPM_TEAM04.Resources.getSideUSData;
+import static DPM_TEAM04.Resources.isLocalizing;
+import static DPM_TEAM04.Resources.leftMotor;
+import static DPM_TEAM04.Resources.rightMotor;
+import static DPM_TEAM04.Resources.startingCorner;
+
 import java.util.ArrayList;
 
-import static DPM_TEAM04.Resources.*;
 import DPM_TEAM04.Resources;
 import DPM_TEAM04.geometry.CoordinateSystem;
 import DPM_TEAM04.geometry.DirectedCoordinate;
-import DPM_TEAM04.geometry.Distance;
 import DPM_TEAM04.navigation.Driver;
-import DPM_TEAM04.navigation.Navigation;
 import lejos.hardware.Audio;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.utility.Delay;
@@ -217,6 +223,25 @@ public class Localization extends Thread {
 				index = i;
 
 			}
+		}
+
+	}
+	
+	public class Distance {
+
+		private double distance, angle;
+
+		public Distance(double distance, double angle) {
+			this.distance = distance;
+			this.angle = angle;
+		}
+
+		public double getDistance() {
+			return this.distance;
+		}
+
+		public double getAngle() {
+			return this.angle;
 		}
 
 	}
