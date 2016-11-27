@@ -131,22 +131,9 @@ public class ObstacleAvoidance extends Thread {
 		if (getFrontUSData() > 10) {
 			setIsAvoiding(false);
 		} else {
-			/*
 			leftMotor.stop(true);
 			rightMotor.stop(false);
-			leftMotor.setAcceleration(ACCELERATION_SMOOTH);
-			rightMotor.setAcceleration(ACCELERATION_SMOOTH);
-			driver.travelDistance(getFrontUSData() - 2.0);
-			float[] colorRGB = getColorRGB();
-			if (colorRGB[1] > colorRGB[0] && !isHoldingBlock) {
-				Search.captureBlockWhileAvoiding();
-				leftMotor.stop(true);
-				rightMotor.stop(false);
-				driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, driver.destination.getX(), driver.destination.getY())), true);
-			} else {
-				driver.travelDistance(-2.0);
-				setIsAvoiding(true);
-			}*/
+			
 			setIsAvoiding(true);
 
 		}

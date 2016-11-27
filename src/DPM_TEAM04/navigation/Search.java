@@ -1,6 +1,9 @@
 package DPM_TEAM04.navigation;
 
 import static DPM_TEAM04.Resources.*;
+
+import java.util.ArrayList;
+
 import DPM_TEAM04.Resources;
 import DPM_TEAM04.geometry.Coordinate;
 import DPM_TEAM04.geometry.CoordinateSystem;
@@ -37,6 +40,7 @@ public class Search extends Thread {
 	public static double angleDifference, actualAngle;
 	public static double firstAngle, startSearchAngle, endSearchAngle;
 	private static Object lock;
+	private static ArrayList<Point2D> listOfWaypoints = new ArrayList<Point2D>();
 
 	public Search() {
 		
@@ -145,7 +149,7 @@ public class Search extends Thread {
 				if (actualAngle < startSearchAngle) {
 					actualAngle += 360;
 				}
-				if (actualAngle > endSearchAngle && clockwise) {
+				if (actualAngle > (endSearchAngle + 5.0) && clockwise) {
 					clockwise = !clockwise;
 					searchStep++;
 				}
@@ -158,37 +162,19 @@ public class Search extends Thread {
 				
 				if (searchStep == 1) {
 					
+					searchStep = 0;
+					
 					leftMotor.stop(true);
 					rightMotor.stop(false);
 					
-					if (builderZoneCorner == 1) {
-						searchPoint = new Point2D.Double(searchPoint.x+TILE_WIDTH, searchPoint.y+TILE_WIDTH);
-					} else if (builderZoneCorner == 2) {
-						searchPoint = new Point2D.Double(searchPoint.x-TILE_WIDTH, searchPoint.y+TILE_WIDTH);
-					} else if (builderZoneCorner == 3) {
-						searchPoint = new Point2D.Double(searchPoint.x-TILE_WIDTH, searchPoint.y-TILE_WIDTH);
-					} else if (builderZoneCorner == 4) {
-						searchPoint = new Point2D.Double(searchPoint.x+TILE_WIDTH, searchPoint.y-TILE_WIDTH);
-					}
-					
 					
 					driver.turnTo((startSearchAngle+45.0), CoordinateSystem.POLAR_DEG);
-					if (getFrontUSData() < 40.0) {
+					if (getFrontUSData() < 50.0) {
 						
 						// If there's an obstacle in the middle, move to another point.
-
-						if (builderZoneCorner == 1) {
-							searchPoint = new Point2D.Double(searchPoint.x+TILE_WIDTH, searchPoint.y);
-						} else if (builderZoneCorner == 2) {
-							searchPoint = new Point2D.Double(searchPoint.x, searchPoint.y+TILE_WIDTH);
-						} else if (builderZoneCorner == 3) {
-							searchPoint = new Point2D.Double(searchPoint.x-TILE_WIDTH, searchPoint.y);
-						} else if (builderZoneCorner == 4) {
-							searchPoint = new Point2D.Double(searchPoint.x, searchPoint.y-TILE_WIDTH);
-						}
 						
 						driver.turnTo((startSearchAngle), CoordinateSystem.POLAR_DEG);
-						if (getFrontUSData() < 40.0) {
+						if (getFrontUSData() < 70.0) {
 
 							if (builderZoneCorner == 1) {
 								searchPoint = new Point2D.Double(searchPoint.x, searchPoint.y+TILE_WIDTH);
@@ -200,8 +186,34 @@ public class Search extends Thread {
 								searchPoint = new Point2D.Double(searchPoint.x+TILE_WIDTH, searchPoint.y);
 							}
 							
+						} else {
+							
+							if (builderZoneCorner == 1) {
+								searchPoint = new Point2D.Double(searchPoint.x+2.0*TILE_WIDTH, searchPoint.y);
+							} else if (builderZoneCorner == 2) {
+								searchPoint = new Point2D.Double(searchPoint.x, searchPoint.y+2.0*TILE_WIDTH);
+							} else if (builderZoneCorner == 3) {
+								searchPoint = new Point2D.Double(searchPoint.x-2.0*TILE_WIDTH, searchPoint.y);
+							} else if (builderZoneCorner == 4) {
+								searchPoint = new Point2D.Double(searchPoint.x, searchPoint.y-2.0*TILE_WIDTH);
+							}
+							
 						}
+					} else {
+						
+						if (builderZoneCorner == 1) {
+							searchPoint = new Point2D.Double(searchPoint.x+TILE_WIDTH, searchPoint.y+TILE_WIDTH);
+						} else if (builderZoneCorner == 2) {
+							searchPoint = new Point2D.Double(searchPoint.x-TILE_WIDTH, searchPoint.y+TILE_WIDTH);
+						} else if (builderZoneCorner == 3) {
+							searchPoint = new Point2D.Double(searchPoint.x-TILE_WIDTH, searchPoint.y-TILE_WIDTH);
+						} else if (builderZoneCorner == 4) {
+							searchPoint = new Point2D.Double(searchPoint.x+TILE_WIDTH, searchPoint.y-TILE_WIDTH);
+						}
+						
 					}
+					
+					listOfWaypoints.add(searchPoint);
 					
 					
 					
@@ -209,10 +221,10 @@ public class Search extends Thread {
 					
 					driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN,
 							searchPoint.x, searchPoint.y)));
-					driver.turnTo(startSearchAngle, CoordinateSystem.POLAR_DEG);
+					driver.turnTo(startSearchAngle+5.0, CoordinateSystem.POLAR_DEG);
 					clockwise = true;
 					blockSeen = false;
-					searchStep = 0;
+					
 				}
 				
 				
@@ -293,7 +305,7 @@ public class Search extends Thread {
 					* Math.sin(theta)) + position.getY());
 			
 			
-			if (collectorZone.contains(ObjectPoint) || collectorZone.contains(ObjectPoint)) {
+			if (collectorZone.contains(ObjectPoint) || builderZone.contains(ObjectPoint)) {
 				wallSeen();
 				return false;
 			}
@@ -362,7 +374,7 @@ public class Search extends Thread {
 		}
 		// driver.travelDistance(blockDistanceCap);
 		float[] colorRGB = getColorRGB();
-		if (colorRGB[1] > colorRGB[0] /*&& colorRGB[1] > colorRGB[2]*/) {
+		if (colorRGB[1] > colorRGB[0] && colorRGB[1] > colorRGB[2]) {
 			captureBlock();
 		} else {
 			System.out.println("Not Block");
@@ -391,7 +403,7 @@ public class Search extends Thread {
 		if (clockwise) {
 			theta = (theta + 25.0) % 360.0;
 		} else {
-			theta = (theta + 385.0) % 360.0;
+			theta = (theta + 335.0) % 360.0;
 		}
 		driver.turnTo(theta, CoordinateSystem.POLAR_DEG);
 		search();
@@ -441,17 +453,21 @@ public class Search extends Thread {
 		}
 
 		// grab the block
-		grabMotor.rotate(200, false);
+		grabMotor.rotate(240, false);
 		liftMotor.rotate(liftAngle, true);
 
 		// return to the center of the builder zone by going to the original search point (which is now called stack point)
+		for (int i=(listOfWaypoints.size()-1); i>=0; i--) {
+			driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, listOfWaypoints.get(i).getX(), listOfWaypoints.get(i).getY())));
+		}
+		
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, stackPoint.x, stackPoint.y)));
 		driver.turnTo((startSearchAngle + 45.0), CoordinateSystem.HEADING_DEG);
 		driver.travelDistance(-(Math.hypot(HALF_TILE_WIDTH, HALF_TILE_WIDTH)));
 		
 		// drop the block
 		liftMotor.rotate(unliftAngle, false);
-		grabMotor.rotate(-150, false);
+		grabMotor.rotate(-190, false);
 		driver.travelDistance(3.0);
 		// Reposition the bumper
 		if (liftPosition != 0) {
@@ -461,6 +477,10 @@ public class Search extends Thread {
 		grabMotor.rotate(-50, false);
 
 		// Go back to the search point
+		for (int i=0; i<listOfWaypoints.size(); i++) {
+			driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, listOfWaypoints.get(i).getX(), listOfWaypoints.get(i).getY())));
+		}
+		
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN,
 				searchPoint.x, searchPoint.y)));
 
@@ -472,6 +492,7 @@ public class Search extends Thread {
 
 		towerHeight++;
 		clockwise = true;
+		lastAngle = startSearchAngle;
 		search();
 
 	}

@@ -172,6 +172,9 @@ public class Main {
 							* TILE_WIDTH, connData.get("LRZy") * TILE_WIDTH,
 							collectorWidth, collectorHeight);
 				}
+				
+				collectorZone = new Rectangle2D.Double(collectorZone.getMinX()-HALF_TILE_WIDTH, collectorZone.getMinY()-HALF_TILE_WIDTH,
+						collectorZone.getWidth()+TILE_WIDTH, collectorZone.getHeight()+TILE_WIDTH);
 
 				// get the center of the builder zone to know it is in which
 				// quarter (compared to the center of the map)
@@ -179,8 +182,8 @@ public class Main {
 				mapCenter = new Point2D.Double(
 						((MAP_DIMENSION / 2.0) - 1.0) * 30.48,
 						((MAP_DIMENSION / 2.0) - 1.0) * 30.48);
-				mapWithoutWalls = new Rectangle2D.Double(0.0, 0.0,
-						((MAP_DIMENSION-2) * TILE_WIDTH), ((MAP_DIMENSION-2)
+				mapWithoutWalls = new Rectangle2D.Double(HALF_TILE_WIDTH, HALF_TILE_WIDTH,
+						((MAP_DIMENSION-3) * TILE_WIDTH), ((MAP_DIMENSION-3)
 								* TILE_WIDTH));
 
 				// Determines the stack point
@@ -218,26 +221,26 @@ public class Main {
 				if (builderZone.getCenterX() < mapCenter.x) {
 					if (builderZone.getCenterY() < mapCenter.y) {
 						// Bottom left quadrant
-						searchPoint = new Point2D.Double(builderZone.getMaxX()
-								- HALF_TILE_WIDTH, builderZone.getMaxY()
-								- HALF_TILE_WIDTH);
+						searchPoint = new Point2D.Double(builderZone.getMinX()
+								+ HALF_TILE_WIDTH + TILE_WIDTH, builderZone.getMinY()
+								+ HALF_TILE_WIDTH + TILE_WIDTH);
 					} else {
 						// Top left quadrant
-						searchPoint = new Point2D.Double(builderZone.getMaxX()
-								- HALF_TILE_WIDTH, builderZone.getMinY()
-								+ HALF_TILE_WIDTH);
+						searchPoint = new Point2D.Double(builderZone.getMinX()
+								+ HALF_TILE_WIDTH  + TILE_WIDTH, builderZone.getMaxY()
+								- HALF_TILE_WIDTH - TILE_WIDTH);
 					}
 				} else {
 					if (builderZone.getCenterY() < mapCenter.y) {
 						// Bottom right quadrant
-						searchPoint = new Point2D.Double(builderZone.getMinX()
-								+ HALF_TILE_WIDTH, builderZone.getMaxY()
-								- HALF_TILE_WIDTH);
+						searchPoint = new Point2D.Double(builderZone.getMaxX()
+								- HALF_TILE_WIDTH - TILE_WIDTH, builderZone.getMinY()
+								+ HALF_TILE_WIDTH + TILE_WIDTH);
 					} else {
 						// Top right quadrant
-						searchPoint = new Point2D.Double(builderZone.getMinX()
-								+ HALF_TILE_WIDTH, builderZone.getMinY()
-								+ HALF_TILE_WIDTH);
+						searchPoint = new Point2D.Double(builderZone.getMaxX()
+								- HALF_TILE_WIDTH - TILE_WIDTH, builderZone.getMaxY()
+								- HALF_TILE_WIDTH - TILE_WIDTH);
 					}
 				}
 				
