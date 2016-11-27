@@ -20,7 +20,7 @@ public class OdometryCorrection {
 	private static final long CORRECTION_PERIOD = 50;
 	//private static final int ROTATION_SPEED = 100;
 	private static final double CS_DISTANCE = 20; //in cm
-	private static final double CS_ANGLE = 20.0; //in degrees
+	private static final double CS_ANGLE = 15.0; //in degrees
 	
 	private double currentSampleDifference;
 	private double lastSample, currentSample, sampleAngle;
@@ -48,7 +48,7 @@ public class OdometryCorrection {
 		// do trig to compute position and heading
 		
 
-		DataEntryProvider sampleDifferenceProvider = new DataEntryProvider("Sample Difference") {
+		/*DataEntryProvider sampleDifferenceProvider = new DataEntryProvider("Sample Difference") {
 
 			@Override
 			public double getEntry() {
@@ -62,7 +62,7 @@ public class OdometryCorrection {
 
 		// start logger
 		fileLog.start();
-		
+		*/
 		this.firstTime = true;
 		long correctionStart, correctionEnd;
 		AngleCSDataPair maxPair, minPair;
@@ -108,7 +108,7 @@ public class OdometryCorrection {
 			minPair = getMinSamplePair(samples);
 
 			
-			if (maxPair.getcsDifference() >= 90 && minPair.getcsDifference() <= -30) {
+			if (maxPair.getcsDifference() >= 20 && minPair.getcsDifference() <= -20) {
 				
 				// Make EV3 beep each time a line is seen
 				Audio audio = LocalEV3.get().getAudio();
@@ -147,7 +147,7 @@ public class OdometryCorrection {
 		
 
 		// save and close logger
-		fileLog.interrupt();
+		//fileLog.interrupt();
 		
 		
 		// After the while loop stops, compute trigonometry to correct it's position and heading

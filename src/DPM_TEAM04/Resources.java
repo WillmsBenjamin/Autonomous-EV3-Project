@@ -28,7 +28,7 @@ public class Resources {
 
 	// Wifi
 
-	public static final String SERVER_IP = "192.168.2.10";
+	public static final String SERVER_IP = "192.168.2.17";
 	public static final int TEAM_NUMBER = 4;
 	public static boolean isBuilder;
 	public static int startingCorner;
@@ -42,7 +42,7 @@ public class Resources {
 			HALF_TILE_WIDTH = TILE_WIDTH / 2.0;
 	public static final double CS_TO_CENTER = 14.7, US_TO_CENTER = 20.1,
 			BUMPER_TO_CENTER = 9.1;
-	public static final double TRACK = 11.68, WHEEL_RADIUS = 2.03,
+	public static final double TRACK = 10.95, WHEEL_RADIUS = 2.03,
 			LEFT_WHEEL_RADIUS = WHEEL_RADIUS,
 			RIGHT_WHEEL_RADIUS = WHEEL_RADIUS;
 
