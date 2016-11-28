@@ -7,9 +7,8 @@ import DPM_TEAM04.geometry.CoordinateSystem;
 import DPM_TEAM04.geometry.DirectedCoordinate;
 import DPM_TEAM04.logging.DataEntryProvider;
 import DPM_TEAM04.logging.FileLogger;
-
+import DPM_TEAM04.navigation.Driver;
 import static DPM_TEAM04.Resources.*;
-
 import lejos.hardware.Audio;
 import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
@@ -29,7 +28,9 @@ public class OdometryCorrection {
 	private LinkedList<AngleCSDataPair> samples;
 	private LinkedList<Double> angleList = new LinkedList<Double>();		// 0 and 2 are x angles and 1 and 3 are y angles
 	private AngleCSDataPair currentPair;
+	private Driver driver = Driver.getDriver();
 	
+	public boolean isFacingStart;
 	private double errorY = 0.0, errorX = 0.0, currentAngle = 0.0, correctedAngle = 0.0;
 	
 	private DirectedCoordinate position;
@@ -44,6 +45,7 @@ public class OdometryCorrection {
 	}
 	
 	public void doCorrection() {
+		
 		// drive to location the top right corner of a free square,
 		// rotate to 270 degrees, and start doing a 360 degree turn (counter-clockwise),
 		// clock all the gridlines, and
@@ -112,8 +114,7 @@ public class OdometryCorrection {
 		this.firstTime = true;
 		long correctionStart, correctionEnd;
 		AngleCSDataPair maxPair, minPair;
-		double bottomYLineOrientation = 0.0, firstXLineOrientation = 0.0, cornerX = 0.0, cornerY = 0.0;
-		//TODO: Set corner x and y to the coordinates of the corner we are running correction at.
+		double bottomYLineOrientation = 0.0, firstXLineOrientation = 0.0;
 		
 		
 		while (true) {
@@ -263,9 +264,112 @@ public class OdometryCorrection {
 			//update the odometer
 			position.setDirection(thetaCorrected, CoordinateSystem.POLAR_RAD);
 			position.setX(xPosition + cornerX); 
-			position.setY(yPosition + cornerY);			
+			position.setY(yPosition + cornerY);		
+			
+			
+			return;
 		}
 	}
+	
+public void prepareCorrection() {
+		
+		
+		long correctionStart, correctionEnd;
+		AngleCSDataPair maxPair, minPair;
+		
+		leftMotor.stop(true);
+		rightMotor.stop(false);
+		leftMotor.forward();
+		rightMotor.forward();
+		
+		
+		while (true) {
+			correctionStart = System.currentTimeMillis();
+			
+			currentSample = getDownCSData()*1000;
+			sampleAngle = position.getDirection(CoordinateSystem.POLAR_RAD);
+			//sampleAngle = (sampleAngle-(30.0*2.0*Math.PI/360.0))%(2.0*Math.PI);
+			
+			// Fetch the data from the color sensor
+			if (firstTime) {
+				// If it's the first data fetched, set the last sample as the same as the first
+				lastSample = currentSample;
+				firstTime = false;
+			}
+			
+			// Calculate the difference between the last color value and the current one
+			currentSampleDifference = lastSample - currentSample;
+			lastSample = currentSample;
+			currentPair = new AngleCSDataPair(currentSampleDifference, sampleAngle);
+			// We use an list to store the last 20 sample pairs to be able to
+			// determine if a line has been detected.
+			
+			// Add the current sample difference to the list (at the end)
+			samples.addLast(currentPair);
+			if (samples.size() > 20) {
+				// If the list contains more than 20 sample pairs, remove the oldest one (at the beginning)
+				samples.removeFirst();
+			} else if(samples.size() <= 20) {
+				continue;
+			}
+			
+			
+			
+			// WHEN A LINE IS DETECTED
+			// Numbers were found by experimentation to detect the line
+			maxPair = getMaxSamplePair(samples);
+			minPair = getMinSamplePair(samples);
+
+			
+			if (maxPair.getcsDifference() >= 20 && minPair.getcsDifference() <= -20) {
+				
+				// Make EV3 beep each time a line is seen
+				Audio audio = LocalEV3.get().getAudio();
+			    audio.systemSound(0);
+				
+				// Once a line is detected, clear the list as we don't want to detect the same line twice.
+				samples.clear();
+				
+				if (isFacingStart){
+					driver.travelDistance(7);
+					// When a line is passed, store the angle calculated by the odometer in an array
+					leftMotor.stop(true);
+					rightMotor.stop(false);
+					return;
+
+				}else {
+					driver.travelDistance(5);
+					// When a line is passed, store the angle calculated by the odometer in an array
+					leftMotor.stop(true);
+					rightMotor.stop(false);
+					return;
+
+				}
+				
+				
+				
+				
+			}
+			
+			
+
+			// this ensures the odometry correction occurs only once every period
+			correctionEnd = System.currentTimeMillis();
+			if (correctionEnd - correctionStart < CORRECTION_PERIOD) {
+				try {
+					Thread.sleep(CORRECTION_PERIOD - (correctionEnd - correctionStart));
+				} catch (InterruptedException e) {
+					// there is nothing to be done here because it is not
+					// expected that the odometry correction will be
+					// interrupted by another thread
+				}
+			}
+		}
+		
+		
+	}
+	
+	
 	
 	private Double angleBetween(double angleOne, double angleTwo) {
 		double angleBetween;

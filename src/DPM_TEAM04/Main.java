@@ -14,6 +14,7 @@ import DPM_TEAM04.navigation.ObstacleAvoidance;
 import DPM_TEAM04.navigation.Search;
 import DPM_TEAM04.odometry.Localization;
 import DPM_TEAM04.odometry.Odometer;
+import DPM_TEAM04.odometry.OdometryCorrection;
 import lejos.hardware.Button;
 import lejos.robotics.geometry.Point2D;
 import lejos.robotics.geometry.Rectangle2D;
@@ -37,6 +38,8 @@ public class Main {
 
 		// Initialize the odometer
 		final Odometer odometer = Odometer.getOdometer();
+		
+		
 
 		// Initialize the display
 		DataEntryProvider versionProvider = new DataEntryProvider("Version") {
@@ -106,8 +109,7 @@ public class Main {
 		WifiConnection conn = null;
 		try {
 			// System.out.println("Connecting...");
-			conn = new WifiConnection(Resources.SERVER_IP,
-					Resources.TEAM_NUMBER, false);
+			conn = new WifiConnection(Resources.SERVER_IP,Resources.TEAM_NUMBER, false);
 		} catch (IOException e) {
 			System.out.println("Connection failed");
 			Button.waitForAnyPress();
@@ -173,8 +175,9 @@ public class Main {
 							collectorWidth, collectorHeight);
 				}
 				
-				collectorZone = new Rectangle2D.Double(collectorZone.getMinX()-HALF_TILE_WIDTH, collectorZone.getMinY()-HALF_TILE_WIDTH,
-						collectorZone.getWidth()+TILE_WIDTH, collectorZone.getHeight()+TILE_WIDTH);
+				collectorZone = new Rectangle2D.Double(collectorZone.getMinX()-TILE_WIDTH, collectorZone.getMinY()-TILE_WIDTH,
+						collectorZone.getWidth()+2.0*TILE_WIDTH, collectorZone.getHeight()+2.0*TILE_WIDTH);
+				
 
 				// get the center of the builder zone to know it is in which
 				// quarter (compared to the center of the map)
@@ -224,11 +227,17 @@ public class Main {
 						searchPoint = new Point2D.Double(builderZone.getMinX()
 								+ HALF_TILE_WIDTH + TILE_WIDTH, builderZone.getMinY()
 								+ HALF_TILE_WIDTH + TILE_WIDTH);
+						odoCorrectionPoint = new Point2D.Double(builderZone.getMaxX() - 3.0*QUARTER_TILE_WIDTH, builderZone.getMaxY() - 3.0*QUARTER_TILE_WIDTH);
+						cornerX = builderZone.getMaxX();
+						cornerY = builderZone.getMaxY();
 					} else {
 						// Top left quadrant
 						searchPoint = new Point2D.Double(builderZone.getMinX()
 								+ HALF_TILE_WIDTH  + TILE_WIDTH, builderZone.getMaxY()
 								- HALF_TILE_WIDTH - TILE_WIDTH);
+						odoCorrectionPoint = new Point2D.Double(builderZone.getMaxX() - 3.0*QUARTER_TILE_WIDTH, builderZone.getMinY() - 3.0*QUARTER_TILE_WIDTH);
+						cornerX = builderZone.getMaxX();
+						cornerY = builderZone.getMinY();
 					}
 				} else {
 					if (builderZone.getCenterY() < mapCenter.y) {
@@ -236,11 +245,17 @@ public class Main {
 						searchPoint = new Point2D.Double(builderZone.getMaxX()
 								- HALF_TILE_WIDTH - TILE_WIDTH, builderZone.getMinY()
 								+ HALF_TILE_WIDTH + TILE_WIDTH);
+						odoCorrectionPoint = new Point2D.Double(builderZone.getMinX() - 3.0*QUARTER_TILE_WIDTH, builderZone.getMaxY() - 3.0*QUARTER_TILE_WIDTH);
+						cornerX = builderZone.getMinX();
+						cornerY = builderZone.getMaxY();
 					} else {
 						// Top right quadrant
 						searchPoint = new Point2D.Double(builderZone.getMaxX()
 								- HALF_TILE_WIDTH - TILE_WIDTH, builderZone.getMaxY()
 								- HALF_TILE_WIDTH - TILE_WIDTH);
+						odoCorrectionPoint = new Point2D.Double(builderZone.getMinX() - 3.0*QUARTER_TILE_WIDTH, builderZone.getMinY() - 3.0*QUARTER_TILE_WIDTH);
+						cornerX = builderZone.getMinX();
+						cornerY = builderZone.getMinY();
 					}
 				}
 				
@@ -303,12 +318,17 @@ public class Main {
 
 		// start logger
 		// fileLog.start();
+		
+		
 		localization.start();
+		
 		try {
 			localization.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		
+		
 		search.start();
 
 

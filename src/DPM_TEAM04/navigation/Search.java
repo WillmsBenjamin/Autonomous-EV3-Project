@@ -9,6 +9,7 @@ import DPM_TEAM04.geometry.Coordinate;
 import DPM_TEAM04.geometry.CoordinateSystem;
 import DPM_TEAM04.geometry.DirectedCoordinate;
 import DPM_TEAM04.odometry.Odometer;
+import DPM_TEAM04.odometry.OdometryCorrection;
 import lejos.hardware.Audio;
 import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
@@ -41,7 +42,8 @@ public class Search extends Thread {
 	public static double firstAngle, startSearchAngle, endSearchAngle;
 	private static Object lock;
 	private static ArrayList<Point2D> listOfWaypoints = new ArrayList<Point2D>();
-
+	//Initialize the odoCorrection
+	private static OdometryCorrection odoCorrection = new OdometryCorrection();
 	public Search() {
 		
 	}
@@ -80,31 +82,42 @@ public class Search extends Thread {
 			// Not expected to be interrupted
 		}
 		
-		
 		// Time it took to get to the green zone
 		long endTime = System.currentTimeMillis();
 		TIME_LEFT = (int)(endTime-startTime);
 		System.out.println(TIME_LEFT);
 
-		leftMotor.stop();
-		rightMotor.stop();
+		leftMotor.stop(true);
+		rightMotor.stop(false);
 		
-		/*
-		 * 
-		 * NEED TO STOP OBSTACLE AVOIDANCE HERE
-		 * 
-		 */
+		/* ODO CORRECTION START */
+		
+		odoCorrection.isFacingStart = false;
+		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, odoCorrectionPoint.x, odoCorrectionPoint.y)));
+		driver.turnTo(endSearchAngle, CoordinateSystem.POLAR_DEG, false);
+		odoCorrection.prepareCorrection();
+		
+		odoCorrection.isFacingStart = true;
+		driver.turnTo(startSearchAngle - 10, CoordinateSystem.POLAR_DEG, false);
+		odoCorrection.prepareCorrection();
+		
+		driver.turnTo(-115, CoordinateSystem.POLAR_DEG, false);
+		driver.rotate(360, CoordinateSystem.POLAR_DEG, true);
+		odoCorrection.doCorrection();
+		
+		/* ODO CORRECTION END */
+		
 
 		if (searchPoint.x < mapCenter.x) {
 			if (searchPoint.y < mapCenter.y) {
 				// Bottom left quadrant
-				startSearchAngle = 0;
+				startSearchAngle = 5;
 				endSearchAngle = 90;
 				builderZoneCorner = 1;
 			} else {
 				// Top left quadrant
 				startSearchAngle = 270;
-				endSearchAngle = 0;
+				endSearchAngle = 355;
 				builderZoneCorner = 4;
 			}
 		} else {
@@ -140,9 +153,10 @@ public class Search extends Thread {
 		
 		while (true) {
 			double USDistance = Resources.getFrontUSData();
-
+			
 			if (!blockSeen || USDistance > searchCap) {
 				actualAngle = position.getDirection(CoordinateSystem.POLAR_DEG);
+				System.out.println("\n\n\n\n\n" + actualAngle);
 				if (endSearchAngle < startSearchAngle) {
 					endSearchAngle += 360;
 				}
@@ -151,7 +165,7 @@ public class Search extends Thread {
 				}
 				if (actualAngle > (endSearchAngle + 5.0) && clockwise) {
 					clockwise = !clockwise;
-					searchStep++;
+					//searchStep++;
 				}
 				
 				/*
@@ -168,7 +182,7 @@ public class Search extends Thread {
 					rightMotor.stop(false);
 					
 					
-					driver.turnTo((startSearchAngle+45.0), CoordinateSystem.POLAR_DEG);
+					driver.turnTo((startSearchAngle + 45.0), CoordinateSystem.POLAR_DEG);
 					if (getFrontUSData() < 50.0) {
 						
 						// If there's an obstacle in the middle, move to another point.
@@ -373,13 +387,7 @@ public class Search extends Thread {
 			driver.rotate(-7, CoordinateSystem.POLAR_DEG);
 		}
 		// driver.travelDistance(blockDistanceCap);
-		float[] colorRGB = getColorRGB();
-		if (colorRGB[1] > colorRGB[0] && colorRGB[1] > colorRGB[2]) {
-			captureBlock();
-		} else {
-			System.out.println("Not Block");
-			notBlock();
-		}
+		
 	}
 
 	/**
@@ -461,7 +469,24 @@ public class Search extends Thread {
 			driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, listOfWaypoints.get(i).getX(), listOfWaypoints.get(i).getY())));
 		}
 		
+		odoCorrection.isFacingStart = false;
+		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, odoCorrectionPoint.x, odoCorrectionPoint.y)));
+		driver.turnTo(endSearchAngle, CoordinateSystem.POLAR_DEG, false);
+		odoCorrection.prepareCorrection();
+		
+		
+		odoCorrection.isFacingStart = true;
+		driver.turnTo(startSearchAngle - 10, CoordinateSystem.POLAR_DEG, false);
+		odoCorrection.prepareCorrection();
+		
+		//do odometryCorrection
+		driver.turnTo(-115, CoordinateSystem.POLAR_DEG, false);
+		driver.rotate(360, CoordinateSystem.POLAR_DEG, true);
+		odoCorrection.doCorrection();
+		
+		
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, stackPoint.x, stackPoint.y)));
+		
 		driver.turnTo((startSearchAngle + 45.0), CoordinateSystem.HEADING_DEG);
 		driver.travelDistance(-(Math.hypot(HALF_TILE_WIDTH, HALF_TILE_WIDTH)));
 		
@@ -481,8 +506,7 @@ public class Search extends Thread {
 			driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, listOfWaypoints.get(i).getX(), listOfWaypoints.get(i).getY())));
 		}
 		
-		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN,
-				searchPoint.x, searchPoint.y)));
+		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, searchPoint.x, searchPoint.y)));
 
 		// turn to the next angle to search
 		double nextAngle = (lastAngle + nextAngleDelta) % 360.0;

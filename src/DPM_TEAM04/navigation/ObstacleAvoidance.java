@@ -60,8 +60,6 @@ public class ObstacleAvoidance extends Thread {
 				rightMotor.setAcceleration(ACCELERATION_FAST);
 
 				driver.rotate(-90, CoordinateSystem.POLAR_DEG);
-				leftMotor.stop(true);
-				rightMotor.stop(false);
 				
 				while (Math.abs((firstAng + 360) - position.getDirection(CoordinateSystem.POLAR_DEG)) % 360 > 25) {
 					avoidBlock();
@@ -87,13 +85,37 @@ public class ObstacleAvoidance extends Thread {
 	}
 
 	private void isThereObstacle() {
-		if (getFrontUSData() > 10) {
+		double USDistance = getFrontUSData();
+		if (USDistance > 10) {
 			setIsAvoiding(false);
 		} else {
 			leftMotor.stop(true);
 			rightMotor.stop(false);
 			
-			setIsAvoiding(true);
+			if (USDistance > 10) {
+				USDistance = 10;
+			}
+			driver.travelDistance(USDistance);
+			float[] colorRGB = getColorRGB();
+			if (colorRGB[1] > colorRGB[0] && colorRGB[1] > colorRGB[2]) {
+				driver.rotate(-30, CoordinateSystem.POLAR_DEG);
+				driver.travelDistance(8);
+				driver.rotate(60, CoordinateSystem.POLAR_DEG);
+				
+				
+				leftMotor.stop(true);
+				rightMotor.stop(false);
+				leftMotor.setAcceleration(ACCELERATION_SMOOTH);
+				rightMotor.setAcceleration(ACCELERATION_SMOOTH);
+				
+				driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, driver.destination.getX(), driver.destination.getY())), true);
+				
+				setIsAvoiding(false);
+				return;
+			} else {
+				setIsAvoiding(true);
+				return;
+			}
 
 		}
 	}

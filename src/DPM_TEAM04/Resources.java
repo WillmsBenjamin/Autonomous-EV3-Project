@@ -28,7 +28,7 @@ public class Resources {
 
 	// Wifi
 
-	public static final String SERVER_IP = "192.168.2.25";
+	public static final String SERVER_IP = "192.168.2.27";
 	public static final int TEAM_NUMBER = 4;
 	public static boolean isBuilder;
 	public static int startingCorner;
@@ -39,7 +39,7 @@ public class Resources {
 
 	// Distance Constants
 	public static final double TILE_WIDTH = 30.48,
-			HALF_TILE_WIDTH = TILE_WIDTH / 2.0;
+			HALF_TILE_WIDTH = TILE_WIDTH / 2.0, QUARTER_TILE_WIDTH = TILE_WIDTH / 4.0;
 	public static final double CS_TO_CENTER = 14.7, US_TO_CENTER = 20.1,
 			BUMPER_TO_CENTER = 9.1;
 	public static final double TRACK = 10.95, WHEEL_RADIUS = 2.03,
@@ -60,6 +60,7 @@ public class Resources {
 	public static Point2D.Double mapCenter;
 	public static Point2D.Double searchPoint;
 	public static Point2D.Double stackPoint;
+	public static Point2D.Double odoCorrectionPoint;
 
 	// Motors
 	private static final String LEFT_MOTOR_PORT = "B";
@@ -120,6 +121,7 @@ public class Resources {
 	public static boolean isSearching = false;
 	public static int searchStep = 0;
 	public static int TIME_LEFT = (270 * 1000);
+	public static double cornerX, cornerY;
 
 	// LCD
 	public static final TextLCD lcd;
