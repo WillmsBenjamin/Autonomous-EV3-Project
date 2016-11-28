@@ -56,8 +56,10 @@ public class ObstacleAvoidance extends Thread {
 
 				leftMotor.stop(true);
 				rightMotor.stop(false);
+				/*
 				leftMotor.setAcceleration(ACCELERATION_FAST);
 				rightMotor.setAcceleration(ACCELERATION_FAST);
+				*/
 
 				driver.rotate(-90, CoordinateSystem.POLAR_DEG);
 				

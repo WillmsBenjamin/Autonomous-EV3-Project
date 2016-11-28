@@ -52,7 +52,7 @@ public class OdometryCorrection {
 		// do trig to compute position and heading
 		
 
-		/*DataEntryProvider sampleDifferenceProvider = new DataEntryProvider("Sample Difference") {
+		DataEntryProvider sampleDifferenceProvider = new DataEntryProvider("Sample Difference") {
 
 			@Override
 			public double getEntry() {
@@ -66,7 +66,7 @@ public class OdometryCorrection {
 
 		// start logger
 		fileLog.start();
-		*/
+		
 		
 		DataEntryProvider errorYProvider = new DataEntryProvider("ErrorY") {
 
@@ -96,17 +96,17 @@ public class OdometryCorrection {
 
 			@Override
 			public double getEntry() {
-				return getCorrectedAngle();
+				return getDownCSData();
 			}
 		};
 		
 		
 
-		FileLogger fileLog = new FileLogger("Poop.csv", 50,
+		FileLogger fileLog22 = new FileLogger("Poop.csv", 50,
 				errorYProvider, errorXProvider, currentAngleProvider, correctedAngleProvider);
 
 		// start logger
-					fileLog.start();
+					fileLog22.start();
 	
 
 		
@@ -155,7 +155,7 @@ public class OdometryCorrection {
 			minPair = getMinSamplePair(samples);
 
 			
-			if (maxPair.getcsDifference() >= 20 && minPair.getcsDifference() <= -20) {
+			if (maxPair.getcsDifference() >= 90 && minPair.getcsDifference() <= -30) {
 				
 				// Make EV3 beep each time a line is seen
 				Audio audio = LocalEV3.get().getAudio();
@@ -259,7 +259,7 @@ public class OdometryCorrection {
 			
 			// save and close logger
 			fileLog.interrupt();
-			
+			fileLog22.interrupt();
 			
 			//update the odometer
 			position.setDirection(thetaCorrected, CoordinateSystem.POLAR_RAD);
@@ -321,7 +321,7 @@ public void prepareCorrection() {
 			minPair = getMinSamplePair(samples);
 
 			
-			if (maxPair.getcsDifference() >= 20 && minPair.getcsDifference() <= -20) {
+			if (maxPair.getcsDifference() >= 90 && minPair.getcsDifference() <= -30) {
 				
 				// Make EV3 beep each time a line is seen
 				Audio audio = LocalEV3.get().getAudio();

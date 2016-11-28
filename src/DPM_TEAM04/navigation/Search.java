@@ -82,6 +82,14 @@ public class Search extends Thread {
 			// Not expected to be interrupted
 		}
 		
+		
+		/*
+		 * 
+		 * STOP OBSTACLE AVOIDANCE
+		 * 
+		 */
+		isSearching = true;
+		
 		// Time it took to get to the green zone
 		long endTime = System.currentTimeMillis();
 		TIME_LEFT = (int)(endTime-startTime);
@@ -94,11 +102,11 @@ public class Search extends Thread {
 		
 		odoCorrection.isFacingStart = false;
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, odoCorrectionPoint.x, odoCorrectionPoint.y)));
-		driver.turnTo(endSearchAngle, CoordinateSystem.POLAR_DEG, false);
+		driver.turnTo(endSearchAngle, CoordinateSystem.POLAR_DEG);
 		odoCorrection.prepareCorrection();
 		
 		odoCorrection.isFacingStart = true;
-		driver.turnTo(startSearchAngle - 10, CoordinateSystem.POLAR_DEG, false);
+		driver.turnTo(startSearchAngle - 10, CoordinateSystem.POLAR_DEG);
 		odoCorrection.prepareCorrection();
 		
 		driver.turnTo(-115, CoordinateSystem.POLAR_DEG, false);
@@ -135,7 +143,6 @@ public class Search extends Thread {
 		}
 
 		driver.turnTo(startSearchAngle, CoordinateSystem.POLAR_DEG, false);
-		isSearching = true;
 		search();
 	}
 
@@ -165,7 +172,7 @@ public class Search extends Thread {
 				}
 				if (actualAngle > (endSearchAngle + 5.0) && clockwise) {
 					clockwise = !clockwise;
-					//searchStep++;
+					searchStep++;
 				}
 				
 				/*
