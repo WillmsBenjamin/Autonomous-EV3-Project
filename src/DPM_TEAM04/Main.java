@@ -313,11 +313,35 @@ public class Main {
 				return getSideUSData();
 			}
 		};
+		
+		DataEntryProvider csFrontProvider = new DataEntryProvider("CS Side") {
 
-		//FileLogger fileLog = new FileLogger("Log_Test.csv", 50, angleProvider,usFrontProvider, usSideProvider);
+			@Override
+			public double getEntry() {
+				return getDownCSData();
+			}
+		};
+		
+		DataEntryProvider leftMotorProvided = new DataEntryProvider("Left motor") {
+
+			@Override
+			public double getEntry() {
+				return leftMotor.getSpeed();
+			}
+		};
+		
+		DataEntryProvider rightMotorProvided = new DataEntryProvider("Right motor") {
+
+			@Override
+			public double getEntry() {
+				return rightMotor.getSpeed();
+			}
+		};
+
+		FileLogger fileLog = new FileLogger("Log_Test.csv", 50, angleProvider,usFrontProvider, usSideProvider, csFrontProvider, leftMotorProvided, rightMotorProvided);
 
 		// start logger
-		// fileLog.start();
+		fileLog.start();
 		
 		
 		localization.start();
@@ -333,7 +357,7 @@ public class Main {
 
 
 		// save and close logger
-		// fileLog.interrupt();
+		fileLog.interrupt();
 
 		Button.waitForAnyPress();
 		System.exit(0);

@@ -38,7 +38,6 @@ public class ObstacleAvoidance extends Thread {
 		}
 
 		while (true) {
-			position = Odometer.getOdometer().getPosition();
 
 			while (!isSearching && !getIsAvoiding()) {
 				if (driver.getIsTravelling()) {
@@ -47,6 +46,8 @@ public class ObstacleAvoidance extends Thread {
 			}
 
 			if (getIsAvoiding()) {
+				position = Odometer.getOdometer().getPosition();
+				
 				synchronized (driver) {
 					driver.interrupt();
 					driver.setIsTravelling(false);
@@ -97,7 +98,7 @@ public class ObstacleAvoidance extends Thread {
 			if (USDistance > 10) {
 				USDistance = 10;
 			}
-			driver.travelDistance(USDistance);
+			driver.travelDistance(USDistance - 4);
 			float[] colorRGB = getColorRGB();
 			if (colorRGB[1] > colorRGB[0] && colorRGB[1] > colorRGB[2]) {
 				driver.rotate(-30, CoordinateSystem.POLAR_DEG);

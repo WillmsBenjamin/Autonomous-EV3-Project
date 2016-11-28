@@ -37,9 +37,8 @@ public class Driver extends Thread {
 		destination = new Coordinate(CoordinateSystem.CARTESIAN, 0.0, 0.0);
 
 		leftMotor.stop();
-		leftMotor.setAcceleration(ACCELERATION_SMOOTH);
-
 		rightMotor.stop();
+		leftMotor.setAcceleration(ACCELERATION_SMOOTH);
 		rightMotor.setAcceleration(ACCELERATION_SMOOTH);
 	}
 
@@ -179,8 +178,10 @@ public class Driver extends Thread {
 
 	@SuppressWarnings("incomplete-switch")
 	public void rotate(double angle, CoordinateSystem angleUnit, boolean immediateReturn) {
-		leftMotor.setSpeed(SPEED_TURNING_FAST);
-		rightMotor.setSpeed(SPEED_TURNING_FAST);
+		leftMotor.setAcceleration(ACCELERATION_SMOOTH);
+		rightMotor.setAcceleration(ACCELERATION_SMOOTH);
+		leftMotor.setSpeed(SPEED_TURNING_MEDIUM);
+		rightMotor.setSpeed(SPEED_TURNING_MEDIUM);
 
 		double angleHeadingDeg = angle;
 		// normalize angle to Heading Deg
@@ -206,6 +207,7 @@ public class Driver extends Thread {
 
 	public void turnTo(double angle, CoordinateSystem angleUnit,
 			boolean immediateReturn) {
+		
 		DirectedCoordinate position = Odometer.getOdometer().getPosition();
 		double changeInAngle = position.directionTo(angle, angleUnit);
 		rotate(changeInAngle, angleUnit, immediateReturn);

@@ -155,7 +155,7 @@ public class OdometryCorrection {
 			minPair = getMinSamplePair(samples);
 
 			
-			if (maxPair.getcsDifference() >= 90 && minPair.getcsDifference() <= -30) {
+			if (maxPair.getcsDifference() >= 70 && minPair.getcsDifference() <= -30) {
 				
 				// Make EV3 beep each time a line is seen
 				Audio audio = LocalEV3.get().getAudio();
@@ -321,7 +321,7 @@ public void prepareCorrection() {
 			minPair = getMinSamplePair(samples);
 
 			
-			if (maxPair.getcsDifference() >= 90 && minPair.getcsDifference() <= -30) {
+			if (maxPair.getcsDifference() >= 70 && minPair.getcsDifference() <= -30) {
 				
 				// Make EV3 beep each time a line is seen
 				Audio audio = LocalEV3.get().getAudio();

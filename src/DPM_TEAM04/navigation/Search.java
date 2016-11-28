@@ -174,7 +174,7 @@ public class Search extends Thread {
 				}
 				if (actualAngle > (endSearchAngle + 5.0) && clockwise) {
 					clockwise = !clockwise;
-					searchStep++;
+					//searchStep++;
 				}
 				
 				/*
@@ -396,7 +396,13 @@ public class Search extends Thread {
 			driver.rotate(-7, CoordinateSystem.POLAR_DEG);
 		}
 		// driver.travelDistance(blockDistanceCap);
-		
+		float[] colorRGB = getColorRGB();
+		if (colorRGB[1] > colorRGB[0] && colorRGB[1] > colorRGB[2]) {
+			captureBlock();
+		} else {
+			System.out.println("Not Block");
+			notBlock();
+		}
 	}
 
 	/**
@@ -480,12 +486,22 @@ public class Search extends Thread {
 		
 		odoCorrection.isFacingStart = false;
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, odoCorrectionPoint.x, odoCorrectionPoint.y)));
+		
+		System.out.println("\n\n\n\n" + endSearchAngle);
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+		} 
 		driver.turnTo(endSearchAngle, CoordinateSystem.POLAR_DEG, false);
 		odoCorrection.prepareCorrection();
 		
 		
 		odoCorrection.isFacingStart = true;
 		driver.turnTo(startSearchAngle - 10, CoordinateSystem.POLAR_DEG, false);
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+		} 
 		odoCorrection.prepareCorrection();
 		
 		//do odometryCorrection
@@ -524,6 +540,12 @@ public class Search extends Thread {
 		isHoldingBlock = false;
 
 		towerHeight++;
+		
+		// If tower is 4 blocks high, exit the program
+		if (towerHeight > 4) {
+			System.exit(0);
+		}
+		
 		clockwise = true;
 		lastAngle = startSearchAngle;
 		search();
