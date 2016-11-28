@@ -98,23 +98,6 @@ public class Search extends Thread {
 		leftMotor.stop(true);
 		rightMotor.stop(false);
 		
-		/* ODO CORRECTION START */
-		
-		odoCorrection.isFacingStart = false;
-		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, odoCorrectionPoint.x, odoCorrectionPoint.y)));
-		driver.turnTo(endSearchAngle, CoordinateSystem.POLAR_DEG);
-		odoCorrection.prepareCorrection();
-		
-		odoCorrection.isFacingStart = true;
-		driver.turnTo(startSearchAngle - 10, CoordinateSystem.POLAR_DEG);
-		odoCorrection.prepareCorrection();
-		
-		driver.turnTo(-115, CoordinateSystem.POLAR_DEG, false);
-		driver.rotate(360, CoordinateSystem.POLAR_DEG, true);
-		odoCorrection.doCorrection();
-		
-		/* ODO CORRECTION END */
-		
 
 		if (searchPoint.x < mapCenter.x) {
 			if (searchPoint.y < mapCenter.y) {
@@ -141,6 +124,25 @@ public class Search extends Thread {
 				builderZoneCorner = 3;
 			}
 		}
+		
+		
+		
+		/* ODO CORRECTION START */
+		
+		odoCorrection.isFacingStart = false;
+		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, odoCorrectionPoint.x, odoCorrectionPoint.y)));
+		driver.turnTo(endSearchAngle, CoordinateSystem.POLAR_DEG, false);
+		odoCorrection.prepareCorrection();
+		
+		odoCorrection.isFacingStart = true;
+		driver.turnTo(startSearchAngle - 10, CoordinateSystem.POLAR_DEG, false);
+		odoCorrection.prepareCorrection();
+		
+		driver.turnTo(-115, CoordinateSystem.POLAR_DEG, false);
+		driver.rotate(360, CoordinateSystem.POLAR_DEG, true);
+		odoCorrection.doCorrection();
+		
+		/* ODO CORRECTION END */
 
 		driver.turnTo(startSearchAngle, CoordinateSystem.POLAR_DEG, false);
 		search();
