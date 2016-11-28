@@ -1,0 +1,807 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.1.12" icons="true">  
+  <object id="1" language="java" name="DPM_TEAM04.Main" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/Main.java" binary="false" label="main" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="178" y="0"/>    
+    <execution id="2">      
+      <position height="3534" width="66" x="5" y="78"/>    
+    </execution>    
+    <execution id="30">      
+      <position height="21" width="7" x="35" y="2538"/>    
+    </execution>  
+  </object>  
+  <object id="31" language="java" name="DPM_TEAM04.Resources" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/Resources.java" binary="false" label="resources" type="class" 
+    autoSize="true">    
+    <position height="-1" width="-1" x="166" y="0"/>    
+    <execution id="4">      
+      <position height="84" width="85" x="75" y="99"/>    
+    </execution>    
+    <execution id="34">      
+      <position height="21" width="85" x="75" y="785"/>    
+    </execution>    
+    <execution id="33">      
+      <position height="21" width="7" x="114" y="141"/>    
+    </execution>    
+    <execution id="35">      
+      <position height="21" width="85" x="75" y="954"/>    
+    </execution>    
+    <execution id="36">      
+      <position height="21" width="85" x="75" y="1499"/>    
+    </execution>    
+    <execution id="37">      
+      <position height="21" width="85" x="75" y="1661"/>    
+    </execution>    
+    <execution id="38">      
+      <position height="21" width="85" x="75" y="2112"/>    
+    </execution>    
+    <execution id="39">      
+      <position height="21" width="85" x="75" y="2786"/>    
+    </execution>    
+    <execution id="40">      
+      <position height="21" width="85" x="75" y="2973"/>    
+    </execution>  
+  </object>  
+  <object id="41" language="java" name="wifi.WifiConnection" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/wifi/WifiConnection.java" binary="false" label="wifiConnection" type="class" 
+    autoSize="true">    
+    <position height="-1" width="-1" x="864" y="0"/>    
+    <execution id="18">      
+      <position height="171" width="109" x="745" y="698"/>    
+    </execution>    
+    <execution id="44">      
+      <position height="89" width="7" x="909" y="738"/>    
+    </execution>  
+  </object>  
+  <object id="46" language="java" name="wifi.ParseTransmission" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/wifi/ParseTransmission.java" binary="false" label="&lt;static&gt;" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="43">      
+      <position height="131" width="0" x="0" y="717"/>    
+    </execution>  
+  </object>  
+  <object id="48" language="java" name="DPM_TEAM04.odometry.Odometer" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/odometry/Odometer.java" binary="false" label="odometer" type="class" 
+    autoSize="true">    
+    <position height="-1" width="-1" x="167" y="0"/>    
+    <execution id="6">      
+      <position height="136" width="109" x="164" y="219"/>    
+    </execution>    
+    <execution id="50">      
+      <position height="73" width="0" x="0" y="261"/>    
+    </execution>    
+    <execution id="20">      
+      <position height="315" width="109" x="164" y="857"/>    
+    </execution>    
+    <execution id="54">      
+      <position height="252" width="7" x="215" y="899"/>    
+    </execution>    
+    <execution id="61">      
+      <position height="21" width="7" x="215" y="1109"/>    
+    </execution>    
+    <execution id="62">      
+      <position height="21" width="109" x="415" y="2754"/>    
+    </execution>    
+    <execution id="63">      
+      <position height="21" width="109" x="415" y="3470"/>    
+    </execution>  
+  </object>  
+  <object id="64" language="java" name="DPM_TEAM04.geometry.DirectedCoordinate" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/geometry/DirectedCoordinate.java" binary="false" label="position" 
+    type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="52">      
+      <position height="21" width="0" x="0" y="292"/>    
+    </execution>    
+    <execution id="57">      
+      <position height="21" width="0" x="0" y="1014"/>    
+    </execution>    
+    <execution id="59">      
+      <position height="21" width="0" x="0" y="1056"/>    
+    </execution>    
+    <execution id="65">      
+      <position height="21" width="133" x="277" y="1529"/>    
+    </execution>    
+    <execution id="66">      
+      <position height="21" width="133" x="277" y="1312"/>    
+    </execution>    
+    <execution id="67">      
+      <position height="21" width="133" x="277" y="1690"/>    
+    </execution>    
+    <execution id="68">      
+      <position height="21" width="133" x="277" y="2168"/>    
+    </execution>    
+    <execution id="69">      
+      <position height="21" width="133" x="277" y="2320"/>    
+    </execution>    
+    <execution id="70">      
+      <position height="21" width="133" x="528" y="3144"/>    
+    </execution>  
+  </object>  
+  <object id="71" language="java" name="DPM_TEAM04.logging.DataEntryProvider" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/logging/DataEntryProvider.java" binary="false" label="dataEntryProvider" 
+    type="class" autoSize="true">    
+    <position height="-1" width="-1" x="272" y="0"/>    
+    <execution id="8">      
+      <position height="21" width="130" x="164" y="376"/>    
+    </execution>    
+    <execution id="72">      
+      <position height="63" width="130" x="414" y="1291"/>    
+    </execution>  
+  </object>  
+  <object id="74" language="java" name="DPM_TEAM04.logging.LCDLogger" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/logging/LCDLogger.java" binary="false" label="lcdLogger" type="class" 
+    autoSize="true">    
+    <position height="-1" width="-1" x="468" y="0"/>    
+    <execution id="10">      
+      <position height="21" width="98" x="298" y="417"/>    
+    </execution>    
+    <execution id="22">      
+      <position height="177" width="98" x="548" y="1228"/>    
+    </execution>    
+    <execution id="76">      
+      <position height="105" width="7" x="594" y="1270"/>    
+    </execution>    
+    <execution id="78">      
+      <position height="21" width="7" x="594" y="1363"/>    
+    </execution>  
+  </object>  
+  <object id="80" language="java" name="DPM_TEAM04.odometry.Localization" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/odometry/Localization.java" binary="false" label="localization" type="class" 
+    autoSize="true">    
+    <position height="-1" width="-1" x="588" y="0"/>    
+    <execution id="12">      
+      <position height="63" width="109" x="400" y="458"/>    
+    </execution>    
+    <execution id="24">      
+      <position height="1019" width="109" x="650" y="1421"/>    
+    </execution>    
+    <execution id="84">      
+      <position height="946" width="7" x="701" y="1473"/>    
+    </execution>    
+    <execution id="26">      
+      <position height="21" width="7" x="701" y="1442"/>    
+    </execution>    
+    <execution id="90">      
+      <position height="121" width="7" x="704" y="1640"/>    
+    </execution>    
+    <execution id="92">      
+      <position height="147" width="7" x="701" y="1811"/>    
+    </execution>    
+    <execution id="99">      
+      <position height="119" width="7" x="704" y="2147"/>    
+    </execution>    
+    <execution id="101">      
+      <position height="99" width="7" x="704" y="2299"/>    
+    </execution>  
+  </object>  
+  <object id="118" language="java" name="java.util.ArrayList" project="DPM-TEAM04-Source" 
+    file="C:/Program Files (x86)/Java/jre7/lib/rt.jar" binary="true" label="listOfDistances" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="82">      
+      <position height="21" width="0" x="0" y="479"/>    
+    </execution>    
+    <execution id="107">      
+      <position height="21" width="96" x="763" y="1719"/>    
+    </execution>    
+    <execution id="109">      
+      <position height="94" width="96" x="763" y="1843"/>    
+    </execution>  
+  </object>  
+  <object id="123" language="java" name="DPM_TEAM04.odometry.Localization.Distance" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/odometry/Localization.java" binary="false" label="distance" type="class" 
+    autoSize="true">    
+    <position height="-1" width="-1" x="567" y="0"/>    
+    <execution id="105">      
+      <position height="21" width="109" x="863" y="1695"/>    
+    </execution>    
+    <execution id="120">      
+      <position height="21" width="109" x="863" y="1864"/>    
+    </execution>    
+    <execution id="122">      
+      <position height="21" width="7" x="914" y="1895"/>    
+    </execution>  
+  </object>  
+  <object id="124" language="java" name="DPM_TEAM04.navigation.Driver" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/navigation/Driver.java" binary="false" label="driver" type="class" 
+    autoSize="true">    
+    <position height="-1" width="-1" x="477" y="0"/>    
+    <execution id="14">      
+      <position height="84" width="112" x="626" y="542"/>    
+    </execution>    
+    <execution id="126">      
+      <position height="21" width="0" x="0" y="584"/>    
+    </execution>    
+    <execution id="88">      
+      <position height="21" width="112" x="863" y="1535"/>    
+    </execution>    
+    <execution id="94">      
+      <position height="21" width="112" x="976" y="1996"/>    
+    </execution>    
+    <execution id="96">      
+      <position height="21" width="112" x="976" y="2024"/>    
+    </execution>    
+    <execution id="112">      
+      <position height="21" width="112" x="976" y="2191"/>    
+    </execution>    
+    <execution id="114">      
+      <position height="21" width="112" x="976" y="2224"/>    
+    </execution>    
+    <execution id="117">      
+      <position height="21" width="112" x="976" y="2356"/>    
+    </execution>    
+    <execution id="127">      
+      <position height="21" width="112" x="1227" y="2877"/>    
+    </execution>    
+    <execution id="128">      
+      <position height="21" width="112" x="1227" y="3031"/>    
+    </execution>    
+    <execution id="129">      
+      <position height="21" width="112" x="1227" y="3059"/>    
+    </execution>    
+    <execution id="130">      
+      <position height="21" width="112" x="1227" y="3083"/>    
+    </execution>    
+    <execution id="131">      
+      <position height="21" width="112" x="1227" y="3245"/>    
+    </execution>    
+    <execution id="132">      
+      <position height="21" width="112" x="1227" y="3505"/>    
+    </execution>    
+    <execution id="133">      
+      <position height="21" width="112" x="1227" y="3549"/>    
+    </execution>  
+  </object>  
+  <object id="134" language="java" name="DPM_TEAM04.navigation.Search" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/navigation/Search.java" binary="false" label="search" type="class" 
+    autoSize="true">    
+    <position height="-1" width="-1" x="785" y="0"/>    
+    <execution id="16">      
+      <position height="21" width="112" x="629" y="642"/>    
+    </execution>    
+    <execution id="28">      
+      <position height="1089" width="112" x="1092" y="2502"/>    
+    </execution>    
+    <execution id="136">      
+      <position height="21" width="7" x="1396" y="2544"/>    
+    </execution>  
+  </object>  
+  <object id="144" language="java" name="DPM_TEAM04.navigation.ObstacleAvoidance" project="DPM-TEAM04-Source" 
+    file="/DPM-TEAM04-Source/src/DPM_TEAM04/navigation/ObstacleAvoidance.java" binary="false" label="oobsAvoid" 
+    type="class" autoSize="true">    
+    <position height="-1" width="-1" x="960" y="0"/>    
+    <execution id="138">      
+      <position height="21" width="133" x="1459" y="2598"/>    
+    </execution>    
+    <execution id="140">      
+      <position height="806" width="7" x="1522" y="2636"/>    
+    </execution>    
+    <execution id="146">      
+      <position height="743" width="7" x="1522" y="2678"/>    
+    </execution>    
+    <execution id="148">      
+      <position height="678" width="7" x="1522" y="2722"/>    
+    </execution>    
+    <execution id="152">      
+      <position height="550" width="7" x="1528" y="2829"/>    
+    </execution>    
+    <execution id="155">      
+      <position height="406" width="7" x="1531" y="2952"/>    
+    </execution>    
+    <execution id="158">      
+      <position height="327" width="7" x="1534" y="3010"/>    
+    </execution>    
+    <execution id="164">      
+      <position height="21" width="7" x="1537" y="3194"/>    
+    </execution>    
+    <execution id="167">      
+      <position height="21" width="7" x="1537" y="3295"/>    
+    </execution>  
+  </object>  
+  <note id="168">    
+    <position height="59" width="115" x="288" y="298"/>    
+    <text><![CDATA[Created for version number and each Odometer value]]>
+    </text>  
+  </note>  
+  <note id="169">    
+    <position height="34" width="117" x="126" y="64"/>    
+    <text><![CDATA[Initialize resources]]>
+    </text>  
+  </note>  
+  <note id="170">    
+    <position height="32" width="200" x="550" y="873"/>    
+    <text><![CDATA[Repeats until Program ends]]>
+    </text>  
+  </note>  
+  <note id="171">    
+    <position height="40" width="84" x="259" y="891"/>    
+    <text><![CDATA[Get Motor Tacho counts]]>
+    </text>  
+  </note>  
+  <note id="172">    
+    <position height="74" width="121" x="67" y="701"/>    
+    <text><![CDATA[Sets builderZone, collectorZone, searchPoint and stackPoint]]>
+    </text>  
+  </note>  
+  <note id="173">    
+    <position height="31" width="176" x="914" y="1248"/>    
+    <text><![CDATA[Repeats until Program ends]]>
+    </text>  
+  </note>  
+  <note id="174">    
+    <position height="46" width="200" x="138" y="1507"/>    
+    <text><![CDATA[Set initial minDistance and minDistAngle]]>
+    </text>  
+  </note>  
+  <note id="175">    
+    <position height="61" width="200" x="1102" y="1590"/>    
+    <text><![CDATA[Repeat saveDistance() until one full rotation is complete]]>
+    </text>  
+  </note>  
+  <note id="176">    
+    <position height="46" width="200" x="694" y="1770"/>    
+    <text><![CDATA[Find the minimal distance and set minDistance and minDistAngle]]>
+    </text>  
+  </note>  
+  <note id="177">    
+    <position height="30" width="127" x="781" y="1983"/>    
+    <text><![CDATA[Bump into first wall]]>
+    </text>  
+  </note>  
+  <note id="178">    
+    <position height="74" width="200" x="564" y="2012"/>    
+    <text><![CDATA[Determine where second wall is,  set the first coordinate and direction, then bump into the next wall]]>
+    </text>  
+  </note>  
+  <note id="179">    
+    <position height="43" width="153" x="1114" y="2267"/>    
+    <text><![CDATA[Set second coordinate and back up]]>
+    </text>  
+  </note>  
+  <note id="180">    
+    <position height="47" width="130" x="123" y="2514"/>    
+    <text><![CDATA[Wait for button press to exit system]]>
+    </text>  
+  </note>  
+  <note id="181">    
+    <position height="61" width="334" x="1675" y="2762"/>    
+    <text><![CDATA[1. Check if not searching and not avoiding, if false ObstacleAvoidance is de-activated and keeps checking these variables. If true, continue to step 2]]>
+    </text>  
+  </note>  
+  <note id="182">    
+    <position height="41" width="321" x="1549" y="2856"/>    
+    <text><![CDATA[2. Check if travelling, if so, Obstacle avoidance is activated. If not, restart step 1]]>
+    </text>  
+  </note>  
+  <note id="183">    
+    <position height="42" width="271" x="1669" y="2919"/>    
+    <text><![CDATA[3. Continuously check for obstacles, if present continue to step 4 else return to step 2]]>
+    </text>  
+  </note>  
+  <note id="184">    
+    <position height="91" width="275" x="1617" y="3009"/>    
+    <text><![CDATA[4. Initialize avoidance
+-Interrupt the driver
+-set travelling to false
+-rotate -90 so that SideUS is facing obstacle
+-begin avoidance]]>
+    </text>  
+  </note>  
+  <note id="185">    
+    <position height="44" width="200" x="1650" y="3142"/>    
+    <text><![CDATA[5. Keep avoiding until robot circumvents the obstacle]]>
+    </text>  
+  </note>  
+  <note id="186">    
+    <position height="48" width="200" x="1717" y="3275"/>    
+    <text><![CDATA[6. Stop obstacle avoidance, return to step 1]]>
+    </text>  
+  </note>  
+  <note id="187">    
+    <position height="31" width="200" x="1677" y="2656"/>    
+    <text><![CDATA[Repeats until program exits]]>
+    </text>  
+  </note>  
+  <note id="188">    
+    <position height="25" width="200" x="1439" y="3510"/>    
+    <text><![CDATA[Travel to Search Point]]>
+    </text>  
+  </note>  
+  <message id="3" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="5" operation="getOdometer():DPM_TEAM04.odometry.Odometer" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="6"/>  
+  </message>  
+  <message id="7" operation="DataEntryProvider(java.lang.String)" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="8"/>  
+  </message>  
+  <message id="9" operation="LCDLogger(int,int,DPM_TEAM04.logging.DataEntryProvider[])" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="10"/>  
+  </message>  
+  <message id="11" operation="Localization()" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="12"/>  
+  </message>  
+  <message id="13" operation="getDriver():DPM_TEAM04.navigation.Driver" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="14"/>  
+  </message>  
+  <message id="15" operation="Search()" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="16"/>  
+  </message>  
+  <message id="17" operation="WifiConnection(java.lang.String,int,boolean)" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="18"/>  
+  </message>  
+  <message id="19" operation="start():void" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="20"/>  
+  </message>  
+  <message id="21" operation="start():void" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="22"/>  
+  </message>  
+  <message id="23" operation="start():void" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="24"/>  
+  </message>  
+  <message id="25" operation="join():void" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="26"/>  
+  </message>  
+  <message id="27" operation="start():void" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="28"/>  
+  </message>  
+  <message id="29" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="30"/>  
+  </message>  
+  <message id="32" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="33"/>  
+  </message>  
+  <message id="42" operation="parseData(java.io.DataInputStream):java.util.HashMap&lt;String,Integer&gt;" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="43"/>  
+  </message>  
+  <message id="45" asynchronous="false">    
+    <end type="SOURCE" refId="44"/>    
+    <end type="TARGET" refId="34"/>  
+  </message>  
+  <message id="47" asynchronous="false">    
+    <end type="SOURCE" refId="43"/>    
+    <end type="TARGET" refId="44"/>  
+  </message>  
+  <message id="49" operation="Odometer()" asynchronous="false">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="50"/>  
+  </message>  
+  <message id="51" 
+    operation="DirectedCoordinate(DPM_TEAM04.geometry.CoordinateSystem,double,double,double,DPM_TEAM04.geometry.CoordinateSystem)" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="50"/>    
+    <end type="TARGET" refId="52"/>  
+  </message>  
+  <message id="53" operation="run():void" asynchronous="false">    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="54"/>  
+  </message>  
+  <message id="55" asynchronous="false">    
+    <end type="SOURCE" refId="54"/>    
+    <end type="TARGET" refId="35"/>  
+  </message>  
+  <message id="56" operation="getDirection(DPM_TEAM04.geometry.CoordinateSystem):double" asynchronous="false">    
+    <end type="SOURCE" refId="54"/>    
+    <end type="TARGET" refId="57"/>  
+  </message>  
+  <message id="58" 
+    operation="incrementCoordinate(DPM_TEAM04.geometry.CoordinateSystem,double,double,double,DPM_TEAM04.geometry.CoordinateSystem):void" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="54"/>    
+    <end type="TARGET" refId="59"/>  
+  </message>  
+  <message id="60" operation="sleep(long):void" asynchronous="false">    
+    <end type="SOURCE" refId="54"/>    
+    <end type="TARGET" refId="61"/>  
+  </message>  
+  <message id="73" 
+    operation="getCoordinates(DPM_TEAM04.geometry.CoordinateSystem,DPM_TEAM04.geometry.CoordinateSystem):double[]" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="72"/>    
+    <end type="TARGET" refId="66"/>  
+  </message>  
+  <message id="75" operation="run():void" asynchronous="false">    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="76"/>  
+  </message>  
+  <message id="77" operation="sleep(long):void" asynchronous="false">    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="78"/>  
+  </message>  
+  <message id="79" operation="getEntry():double" asynchronous="false">    
+    <end type="SOURCE" refId="76"/>    
+    <end type="TARGET" refId="72"/>  
+  </message>  
+  <message id="81" operation="ArrayList()" asynchronous="false">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="82"/>  
+  </message>  
+  <message id="83" operation="run():void" asynchronous="false">    
+    <end type="SOURCE" refId="24"/>    
+    <end type="TARGET" refId="84"/>  
+  </message>  
+  <message id="85" operation="getFrontUSData():float" asynchronous="false">    
+    <end type="SOURCE" refId="84"/>    
+    <end type="TARGET" refId="36"/>  
+  </message>  
+  <message id="86" operation="getDirection(DPM_TEAM04.geometry.CoordinateSystem):double" asynchronous="false">    
+    <end type="SOURCE" refId="84"/>    
+    <end type="TARGET" refId="65"/>  
+  </message>  
+  <message id="87" operation="rotate(double,DPM_TEAM04.geometry.CoordinateSystem,boolean):void" asynchronous="false">    
+    <end type="SOURCE" refId="84"/>    
+    <end type="TARGET" refId="88"/>  
+  </message>  
+  <message id="89" operation="saveDistance():void" asynchronous="false">    
+    <end type="SOURCE" refId="84"/>    
+    <end type="TARGET" refId="90"/>  
+  </message>  
+  <message id="91" operation="getMinimalDistance():void" asynchronous="false">    
+    <end type="SOURCE" refId="84"/>    
+    <end type="TARGET" refId="92"/>  
+  </message>  
+  <message id="93" operation="turnTo(double,DPM_TEAM04.geometry.CoordinateSystem):void" asynchronous="false">    
+    <end type="SOURCE" refId="84"/>    
+    <end type="TARGET" refId="94"/>  
+  </message>  
+  <message id="95" operation="travelDistance(double):void" asynchronous="false">    
+    <end type="SOURCE" refId="84"/>    
+    <end type="TARGET" refId="96"/>  
+  </message>  
+  <message id="97" operation="getSideUSData():float" asynchronous="false">    
+    <end type="SOURCE" refId="84"/>    
+    <end type="TARGET" refId="38"/>  
+  </message>  
+  <message id="98" operation="setNewCoordinates():void" asynchronous="false">    
+    <end type="SOURCE" refId="84"/>    
+    <end type="TARGET" refId="99"/>  
+  </message>  
+  <message id="100" operation="setNewCoordinates():void" asynchronous="false">    
+    <end type="SOURCE" refId="84"/>    
+    <end type="TARGET" refId="101"/>  
+  </message>  
+  <message id="102" operation="getFrontUSData():float" asynchronous="false">    
+    <end type="SOURCE" refId="90"/>    
+    <end type="TARGET" refId="37"/>  
+  </message>  
+  <message id="103" operation="getDirection(DPM_TEAM04.geometry.CoordinateSystem):double" asynchronous="false">    
+    <end type="SOURCE" refId="90"/>    
+    <end type="TARGET" refId="67"/>  
+  </message>  
+  <message id="104" operation="Distance(double,double)" asynchronous="false">    
+    <end type="SOURCE" refId="90"/>    
+    <end type="TARGET" refId="105"/>  
+  </message>  
+  <message id="106" operation="add(E):boolean" asynchronous="false">    
+    <end type="SOURCE" refId="90"/>    
+    <end type="TARGET" refId="107"/>  
+  </message>  
+  <message id="108" operation="get(int):E" asynchronous="false">    
+    <end type="SOURCE" refId="92"/>    
+    <end type="TARGET" refId="109"/>  
+  </message>  
+  <message id="110" 
+    operation="setCoordinate(DPM_TEAM04.geometry.CoordinateSystem,double,double,double,DPM_TEAM04.geometry.CoordinateSystem):void" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="99"/>    
+    <end type="TARGET" refId="68"/>  
+  </message>  
+  <message id="111" operation="turnTo(double,DPM_TEAM04.geometry.CoordinateSystem):void" asynchronous="false">    
+    <end type="SOURCE" refId="99"/>    
+    <end type="TARGET" refId="112"/>  
+  </message>  
+  <message id="113" operation="travelDistance(double):void" asynchronous="false">    
+    <end type="SOURCE" refId="99"/>    
+    <end type="TARGET" refId="114"/>  
+  </message>  
+  <message id="115" 
+    operation="setCoordinate(DPM_TEAM04.geometry.CoordinateSystem,double,double,double,DPM_TEAM04.geometry.CoordinateSystem):void" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="101"/>    
+    <end type="TARGET" refId="69"/>  
+  </message>  
+  <message id="116" operation="travelDistance(double):void" asynchronous="false">    
+    <end type="SOURCE" refId="101"/>    
+    <end type="TARGET" refId="117"/>  
+  </message>  
+  <message id="119" operation="getDistance():double" asynchronous="false">    
+    <end type="SOURCE" refId="109"/>    
+    <end type="TARGET" refId="120"/>  
+  </message>  
+  <message id="121" operation="getAngle():double" asynchronous="false">    
+    <end type="SOURCE" refId="109"/>    
+    <end type="TARGET" refId="122"/>  
+  </message>  
+  <message id="125" operation="Driver()" asynchronous="false">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="126"/>  
+  </message>  
+  <message id="135" operation="run():void" asynchronous="false">    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="136"/>  
+  </message>  
+  <message id="137" operation="ObstacleAvoidance()" asynchronous="false">    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="138"/>  
+  </message>  
+  <message id="139" operation="start():void" asynchronous="false">    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="140"/>  
+  </message>  
+  <message id="141" operation="getPosition():DPM_TEAM04.geometry.DirectedCoordinate" asynchronous="false">    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="63"/>  
+  </message>  
+  <message id="142" operation="travelTo(DPM_TEAM04.geometry.Coordinate,boolean):void" asynchronous="false">    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="132"/>  
+  </message>  
+  <message id="143" operation="turnTo(double,DPM_TEAM04.geometry.CoordinateSystem,boolean):void" asynchronous="false">    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="133"/>  
+  </message>  
+  <message id="145" operation="run():void" asynchronous="false">    
+    <end type="SOURCE" refId="140"/>    
+    <end type="TARGET" refId="146"/>  
+  </message>  
+  <message id="147" operation="sleep(long):void" asynchronous="false">    
+    <end type="SOURCE" refId="146"/>    
+    <end type="TARGET" refId="148"/>  
+  </message>  
+  <message id="149" operation="getPosition():DPM_TEAM04.geometry.DirectedCoordinate" asynchronous="false">    
+    <end type="SOURCE" refId="148"/>    
+    <end type="TARGET" refId="62"/>  
+  </message>  
+  <message id="150" asynchronous="false">    
+    <end type="SOURCE" refId="148"/>    
+    <end type="TARGET" refId="39"/>  
+  </message>  
+  <message id="151" operation="getIsAvoiding():boolean" asynchronous="false">    
+    <end type="SOURCE" refId="148"/>    
+    <end type="TARGET" refId="152"/>  
+  </message>  
+  <message id="153" operation="getIsTravelling():boolean" asynchronous="false">    
+    <end type="SOURCE" refId="152"/>    
+    <end type="TARGET" refId="127"/>  
+  </message>  
+  <message id="154" operation="isThereObstacle():void" asynchronous="false">    
+    <end type="SOURCE" refId="152"/>    
+    <end type="TARGET" refId="155"/>  
+  </message>  
+  <message id="156" operation="getFrontUSData():float" asynchronous="false">    
+    <end type="SOURCE" refId="155"/>    
+    <end type="TARGET" refId="40"/>  
+  </message>  
+  <message id="157" operation="setIsAvoiding(boolean):void" asynchronous="false">    
+    <end type="SOURCE" refId="155"/>    
+    <end type="TARGET" refId="158"/>  
+  </message>  
+  <message id="159" operation="interrupt():void" asynchronous="false">    
+    <end type="SOURCE" refId="158"/>    
+    <end type="TARGET" refId="128"/>  
+  </message>  
+  <message id="160" operation="setIsTravelling(boolean):void" asynchronous="false">    
+    <end type="SOURCE" refId="158"/>    
+    <end type="TARGET" refId="129"/>  
+  </message>  
+  <message id="161" operation="rotate(double,DPM_TEAM04.geometry.CoordinateSystem):void" asynchronous="false">    
+    <end type="SOURCE" refId="158"/>    
+    <end type="TARGET" refId="130"/>  
+  </message>  
+  <message id="162" operation="getDirection(DPM_TEAM04.geometry.CoordinateSystem):double" asynchronous="false">    
+    <end type="SOURCE" refId="158"/>    
+    <end type="TARGET" refId="70"/>  
+  </message>  
+  <message id="163" operation="avoidBlock():void" asynchronous="false">    
+    <end type="SOURCE" refId="158"/>    
+    <end type="TARGET" refId="164"/>  
+  </message>  
+  <message id="165" operation="travelTo(DPM_TEAM04.geometry.Coordinate,boolean):void" asynchronous="false">    
+    <end type="SOURCE" refId="158"/>    
+    <end type="TARGET" refId="131"/>  
+  </message>  
+  <message id="166" operation="setIsAvoiding(boolean):void" asynchronous="false">    
+    <end type="SOURCE" refId="158"/>    
+    <end type="TARGET" refId="167"/>  
+  </message>  
+  <text-link id="189">    
+    <link-end type="SOURCE" refId="183"/>    
+    <link-end type="TARGET" refId="154"/>  
+  </text-link>  
+  <text-link id="190">    
+    <link-end type="SOURCE" refId="173"/>    
+    <link-end type="TARGET" refId="75"/>  
+  </text-link>  
+  <text-link id="191">    
+    <link-end type="SOURCE" refId="184"/>    
+    <link-end type="TARGET" refId="157"/>  
+  </text-link>  
+  <text-link id="192">    
+    <link-end type="SOURCE" refId="177"/>    
+    <link-end type="TARGET" refId="93"/>  
+  </text-link>  
+  <text-link id="193">    
+    <link-end type="SOURCE" refId="172"/>    
+    <link-end type="TARGET" refId="45"/>  
+  </text-link>  
+  <text-link id="194">    
+    <link-end type="SOURCE" refId="181"/>    
+    <link-end type="TARGET" refId="151"/>  
+  </text-link>  
+  <text-link id="195">    
+    <link-end type="SOURCE" refId="176"/>    
+    <link-end type="TARGET" refId="91"/>  
+  </text-link>  
+  <text-link id="196">    
+    <link-end type="SOURCE" refId="179"/>    
+    <link-end type="TARGET" refId="100"/>  
+  </text-link>  
+  <text-link id="197">    
+    <link-end type="SOURCE" refId="186"/>    
+    <link-end type="TARGET" refId="166"/>  
+  </text-link>  
+  <text-link id="198">    
+    <link-end type="SOURCE" refId="185"/>    
+    <link-end type="TARGET" refId="163"/>  
+  </text-link>  
+  <text-link id="199">    
+    <link-end type="SOURCE" refId="188"/>    
+    <link-end type="TARGET" refId="142"/>  
+  </text-link>  
+  <text-link id="200">    
+    <link-end type="SOURCE" refId="178"/>    
+    <link-end type="TARGET" refId="97"/>  
+  </text-link>  
+  <text-link id="201">    
+    <link-end type="SOURCE" refId="171"/>    
+    <link-end type="TARGET" refId="55"/>  
+  </text-link>  
+  <text-link id="202">    
+    <link-end type="SOURCE" refId="182"/>    
+    <link-end type="TARGET" refId="153"/>  
+  </text-link>  
+  <text-link id="203">    
+    <link-end type="SOURCE" refId="169"/>    
+    <link-end type="TARGET" refId="3"/>  
+  </text-link>  
+  <text-link id="204">    
+    <link-end type="SOURCE" refId="170"/>    
+    <link-end type="TARGET" refId="53"/>  
+  </text-link>  
+  <text-link id="205">    
+    <link-end type="SOURCE" refId="168"/>    
+    <link-end type="TARGET" refId="7"/>  
+  </text-link>  
+  <text-link id="206">    
+    <link-end type="SOURCE" refId="187"/>    
+    <link-end type="TARGET" refId="145"/>  
+  </text-link>  
+  <text-link id="207">    
+    <link-end type="SOURCE" refId="175"/>    
+    <link-end type="TARGET" refId="89"/>  
+  </text-link>  
+  <text-link id="208">    
+    <link-end type="SOURCE" refId="180"/>    
+    <link-end type="TARGET" refId="29"/>  
+  </text-link>
+</sequence-diagram>
