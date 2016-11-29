@@ -89,8 +89,26 @@ public class ObstacleAvoidance extends Thread {
 
 	private void isThereObstacle() {
 		double USDistance = getFrontUSData();
+		
+		/*
+		 * START OF NEW CODE : Compute the dangerous circle of the red zone and if the robot is inside, start the obstacle avoidance
+		 
+		Point2D topRightCornerPt = new Point2D.Double(collectorZone.getMaxX(), collectorZone.getMaxY());
+		Point2D centerOfCollector = new Point2D.Double(collectorZone.getCenterX(), collectorZone.getCenterY());
+		double minimalDistanceFromCenterOfColleter = Math.abs(topRightCornerPt.distance(centerOfCollector)) + TILE_WIDTH;
+		Point2D actualPosition = new Point2D.Double(position.getX(), position.getY());
+		
+		if (Math.abs(actualPosition.distance(centerOfCollector)) < minimalDistanceFromCenterOfColleter) {
+			setIsAvoiding(true);
+			return;
+		}
+
+		 * END OF NEW CODE
+		 */
+		
 		if (USDistance > 10) {
 			setIsAvoiding(false);
+			return;
 		} else {
 			leftMotor.stop(true);
 			rightMotor.stop(false);
@@ -129,6 +147,29 @@ public class ObstacleAvoidance extends Thread {
 		double speed;
 		leftMotor.setSpeed(SPEED_AVOIDING_INBETWEEN);
 		distance = getSideUSData();
+		
+		/*
+		 * START OF NEW CODE : Compute the dangerous circle of the red zone
+		 * 
+		 * If the robot is inside the zone, avoid it
+		 * If the distance to the zone is smaller than 10, avoid it
+		 
+		
+		Point2D topRightCornerPt = new Point2D.Double(collectorZone.getMaxX(), collectorZone.getMaxY());
+		Point2D centerOfCollector = new Point2D.Double(collectorZone.getCenterX(), collectorZone.getCenterY());
+		double minimalDistanceFromCenterOfColleter = Math.abs(topRightCornerPt.distance(centerOfCollector)) + TILE_WIDTH;
+		Point2D actualPosition = new Point2D.Double(position.getX(), position.getY());
+		double distanceFromZoneRadially = Math.abs(minimalDistanceFromCenterOfColleter - Math.abs(actualPosition.distance(centerOfCollector)));
+		
+		if (Math.abs(actualPosition.distance(centerOfCollector)) < minimalDistanceFromCenterOfColleter) {
+			distance = distanceFromZoneRadially;
+		} else if (distanceFromZoneRadially < 10 && distance >= 10) {
+			distance = distanceFromZoneRadially;
+		}
+		
+		
+		 * END OF NEW CODE
+		 */
 		
 		
 		//change distance max and min

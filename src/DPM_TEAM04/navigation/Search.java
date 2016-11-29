@@ -45,8 +45,7 @@ public class Search extends Thread {
 	//Initialize the odoCorrection
 	private static OdometryCorrection odoCorrection = new OdometryCorrection();
 	public Search() {
-		//driver = Driver.getDriver();
-		position = Odometer.getOdometer().getPosition();
+		
 	}
 
 	public void run() {
@@ -58,7 +57,8 @@ public class Search extends Thread {
 		
 		long startTime = System.currentTimeMillis();
 
-		
+		//driver = Driver.getDriver();
+		position = Odometer.getOdometer().getPosition();
 
 		grabMotor.setAcceleration(ACCELERATION_SMOOTH);
 		liftMotor.setAcceleration(ACCELERATION_SMOOTH);
@@ -125,25 +125,24 @@ public class Search extends Thread {
 			}
 		}
 		
-		System.out.println("\n\n\n\n\n" + startSearchAngle + "\n" + endSearchAngle);
 		
 		
-		/* ODO CORRECTION START */
-		/*
+		/* ODO CORRECTION START 
+		
 		odoCorrection.isFacingStart = false;
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, odoCorrectionPoint.x, odoCorrectionPoint.y)));
-		driver.turnTo(endSearchAngle, CoordinateSystem.POLAR_DEG);
+		driver.turnTo(endSearchAngle, CoordinateSystem.POLAR_DEG, false);
 		odoCorrection.prepareCorrection();
 		
 		odoCorrection.isFacingStart = true;
-		driver.turnTo(startSearchAngle - 10, CoordinateSystem.POLAR_DEG);
+		driver.turnTo(startSearchAngle - 10, CoordinateSystem.POLAR_DEG, false);
 		odoCorrection.prepareCorrection();
 		
 		driver.turnTo(-115, CoordinateSystem.POLAR_DEG, false);
 		driver.rotate(360, CoordinateSystem.POLAR_DEG, true);
 		odoCorrection.doCorrection();
 		
-		/* ODO CORRECTION END */
+		ODO CORRECTION END */
 
 		driver.turnTo(startSearchAngle, CoordinateSystem.POLAR_DEG, false);
 		search();
@@ -170,12 +169,12 @@ public class Search extends Thread {
 				if (endSearchAngle < startSearchAngle) {
 					endSearchAngle += 360;
 				}
-				if (actualAngle < (startSearchAngle - 5)) {
+				if (actualAngle < (startSearchAngle - 5.0)) {
 					actualAngle += 360;
 				}
-				if (actualAngle > (endSearchAngle + 5.0) && clockwise) {
+				if (actualAngle > (endSearchAngle - 5.0) && clockwise) {
 					clockwise = !clockwise;
-					//searchStep++;
+					searchStep++;
 				}
 				
 				/*
@@ -186,7 +185,7 @@ public class Search extends Thread {
 				
 				if (searchStep == 1) {
 					
-					searchStep = 0;
+					searchStep = 2;
 					
 					leftMotor.stop(true);
 					rightMotor.stop(false);
@@ -201,38 +200,38 @@ public class Search extends Thread {
 						if (getFrontUSData() < 70.0) {
 
 							if (builderZoneCorner == 1) {
-								searchPoint = new Point2D.Double(searchPoint.x, searchPoint.y+TILE_WIDTH);
+								searchPoint = new Point2D.Double(searchPoint.getX(), searchPoint.getY()+TILE_WIDTH);
 							} else if (builderZoneCorner == 2) {
-								searchPoint = new Point2D.Double(searchPoint.x-TILE_WIDTH, searchPoint.y);
+								searchPoint = new Point2D.Double(searchPoint.getX()-TILE_WIDTH, searchPoint.getY());
 							} else if (builderZoneCorner == 3) {
-								searchPoint = new Point2D.Double(searchPoint.x, searchPoint.y-TILE_WIDTH);
+								searchPoint = new Point2D.Double(searchPoint.getX(), searchPoint.getY()-TILE_WIDTH);
 							} else if (builderZoneCorner == 4) {
-								searchPoint = new Point2D.Double(searchPoint.x+TILE_WIDTH, searchPoint.y);
+								searchPoint = new Point2D.Double(searchPoint.getX()+TILE_WIDTH, searchPoint.getY());
 							}
 							
 						} else {
 							
 							if (builderZoneCorner == 1) {
-								searchPoint = new Point2D.Double(searchPoint.x+2.0*TILE_WIDTH, searchPoint.y);
+								searchPoint = new Point2D.Double(searchPoint.getX()+2.0*TILE_WIDTH, searchPoint.getY());
 							} else if (builderZoneCorner == 2) {
-								searchPoint = new Point2D.Double(searchPoint.x, searchPoint.y+2.0*TILE_WIDTH);
+								searchPoint = new Point2D.Double(searchPoint.getX(), searchPoint.getY()+2.0*TILE_WIDTH);
 							} else if (builderZoneCorner == 3) {
-								searchPoint = new Point2D.Double(searchPoint.x-2.0*TILE_WIDTH, searchPoint.y);
+								searchPoint = new Point2D.Double(searchPoint.getX()-2.0*TILE_WIDTH, searchPoint.getY());
 							} else if (builderZoneCorner == 4) {
-								searchPoint = new Point2D.Double(searchPoint.x, searchPoint.y-2.0*TILE_WIDTH);
+								searchPoint = new Point2D.Double(searchPoint.getX(), searchPoint.getY()-2.0*TILE_WIDTH);
 							}
 							
 						}
 					} else {
 						
 						if (builderZoneCorner == 1) {
-							searchPoint = new Point2D.Double(searchPoint.x+TILE_WIDTH, searchPoint.y+TILE_WIDTH);
+							searchPoint = new Point2D.Double(searchPoint.getX()+TILE_WIDTH, searchPoint.getY()+TILE_WIDTH);
 						} else if (builderZoneCorner == 2) {
-							searchPoint = new Point2D.Double(searchPoint.x-TILE_WIDTH, searchPoint.y+TILE_WIDTH);
+							searchPoint = new Point2D.Double(searchPoint.getX()-TILE_WIDTH, searchPoint.getY()+TILE_WIDTH);
 						} else if (builderZoneCorner == 3) {
-							searchPoint = new Point2D.Double(searchPoint.x-TILE_WIDTH, searchPoint.y-TILE_WIDTH);
+							searchPoint = new Point2D.Double(searchPoint.getX()-TILE_WIDTH, searchPoint.getY()-TILE_WIDTH);
 						} else if (builderZoneCorner == 4) {
-							searchPoint = new Point2D.Double(searchPoint.x+TILE_WIDTH, searchPoint.y-TILE_WIDTH);
+							searchPoint = new Point2D.Double(searchPoint.getX()+TILE_WIDTH, searchPoint.getY()-TILE_WIDTH);
 						}
 						
 					}
@@ -265,16 +264,10 @@ public class Search extends Thread {
 			} else if (isObjectSeen(USDistance)) {
 				blockSeen = true;
 				// move forward
-				
-				Object lock = new Object();
-				synchronized (lock) {
-					leftMotor.setSpeed(SPEED_FORWARD);
-					rightMotor.setSpeed(SPEED_FORWARD);
-					
-					leftMotor.forward();
-					rightMotor.forward();
-				}
-				
+				leftMotor.setSpeed(SPEED_FORWARD);
+				rightMotor.setSpeed(SPEED_FORWARD);
+				leftMotor.forward();
+				rightMotor.forward();
 				lastAngle = position.getDirection(CoordinateSystem.POLAR_DEG);
 
 				if (firstTime) {
@@ -322,7 +315,7 @@ public class Search extends Thread {
 	 * 
 	 * @param USDistance
 	 *            Data from the ultrasonic sensor.
-	 * @return Returns true if there is an objet seen. Returns false if no objet
+	 * @return Returns true if there is an object seen. Returns false if no object
 	 *         is seen.
 	 */
 	public static boolean isObjectSeen(double USDistance) {
@@ -413,7 +406,7 @@ public class Search extends Thread {
 	}
 
 	/**
-	 * If it not a block, go back to the search point and continue searching.
+	 * If it is not a block, go back to the search point and continue searching.
 	 */
 	public static void notBlock() {
 		driver.travelDistance(-BUMPER_TO_CENTER);
@@ -429,13 +422,13 @@ public class Search extends Thread {
 	 * If the object is too close to a wall, turn instantly.
 	 */
 	public static void wallSeen() {
-		double theta = position.getDirection(CoordinateSystem.POLAR_DEG);
+		leftMotor.stop(true);
+		rightMotor.stop(false);
 		if (clockwise) {
-			theta = (theta + 25.0) % 360.0;
+			driver.rotate(25, CoordinateSystem.POLAR_DEG);
 		} else {
-			theta = (theta + 335.0) % 360.0;
+			driver.rotate(-25, CoordinateSystem.POLAR_DEG);
 		}
-		driver.turnTo(theta, CoordinateSystem.POLAR_DEG);
 		search();
 	}
 
@@ -476,16 +469,12 @@ public class Search extends Thread {
 		// orient the block to make it easier to grab
 		if (clockwise) {
 			rightMotor.rotate(-90, false);
-			leftMotor.rotate(-90, false);
+			leftMotor.rotate(-90, true);
 		} else {
 			leftMotor.rotate(-90, false);
-			rightMotor.rotate(-90, false);
+			rightMotor.rotate(-90, true);
 		}
-		
-		
-		//run into the block while we grab it
-		driver.travelDistance(-5.0, true);
-		
+
 		// grab the block
 		grabMotor.rotate(240, false);
 		liftMotor.rotate(liftAngle, true);
@@ -495,6 +484,9 @@ public class Search extends Thread {
 			driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, listOfWaypoints.get(i).getX(), listOfWaypoints.get(i).getY())));
 		}
 		
+		
+		
+		/*
 		odoCorrection.isFacingStart = false;
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, odoCorrectionPoint.x, odoCorrectionPoint.y)));
 		
@@ -504,19 +496,19 @@ public class Search extends Thread {
 		driver.turnTo(45, CoordinateSystem.POLAR_DEG, false);
 		odoCorrection.prepareCorrection();
 		
-		/*
-		odoCorrection.isFacingStart = true;
-		driver.turnTo(0 - 10, CoordinateSystem.POLAR_DEG, false);
 		
-		odoCorrection.prepareCorrection();
-		*/
+		//odoCorrection.isFacingStart = true;
+		//driver.turnTo(0 - 10, CoordinateSystem.POLAR_DEG, false);
+		
+		//odoCorrection.prepareCorrection();
+		
 		
 		
 		//do odometryCorrection
 		driver.turnTo(-115, CoordinateSystem.POLAR_DEG, false);
 		driver.rotate(360, CoordinateSystem.POLAR_DEG, true);
 		odoCorrection.doCorrection();
-		
+		*/
 		
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, stackPoint.x, stackPoint.y)));
 		
@@ -598,11 +590,15 @@ public class Search extends Thread {
 		// orient the block to make it easier to grab
 		if (clockwise) {
 			rightMotor.rotate(-90, false);
-			leftMotor.rotate(-90, true);
+			leftMotor.rotate(-90, false);
 		} else {
 			leftMotor.rotate(-90, false);
-			rightMotor.rotate(-90, true);
+			rightMotor.rotate(-90, false);
 		}
+		
+		//run into the block while we grab it
+		driver.travelDistance(-5.0, true);
+
 
 		// grab the block
 		grabMotor.rotate(200, false);
