@@ -28,7 +28,7 @@ public class Resources {
 
 	// Wifi
 
-	public static final String SERVER_IP = "172.20.10.11";
+	public static final String SERVER_IP = "192.168.2.3";
 	public static final int TEAM_NUMBER = 4;
 	public static boolean isBuilder;
 	public static int startingCorner;

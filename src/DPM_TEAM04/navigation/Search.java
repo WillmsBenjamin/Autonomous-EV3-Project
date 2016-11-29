@@ -450,18 +450,23 @@ public class Search extends Thread {
 
 		// Set the angles according to the tower height
 		int liftAngle = 0, unliftAngle = 0;
+		int turnToStack = 45;
 		if (towerHeight == 0) {
 			liftAngle = -450;
 			unliftAngle = 450;
+			turnToStack = 43;
 		} else if (towerHeight == 1) {
 			liftAngle = -900;
 			unliftAngle = 100;
+			turnToStack = 41;
 		} else if (towerHeight == 2) {
 			liftAngle = -1800;
 			unliftAngle = 100;
+			turnToStack = 39;
 		} else if (towerHeight == 3) {
 			liftAngle = -2600;
 			unliftAngle = 100;
+			turnToStack = 37;
 		}
 		liftPosition = liftAngle + unliftAngle;
 
@@ -519,7 +524,7 @@ public class Search extends Thread {
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, stackPoint.x, stackPoint.y)));
 		
 		driver.turnTo(startSearchAngle, CoordinateSystem.POLAR_DEG, false);
-		driver.rotate(45, CoordinateSystem.POLAR_DEG, false);
+		driver.rotate(turnToStack, CoordinateSystem.POLAR_DEG, false);
 		driver.travelDistance(-(Math.hypot(HALF_TILE_WIDTH, HALF_TILE_WIDTH)));
 		
 		// drop the block
