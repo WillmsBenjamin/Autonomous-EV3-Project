@@ -31,6 +31,8 @@ public class OdometryCorrection {
 	private Driver driver = Driver.getDriver();
 	
 	public boolean isFacingStart;
+	
+	//for plotting
 	private double errorY = 0.0, errorX = 0.0, currentAngle = 0.0, correctedAngle = 0.0;
 	
 	private DirectedCoordinate position;
@@ -51,21 +53,32 @@ public class OdometryCorrection {
 		// clock all the gridlines, and
 		// do trig to compute position and heading
 		
+		currentSampleDifference = 0.0;
+		lastSample = 0.0;
+		currentSample = 0.0; 
+		sampleAngle = 0.0;
+		firstTime= true;
+		lineCounter = 0;
+		samples.clear();
+		angleList.clear();
+		currentPair = new AngleCSDataPair();
+		
+		
 
-		DataEntryProvider sampleDifferenceProvider = new DataEntryProvider("Sample Difference") {
+		/*DataEntryProvider sampleDifferenceProvider = new DataEntryProvider("Sample Difference") {
 
 			@Override
 			public double getEntry() {
 				return getCurrentSampleDifference();
 			}
-		};
+		};*/
 		
 
-		FileLogger fileLog = new FileLogger("Sample_Difference_Test.csv", 50,
-				sampleDifferenceProvider);
+		//FileLogger fileLog = new FileLogger("Sample_Difference_Test.csv", 50,
+			//	sampleDifferenceProvider);
 
 		// start logger
-		fileLog.start();
+		//fileLog.start();
 		
 		
 		DataEntryProvider errorYProvider = new DataEntryProvider("ErrorY") {
@@ -96,17 +109,17 @@ public class OdometryCorrection {
 
 			@Override
 			public double getEntry() {
-				return getDownCSData();
+				return getCorrectedAngle();
 			}
 		};
 		
 		
 
-		FileLogger fileLog22 = new FileLogger("Poop.csv", 50,
+		FileLogger fileLog22 = new FileLogger("Poop4.csv", 50,
 				errorYProvider, errorXProvider, currentAngleProvider, correctedAngleProvider);
 
 		// start logger
-					fileLog22.start();
+		fileLog22.start();
 	
 
 		
@@ -166,11 +179,11 @@ public class OdometryCorrection {
 				
 				// When a line is passed, store the angle calculated by the odometer in an array
 				this.lineCounter++;
-				this.angleList.add((maxPair.getAngle() + angleBetween(maxPair.getAngle(), minPair.getAngle()))%(2*Math.PI));
+				this.angleList.add((maxPair.getAngle() + angleBetween(maxPair.getAngle(), minPair.getAngle()))%(2.0*Math.PI));
 				if(lineCounter == 1) {
-					bottomYLineOrientation = (maxPair.getAngle() + angleBetween(maxPair.getAngle(), minPair.getAngle()))%(2*Math.PI); //Keep track of the robot's orientation when detecting the first y line
+					bottomYLineOrientation = (maxPair.getAngle() + angleBetween(maxPair.getAngle(), minPair.getAngle()))%(2.0*Math.PI); //Keep track of the robot's orientation when detecting the first y line
 				} else if(lineCounter == 2) {
-					firstXLineOrientation = (maxPair.getAngle() + angleBetween(maxPair.getAngle(), minPair.getAngle()))%(2*Math.PI); //Keep track of the robot's orientation when detecting the first x line
+					firstXLineOrientation = (maxPair.getAngle() + angleBetween(maxPair.getAngle(), minPair.getAngle()))%(2.0*Math.PI); //Keep track of the robot's orientation when detecting the first x line
 				}
 			}
 			
@@ -221,8 +234,8 @@ public class OdometryCorrection {
 				bottomYLineOrientation += 2.0*Math.PI;
 			}
 			// Compute the error between the true orientation, and the odometer's orientation
-			deltaAngleY = (2.0)*Math.PI - ((bottomYLineOrientation)%(2*Math.PI))- halfAngleBetweenY;
-			deltaAngleX = (1.0/2.0)*Math.PI - ((firstXLineOrientation)%(2*Math.PI))- halfAngleBetweenX;
+			deltaAngleY = (2.0)*Math.PI - ((bottomYLineOrientation)%(2.0*Math.PI))- halfAngleBetweenY;
+			deltaAngleX = (1.0/2.0)*Math.PI - ((firstXLineOrientation)%(2.0*Math.PI))- halfAngleBetweenX;
 			/*
 			if (deltaAngleY < 0.0) {
 				deltaAngleY += 2.0*Math.PI;
@@ -230,7 +243,9 @@ public class OdometryCorrection {
 			if (deltaAngleX < 0.0) {
 				deltaAngleX += 2.0*Math.PI;
 			}*/
-			
+			if(deltaAngleX < -1) {
+				deltaAngleX += 2.0*Math.PI;
+			}
 			
 			errorY = deltaAngleY;
 			errorX = deltaAngleX;
@@ -248,9 +263,13 @@ public class OdometryCorrection {
 			
 			correctedAngle = thetaCorrected;
 			
+			/*
+			if(yPosition < xPosition) {
+				thetaCorrected += Math.PI;
+			}*/
 			
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(200);
 			} catch (InterruptedException e) {
 				// there is nothing to be done here because it is not
 				// expected that the odometry correction will be
@@ -258,7 +277,7 @@ public class OdometryCorrection {
 			}
 			
 			// save and close logger
-			fileLog.interrupt();
+			//fileLog.interrupt();
 			fileLog22.interrupt();
 			
 			//update the odometer
@@ -273,14 +292,24 @@ public class OdometryCorrection {
 	
 public void prepareCorrection() {
 		
-		
 		long correctionStart, correctionEnd;
 		AngleCSDataPair maxPair, minPair;
 		
+		
+		
 		leftMotor.stop(true);
 		rightMotor.stop(false);
-		leftMotor.forward();
-		rightMotor.forward();
+		
+		
+		Object lock2 = new Object();
+		synchronized (lock2) {
+			leftMotor.setSpeed(SPEED_FORWARD);
+			rightMotor.setSpeed(SPEED_FORWARD);
+			
+			leftMotor.forward();
+			rightMotor.forward();
+		}
+		
 		
 		
 		while (true) {
@@ -329,7 +358,11 @@ public void prepareCorrection() {
 				
 				// Once a line is detected, clear the list as we don't want to detect the same line twice.
 				samples.clear();
+				driver.travelDistance(7);
+				return;
+
 				
+				/*
 				if (isFacingStart){
 					driver.travelDistance(7);
 					// When a line is passed, store the angle calculated by the odometer in an array
@@ -344,7 +377,7 @@ public void prepareCorrection() {
 					rightMotor.stop(false);
 					return;
 
-				}
+				}*/
 				
 				
 				

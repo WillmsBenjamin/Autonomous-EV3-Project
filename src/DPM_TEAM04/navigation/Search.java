@@ -45,7 +45,8 @@ public class Search extends Thread {
 	//Initialize the odoCorrection
 	private static OdometryCorrection odoCorrection = new OdometryCorrection();
 	public Search() {
-		
+		//driver = Driver.getDriver();
+		position = Odometer.getOdometer().getPosition();
 	}
 
 	public void run() {
@@ -57,8 +58,7 @@ public class Search extends Thread {
 		
 		long startTime = System.currentTimeMillis();
 
-		//driver = Driver.getDriver();
-		position = Odometer.getOdometer().getPosition();
+		
 
 		grabMotor.setAcceleration(ACCELERATION_SMOOTH);
 		liftMotor.setAcceleration(ACCELERATION_SMOOTH);
@@ -125,17 +125,18 @@ public class Search extends Thread {
 			}
 		}
 		
+		System.out.println("\n\n\n\n\n" + startSearchAngle + "\n" + endSearchAngle);
 		
 		
 		/* ODO CORRECTION START */
-		
+		/*
 		odoCorrection.isFacingStart = false;
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, odoCorrectionPoint.x, odoCorrectionPoint.y)));
-		driver.turnTo(endSearchAngle, CoordinateSystem.POLAR_DEG, false);
+		driver.turnTo(endSearchAngle, CoordinateSystem.POLAR_DEG);
 		odoCorrection.prepareCorrection();
 		
 		odoCorrection.isFacingStart = true;
-		driver.turnTo(startSearchAngle - 10, CoordinateSystem.POLAR_DEG, false);
+		driver.turnTo(startSearchAngle - 10, CoordinateSystem.POLAR_DEG);
 		odoCorrection.prepareCorrection();
 		
 		driver.turnTo(-115, CoordinateSystem.POLAR_DEG, false);
@@ -169,7 +170,7 @@ public class Search extends Thread {
 				if (endSearchAngle < startSearchAngle) {
 					endSearchAngle += 360;
 				}
-				if (actualAngle < startSearchAngle) {
+				if (actualAngle < (startSearchAngle - 5)) {
 					actualAngle += 360;
 				}
 				if (actualAngle > (endSearchAngle + 5.0) && clockwise) {
@@ -264,10 +265,16 @@ public class Search extends Thread {
 			} else if (isObjectSeen(USDistance)) {
 				blockSeen = true;
 				// move forward
-				leftMotor.setSpeed(SPEED_FORWARD);
-				rightMotor.setSpeed(SPEED_FORWARD);
-				leftMotor.forward();
-				rightMotor.forward();
+				
+				Object lock = new Object();
+				synchronized (lock) {
+					leftMotor.setSpeed(SPEED_FORWARD);
+					rightMotor.setSpeed(SPEED_FORWARD);
+					
+					leftMotor.forward();
+					rightMotor.forward();
+				}
+				
 				lastAngle = position.getDirection(CoordinateSystem.POLAR_DEG);
 
 				if (firstTime) {
@@ -469,12 +476,16 @@ public class Search extends Thread {
 		// orient the block to make it easier to grab
 		if (clockwise) {
 			rightMotor.rotate(-90, false);
-			leftMotor.rotate(-90, true);
+			leftMotor.rotate(-90, false);
 		} else {
 			leftMotor.rotate(-90, false);
-			rightMotor.rotate(-90, true);
+			rightMotor.rotate(-90, false);
 		}
-
+		
+		
+		//run into the block while we grab it
+		driver.travelDistance(-5.0, true);
+		
 		// grab the block
 		grabMotor.rotate(240, false);
 		liftMotor.rotate(liftAngle, true);
@@ -487,22 +498,19 @@ public class Search extends Thread {
 		odoCorrection.isFacingStart = false;
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, odoCorrectionPoint.x, odoCorrectionPoint.y)));
 		
-		System.out.println("\n\n\n\n" + endSearchAngle);
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-		} 
-		driver.turnTo(endSearchAngle, CoordinateSystem.POLAR_DEG, false);
+		
+		
+		//here
+		driver.turnTo(45, CoordinateSystem.POLAR_DEG, false);
 		odoCorrection.prepareCorrection();
 		
-		
+		/*
 		odoCorrection.isFacingStart = true;
-		driver.turnTo(startSearchAngle - 10, CoordinateSystem.POLAR_DEG, false);
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-		} 
+		driver.turnTo(0 - 10, CoordinateSystem.POLAR_DEG, false);
+		
 		odoCorrection.prepareCorrection();
+		*/
+		
 		
 		//do odometryCorrection
 		driver.turnTo(-115, CoordinateSystem.POLAR_DEG, false);
@@ -542,7 +550,7 @@ public class Search extends Thread {
 		towerHeight++;
 		
 		// If tower is 4 blocks high, exit the program
-		if (towerHeight > 4) {
+		if (towerHeight >= 4) {
 			System.exit(0);
 		}
 		

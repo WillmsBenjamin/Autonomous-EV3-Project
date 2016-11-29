@@ -180,8 +180,8 @@ public class Driver extends Thread {
 	public void rotate(double angle, CoordinateSystem angleUnit, boolean immediateReturn) {
 		leftMotor.setAcceleration(ACCELERATION_SMOOTH);
 		rightMotor.setAcceleration(ACCELERATION_SMOOTH);
-		leftMotor.setSpeed(SPEED_TURNING_MEDIUM);
-		rightMotor.setSpeed(SPEED_TURNING_MEDIUM);
+		leftMotor.setSpeed(SPEED_TURNING_FAST);
+		rightMotor.setSpeed(SPEED_TURNING_FAST);
 
 		double angleHeadingDeg = angle;
 		// normalize angle to Heading Deg

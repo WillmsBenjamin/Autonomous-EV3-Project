@@ -63,6 +63,8 @@ public class OdometryCorrectionTest {
 		
 		OdometryCorrection odoCorrection = new OdometryCorrection();
 		
+		while(true) {
+		
 		driver.rotate(-115, CoordinateSystem.POLAR_DEG, false);
 		driver.rotate(360, CoordinateSystem.POLAR_DEG, true);
 		odoCorrection.doCorrection();
@@ -72,7 +74,8 @@ public class OdometryCorrectionTest {
 		driver.turnTo(0.0, CoordinateSystem.POLAR_DEG);
 		
 		Button.waitForAnyPress();
-		System.exit(0);
+		}
+		
 	}
 
 }

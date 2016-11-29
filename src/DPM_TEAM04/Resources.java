@@ -28,14 +28,14 @@ public class Resources {
 
 	// Wifi
 
-	public static final String SERVER_IP = "192.168.2.16";
+	public static final String SERVER_IP = "192.168.43.124";
 	public static final int TEAM_NUMBER = 4;
 	public static boolean isBuilder;
 	public static int startingCorner;
 	public static HashMap<String, Integer> wifiData;
 
 	// MAP
-	public static final int MAP_DIMENSION = 8; // 8 X 8 tiles
+	public static final int MAP_DIMENSION = 12; // 12 X 12 tiles
 
 	// Distance Constants
 	public static final double TILE_WIDTH = 30.48,
@@ -63,13 +63,13 @@ public class Resources {
 	public static Point2D.Double odoCorrectionPoint;
 
 	// Motors
-	private static final String LEFT_MOTOR_PORT = "B";
+	private static final String LEFT_MOTOR_PORT = "C";
 	public static final EV3LargeRegulatedMotor leftMotor;
-	private static final String RIGHT_MOTOR_PORT = "A";
+	private static final String RIGHT_MOTOR_PORT = "D";
 	public static final EV3LargeRegulatedMotor rightMotor;
-	private static final String GRAB_MOTOR_PORT = "C";
+	private static final String GRAB_MOTOR_PORT = "B";
 	public static final EV3LargeRegulatedMotor grabMotor;
-	private static final String LIFT_MOTOR_PORT = "D";
+	private static final String LIFT_MOTOR_PORT = "A";
 	public static final EV3LargeRegulatedMotor liftMotor;
 
 	// Motor Constants

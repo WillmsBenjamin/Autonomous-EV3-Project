@@ -183,8 +183,8 @@ public class Main {
 				// quarter (compared to the center of the map)
 
 				mapCenter = new Point2D.Double(
-						((MAP_DIMENSION / 2.0) - 1.0) * 30.48,
-						((MAP_DIMENSION / 2.0) - 1.0) * 30.48);
+						(((MAP_DIMENSION / 2.0) - 1.0) * TILE_WIDTH),
+						(((MAP_DIMENSION / 2.0) - 1.0) * TILE_WIDTH));
 				mapWithoutWalls = new Rectangle2D.Double(HALF_TILE_WIDTH, HALF_TILE_WIDTH,
 						((MAP_DIMENSION-3) * TILE_WIDTH), ((MAP_DIMENSION-3)
 								* TILE_WIDTH));
@@ -227,17 +227,17 @@ public class Main {
 						searchPoint = new Point2D.Double(builderZone.getMinX()
 								+ HALF_TILE_WIDTH + TILE_WIDTH, builderZone.getMinY()
 								+ HALF_TILE_WIDTH + TILE_WIDTH);
-						odoCorrectionPoint = new Point2D.Double(builderZone.getMaxX() - 3.0*QUARTER_TILE_WIDTH, builderZone.getMaxY() - 3.0*QUARTER_TILE_WIDTH);
-						cornerX = builderZone.getMaxX();
-						cornerY = builderZone.getMaxY();
+						odoCorrectionPoint = new Point2D.Double(searchPoint.x - 1.5*QUARTER_TILE_WIDTH, searchPoint.y - 1.5*QUARTER_TILE_WIDTH);
+						cornerX = searchPoint.x + HALF_TILE_WIDTH;
+						cornerY = searchPoint.y + HALF_TILE_WIDTH;
 					} else {
 						// Top left quadrant
 						searchPoint = new Point2D.Double(builderZone.getMinX()
 								+ HALF_TILE_WIDTH  + TILE_WIDTH, builderZone.getMaxY()
 								- HALF_TILE_WIDTH - TILE_WIDTH);
-						odoCorrectionPoint = new Point2D.Double(builderZone.getMaxX() - 3.0*QUARTER_TILE_WIDTH, builderZone.getMinY() - 3.0*QUARTER_TILE_WIDTH);
-						cornerX = builderZone.getMaxX();
-						cornerY = builderZone.getMinY();
+						odoCorrectionPoint = new Point2D.Double(searchPoint.x - 1.5*QUARTER_TILE_WIDTH, searchPoint.y - 1.5*QUARTER_TILE_WIDTH);
+						cornerX = searchPoint.x + HALF_TILE_WIDTH;
+						cornerY = searchPoint.y + HALF_TILE_WIDTH;
 					}
 				} else {
 					if (builderZone.getCenterY() < mapCenter.y) {
@@ -245,17 +245,17 @@ public class Main {
 						searchPoint = new Point2D.Double(builderZone.getMaxX()
 								- HALF_TILE_WIDTH - TILE_WIDTH, builderZone.getMinY()
 								+ HALF_TILE_WIDTH + TILE_WIDTH);
-						odoCorrectionPoint = new Point2D.Double(builderZone.getMinX() - 3.0*QUARTER_TILE_WIDTH, builderZone.getMaxY() - 3.0*QUARTER_TILE_WIDTH);
-						cornerX = builderZone.getMinX();
-						cornerY = builderZone.getMaxY();
+						odoCorrectionPoint = new Point2D.Double(searchPoint.x - 1.5*QUARTER_TILE_WIDTH, searchPoint.y - 1.5*QUARTER_TILE_WIDTH);
+						cornerX = searchPoint.x + HALF_TILE_WIDTH;
+						cornerY = searchPoint.y + HALF_TILE_WIDTH;
 					} else {
 						// Top right quadrant
 						searchPoint = new Point2D.Double(builderZone.getMaxX()
 								- HALF_TILE_WIDTH - TILE_WIDTH, builderZone.getMaxY()
 								- HALF_TILE_WIDTH - TILE_WIDTH);
-						odoCorrectionPoint = new Point2D.Double(builderZone.getMinX() - 3.0*QUARTER_TILE_WIDTH, builderZone.getMinY() - 3.0*QUARTER_TILE_WIDTH);
-						cornerX = builderZone.getMinX();
-						cornerY = builderZone.getMinY();
+						odoCorrectionPoint = new Point2D.Double(searchPoint.x - 1.5*QUARTER_TILE_WIDTH, searchPoint.y - 1.5*QUARTER_TILE_WIDTH);
+						cornerX = searchPoint.x + HALF_TILE_WIDTH;
+						cornerY = searchPoint.y + HALF_TILE_WIDTH;
 					}
 				}
 				
