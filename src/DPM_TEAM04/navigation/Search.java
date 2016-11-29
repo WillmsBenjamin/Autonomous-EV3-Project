@@ -176,6 +176,9 @@ public class Search extends Thread {
 					clockwise = !clockwise;
 					searchStep++;
 				}
+				if (endSearchAngle > 360) {
+					endSearchAngle -= 360;
+				}
 				
 				/*
 				 * 
@@ -264,6 +267,7 @@ public class Search extends Thread {
 			} else if (isObjectSeen(USDistance)) {
 				blockSeen = true;
 				// move forward
+				
 				leftMotor.setSpeed(SPEED_FORWARD);
 				rightMotor.setSpeed(SPEED_FORWARD);
 				leftMotor.forward();
@@ -475,6 +479,8 @@ public class Search extends Thread {
 			rightMotor.rotate(-90, true);
 		}
 
+		
+				
 		// grab the block
 		grabMotor.rotate(240, false);
 		liftMotor.rotate(liftAngle, true);
@@ -512,7 +518,8 @@ public class Search extends Thread {
 		
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, stackPoint.x, stackPoint.y)));
 		
-		driver.turnTo((startSearchAngle + 45.0), CoordinateSystem.HEADING_DEG);
+		driver.turnTo(startSearchAngle, CoordinateSystem.POLAR_DEG, false);
+		driver.rotate(45, CoordinateSystem.POLAR_DEG, false);
 		driver.travelDistance(-(Math.hypot(HALF_TILE_WIDTH, HALF_TILE_WIDTH)));
 		
 		// drop the block

@@ -63,7 +63,8 @@ public class WheelRadiusTest {
 		// To test the WheelRadius
 		while (true) {
 			coordinate.setCoordinate(CoordinateSystem.POLAR_DEG, 0.0, 0.0);
-			driver.travelTo(new Coordinate(CoordinateSystem.CARTESIAN,6 * TILE_WIDTH, 0 * TILE_WIDTH));
+			driver.travelDistance(120.0);
+			//driver.travelTo(new Coordinate(CoordinateSystem.CARTESIAN,6 * TILE_WIDTH, 0 * TILE_WIDTH));
 
 			// if not escape, break while loop and repeat
 			while (true) {
