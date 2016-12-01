@@ -32,6 +32,34 @@ import java.util.HashMap;
  * Then, once completed, it will allow access to an instance of the Transmission
  * class which has access to all of the data needed
  */
+/**
+ * 
+ * This class opens a wifi connection, waits for the data
+ * and then allows access to the data after closing the wifi socket.
+ * 
+ * It should be used by calling the constructor which will automatically wait for
+ * data without any further user command
+ * 
+ * Then, once completed, it will allow access to an instance of the Transmission
+ * class which has access to all of the data needed
+ *
+ * @author Sean Lawlor
+ * @date November 3, 2011
+ * @class ECSE 211 - Design Principle and Methods
+ *
+ * Modified by F.P. Ferrie
+ * February 28, 2014
+ * Changed parameters for W2014 competition
+ * 
+ * Modified by Francois OD
+ * November 11, 2015
+ * Ported to EV3 and wifi (from NXT and bluetooth)
+ * Changed parameters for F2015 competition
+ * 
+ * Modified by Michael Smith
+ * November 1, 2016
+ * Removed LCD printing, added optional debug print statements
+ */
 public class WifiConnection {
 
 	public HashMap<String, Integer> StartData;
