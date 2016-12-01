@@ -9,12 +9,7 @@ import DPM_TEAM04.geometry.Coordinate;
 import DPM_TEAM04.geometry.CoordinateSystem;
 import DPM_TEAM04.geometry.DirectedCoordinate;
 import DPM_TEAM04.odometry.Odometer;
-import DPM_TEAM04.odometry.OdometryCorrection;
-import lejos.hardware.Audio;
-import lejos.hardware.Button;
-import lejos.hardware.ev3.LocalEV3;
 import lejos.robotics.geometry.Point2D;
-import lejos.robotics.geometry.Rectangle2D;
 import lejos.utility.Delay;
 
 /**
@@ -40,10 +35,8 @@ public class Search extends Thread {
 										// counter Clockwise
 	public static double angleDifference, actualAngle;
 	public static double firstAngle, startSearchAngle, endSearchAngle;
-	private static Object lock;
 	private static ArrayList<Point2D> listOfWaypoints = new ArrayList<Point2D>();
-	//Initialize the odoCorrection
-	private static OdometryCorrection odoCorrection = new OdometryCorrection();
+	
 	public Search() {
 		
 	}

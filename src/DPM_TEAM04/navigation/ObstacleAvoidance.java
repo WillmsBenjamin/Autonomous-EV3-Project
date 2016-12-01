@@ -5,11 +5,7 @@ import DPM_TEAM04.geometry.Coordinate;
 import DPM_TEAM04.geometry.CoordinateSystem;
 import DPM_TEAM04.geometry.DirectedCoordinate;
 import DPM_TEAM04.odometry.Odometer;
-import DPM_TEAM04.test.ObstacleAvoidTest;
 import lejos.hardware.Sound;
-import lejos.hardware.Audio;
-import lejos.robotics.geometry.Point2D;
-
 
 /**
  * Extends Thread. Constantly check if there is an obstacle to avoid when travelling to a destination and the robot is not 

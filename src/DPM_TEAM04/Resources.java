@@ -109,11 +109,8 @@ public class Resources {
 	private static final SampleProvider csDown;
 	private static final float[] csDataDown;
 	private static final int CS_DOWN_NUM_SAMPLES = US_FRONT_NUM_SAMPLES;
-	private static final float DIFF_THRESH = -0.02f;
-	private static float previousValue;
 
 	// Threads
-	private static Object lock;
 	public static boolean isLocalizing = true;
 	public static int towerHeight = 0;
 	public static int liftPosition = 0;

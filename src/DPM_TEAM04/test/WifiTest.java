@@ -27,6 +27,30 @@ import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
 
+/**
+ * 
+ * Example call of the transmission protocol We use System.out.println()
+ * instead of LCD printing so that full debug output (e.g. the very long
+ * string containing the transmission) can be read on the screen or a remote
+ * console such as the EV3Control program via Bluetooth or WiFi
+ * 
+ * @author Sean Lawlor
+ * @date November 3, 2011
+ * @class ECSE 211 - Design Principle and Methods
+ * 
+ * Modified by F.P. Ferrie
+ * February 28, 2014
+ * Changed parameters for W2014 competition
+ * 
+ * Modified by Francois OD
+ * November 11, 2015
+ * Ported to EV3 and wifi (from NXT and bluetooth)
+ * Changed parameters for F2015 competition
+ * 
+ * Modified by Michael Smith
+ * November 1, 2016
+ * Cleaned up print statements, old code, formatting
+ */
 public class WifiTest {
 	/*
 	 * Example call of the transmission protocol We use System.out.println()

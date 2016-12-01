@@ -5,6 +5,11 @@ import DPM_TEAM04.logging.DataEntryProvider;
 import DPM_TEAM04.logging.LCDLogger;
 import lejos.hardware.Button;
 
+/**
+ * Test class to log the distance values fetched from the ultrasonic sensor. Data entries provided to the LCD logger and the 
+ * file logger (to output a .csv file).
+ * @author KareemHalabi
+ */
 public class UltrasonicDistanceTest {
 
 	public static void main(String[] args) {
