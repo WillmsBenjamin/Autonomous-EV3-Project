@@ -4,12 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import javax.xml.crypto.Data;
-
-import lejos.robotics.SampleProvider;
 
 /**
  * Class for saving various data to a CSV file

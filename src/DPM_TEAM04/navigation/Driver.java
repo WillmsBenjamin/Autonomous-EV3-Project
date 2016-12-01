@@ -9,11 +9,20 @@ import DPM_TEAM04.geometry.CoordinateSystem;
 import DPM_TEAM04.geometry.DirectedCoordinate;
 import DPM_TEAM04.odometry.Odometer;
 
+/*
+ * * North  
+ * ^     ^ +r
+ * |-   /
+ * | \ /  +theta (deg only)
+ * |  /
+ * | /
+ * |/
+ * +-------------> East
+ * (0 angle is y axis)
+ */
+
 /**
- * Coordinate system used in this class is compass heading
- * 
- * North ^ ^ +r |- / | \ / +theta (deg only) | / | / |/ +-------------> East (0
- * angle is y axis)
+ * Class used for navigation related methods. Coordinate system used in this class is compass heading.
  * 
  */
 
@@ -113,6 +122,12 @@ public class Driver extends Thread {
 		isTravelling = false;
 
 	}
+	/**
+	 * Orient and travel to a new destination
+	 * @param dest
+	 *            The Coordinate to travel to
+	 * @param immediateReturn Returns immediately if true. Wait until complete if false.
+	 */
 	public void travelTo(Coordinate dest, boolean immediateReturn) {
 
 		isTravelling = true;
@@ -138,29 +153,12 @@ public class Driver extends Thread {
 		//isTravelling = false;
 
 	}
-	public void travelToWithoutSavingDestination(Coordinate dest) {
-		isTravelling = true;
-		leftMotor.stop();
-		rightMotor.stop();
-		leftMotor.setAcceleration(ACCELERATION_SMOOTH);
-		rightMotor.setAcceleration(ACCELERATION_SMOOTH);
 
-		// get distance and heading changes
-		double distanceToC = Odometer.getOdometer().getPosition()
-				.distanceTo(dest);
-		double changeInHeading = Odometer.getOdometer().getPosition()
-				.angleTo(dest, CoordinateSystem.HEADING_DEG);
-
-		// Orient to destination
-		rotate(changeInHeading, CoordinateSystem.HEADING_DEG);
-
-		// Travel to destination
-		travelDistance(distanceToC);
-
-		//isTravelling = false;
-
-	}
-
+	/**
+	 * Rotate the robot for the input angle. Waits until the rotation is complete.
+	 * @param angle Angle to rotate the motors.
+	 * @param angleUnit Coordinate system used.
+	 */
 	public void rotate(double angle, CoordinateSystem angleUnit) {
 		rotate(angle, angleUnit, false);
 	}
@@ -201,10 +199,21 @@ public class Driver extends Thread {
 				immediateReturn);
 	}
 
+	/**
+	 * Turn to a desired angle. Waits until the rotation is complete.
+	 * @param angle Angle to turn to.
+	 * @param angleUnit Coordinate system used.
+	 */
 	public void turnTo(double angle, CoordinateSystem angleUnit) {
 		turnTo(angle, angleUnit, false);
 	}
 
+	/**
+	 * Turn to a desired angle.
+	 * @param angle Angle to turn to.
+	 * @param angleUnit Coordinate system used.
+	 * @param immediateReturn Returns immediately if true. Waits until rotation is complete if false.
+	 */
 	public void turnTo(double angle, CoordinateSystem angleUnit,
 			boolean immediateReturn) {
 		
@@ -213,11 +222,19 @@ public class Driver extends Thread {
 		rotate(changeInAngle, angleUnit, immediateReturn);
 	}
 
+	/**
+	 * Sets the value of the boolean isTravelling.
+	 * @param boolValue Value to be set.
+	 */
 	public void setIsTravelling(boolean boolValue) {
 		synchronized (lock) {
 			isTravelling = boolValue;
 		}
 	}
+	/**
+	 * Returns the isTravelling boolean.
+	 * @return Returns a boolean.
+	 */
 	public boolean getIsTravelling() {
 		synchronized (lock) {
 			return isTravelling;
@@ -225,15 +242,20 @@ public class Driver extends Thread {
 	}
 	
 	/**
-	 * Travels a distance in cm
+	 * Travels a distance in cm. Returns when travelling completed.
 	 * 
 	 * @param distance
-	 *            How far to travel in cm
+	 *            How far to travel in cm.
 	 */
 	public void travelDistance(double distance) {
 		travelDistance(distance, false);
 	}
 
+	/**
+	 * Travels a distance in cm.
+	 * @param distance Distance to travel in cm.
+	 * @param immediateReturn Returns immediately if true. Waits until rotation is complete if false.
+	 */
 	public void travelDistance(double distance, boolean immediateReturn) {
 		leftMotor.setSpeed(SPEED_FORWARD);
 		rightMotor.setSpeed(SPEED_FORWARD);
@@ -243,19 +265,26 @@ public class Driver extends Thread {
 				immediateReturn);
 	}
 
-	// converts a traveled distance to an wheel angular displacement in degrees
+	
+	/**
+	 * Converts a traveled distance to a wheel angular displacement in degrees.
+	 * @param radius Radius of the wheels.
+	 * @param distance Distance to convert.
+	 * @return Returns the converted distance.
+	 */
 	private static int convertDistance(double radius, double distance) {
 		return (int) ((180.0 * distance) / (Math.PI * radius));
 	}
 
-	// converts a turning circle HEADING_DEG displacement into a motor rotation
-	// angluar displacement
+	/**
+	 * Converts a turning circle HEADING_DEG displacement into a motor rotation angular displacement.
+	 * @param radius Radius of the wheels.
+	 * @param width Track of the robot.
+	 * @param angle Angle to convert.
+	 * @return Returns the converted angle.
+	 */
 	private static int convertAngle(double radius, double width, double angle) {
 		return convertDistance(radius, Math.PI * width * angle / 360.0);
-	}
-
-	public Coordinate getDestination() {
-		return destination;
 	}
 
 }

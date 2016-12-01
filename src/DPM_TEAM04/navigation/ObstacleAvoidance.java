@@ -12,24 +12,24 @@ import lejos.robotics.geometry.Point2D;
 
 
 /**
+ * Extends Thread. Constantly check if there is an obstacle to avoid when travelling to a destination and the robot is not 
+ * in a searching state. If an object is seen, it checks whether it is an obstacle or a styrofoam block. If the object is 
+ * an obstacle, the robot is in obstacle avoidance state until it reaches the original angle and the path is clear.
  * 
- * 
- * @author Tristan Toupin & alexisgj
+ * @author Tristan Toupin, Alexis Giguere-Joannette
  *
  */
-
 public class ObstacleAvoidance extends Thread {
 
 	private DirectedCoordinate position;
 	private Driver driver = Driver.getDriver();
 	public static Object lock;
 	private static boolean isAvoiding = false;
-	private Coordinate pointBefore;
 
 	public ObstacleAvoidance() {
 		lock = new Object();
 	}
-
+	
 	public void run() {
 
 		try {
@@ -37,18 +37,22 @@ public class ObstacleAvoidance extends Thread {
 		} catch (InterruptedException e) {
 		}
 
+		// While loop that checks forever if there is an obstacle.
 		while (true) {
 
 			while (!isSearching && !getIsAvoiding()) {
 				if (driver.getIsTravelling()) {
+					// Checks if obstalce when travelling and not searching
 					isThereObstacle();
 				}
 			}
 
 			if (getIsAvoiding()) {
+				// When the robot is in avoidance state
 				position = Odometer.getOdometer().getPosition();
 				
 				synchronized (driver) {
+					// Interrupt the driver thread (to stop the motors)
 					driver.interrupt();
 					driver.setIsTravelling(false);
 				}
@@ -57,16 +61,15 @@ public class ObstacleAvoidance extends Thread {
 
 				leftMotor.stop(true);
 				rightMotor.stop(false);
-				/*
-				leftMotor.setAcceleration(ACCELERATION_FAST);
-				rightMotor.setAcceleration(ACCELERATION_FAST);
-				*/
 
+				// Rotate -90 degrees when obstacle was seen
 				driver.rotate(-90, CoordinateSystem.POLAR_DEG);
 				
 				while (Math.abs((firstAng + 360) - position.getDirection(CoordinateSystem.POLAR_DEG)) % 360 > 25) {
+					// Start avoiding block
 					avoidBlock();
 					if (getFrontUSData() < 10) {
+						// Check if obstacle in front while avoiding
 						leftMotor.stop(true);
 						rightMotor.stop(false);
 						driver.rotate(-90, CoordinateSystem.POLAR_DEG);
@@ -80,6 +83,8 @@ public class ObstacleAvoidance extends Thread {
 				leftMotor.setAcceleration(ACCELERATION_SMOOTH);
 				rightMotor.setAcceleration(ACCELERATION_SMOOTH);
 				
+				// After avoidance, travel back to the last destination saved.
+				
 				driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, driver.destination.getX(), driver.destination.getY())), true);
 				
 				setIsAvoiding(false);
@@ -87,37 +92,30 @@ public class ObstacleAvoidance extends Thread {
 		}
 	}
 
+	/**
+	 * Check if there is an obstacle seen by the front ultrasonic sensor.
+	 */
 	private void isThereObstacle() {
 		double USDistance = getFrontUSData();
 		
-		/*
-		 * START OF NEW CODE : Compute the dangerous circle of the red zone and if the robot is inside, start the obstacle avoidance
-		 
-		Point2D topRightCornerPt = new Point2D.Double(collectorZone.getMaxX(), collectorZone.getMaxY());
-		Point2D centerOfCollector = new Point2D.Double(collectorZone.getCenterX(), collectorZone.getCenterY());
-		double minimalDistanceFromCenterOfColleter = Math.abs(topRightCornerPt.distance(centerOfCollector)) + TILE_WIDTH;
-		Point2D actualPosition = new Point2D.Double(position.getX(), position.getY());
-		
-		if (Math.abs(actualPosition.distance(centerOfCollector)) < minimalDistanceFromCenterOfColleter) {
-			setIsAvoiding(true);
-			return;
-		}
-
-		 * END OF NEW CODE
-		 */
-		
 		if (USDistance > 10) {
+			// Not avoiding
 			setIsAvoiding(false);
 			return;
 		} else {
+			// Avoiding
 			leftMotor.stop(true);
 			rightMotor.stop(false);
 			
 			if (USDistance > 10) {
 				USDistance = 10;
 			}
+			
+			// Travel close to the obstacle
 			driver.travelDistance(USDistance - 4);
 			float[] colorRGB = getColorRGB();
+			
+			// Check if it is an obstacle or a styrofoam block
 			if (colorRGB[1] > colorRGB[0] && colorRGB[1] > colorRGB[2]) {
 				driver.rotate(-30, CoordinateSystem.POLAR_DEG);
 				driver.travelDistance(8);
@@ -134,6 +132,7 @@ public class ObstacleAvoidance extends Thread {
 				setIsAvoiding(false);
 				return;
 			} else {
+				// Set avoiding to true
 				setIsAvoiding(true);
 				return;
 			}
@@ -141,35 +140,15 @@ public class ObstacleAvoidance extends Thread {
 		}
 	}
 
-	//STEP PCONTROLLER FCT
+	/**
+	 * Avoidance of an object as a P controller. It adjusts the speed of the motors according to a linear function of the distance 
+	 * of the side ultrasonic sensor.
+	 */
 	private void avoidBlock() {
 		double distance;
 		double speed;
 		leftMotor.setSpeed(SPEED_AVOIDING_INBETWEEN);
 		distance = getSideUSData();
-		
-		/*
-		 * START OF NEW CODE : Compute the dangerous circle of the red zone
-		 * 
-		 * If the robot is inside the zone, avoid it
-		 * If the distance to the zone is smaller than 10, avoid it
-		 
-		
-		Point2D topRightCornerPt = new Point2D.Double(collectorZone.getMaxX(), collectorZone.getMaxY());
-		Point2D centerOfCollector = new Point2D.Double(collectorZone.getCenterX(), collectorZone.getCenterY());
-		double minimalDistanceFromCenterOfColleter = Math.abs(topRightCornerPt.distance(centerOfCollector)) + TILE_WIDTH;
-		Point2D actualPosition = new Point2D.Double(position.getX(), position.getY());
-		double distanceFromZoneRadially = Math.abs(minimalDistanceFromCenterOfColleter - Math.abs(actualPosition.distance(centerOfCollector)));
-		
-		if (Math.abs(actualPosition.distance(centerOfCollector)) < minimalDistanceFromCenterOfColleter) {
-			distance = distanceFromZoneRadially;
-		} else if (distanceFromZoneRadially < 10 && distance >= 10) {
-			distance = distanceFromZoneRadially;
-		}
-		
-		
-		 * END OF NEW CODE
-		 */
 		
 		
 		//change distance max and min
@@ -192,17 +171,29 @@ public class ObstacleAvoidance extends Thread {
 		}
 	}
 	
+	/**
+	 * Sets the isAvoiding value.
+	 * @param boolValue Boolean value to be set at.
+	 */
 	public static void setIsAvoiding(boolean boolValue) {
 		synchronized (lock) {
 			isAvoiding = boolValue;
 		}
 	}
+	/**
+	 * Get the isAvoiding boolean.
+	 * @return Returns the isAvoiding variable.
+	 */
 	public static boolean getIsAvoiding() {
 		synchronized (lock) {
 			return isAvoiding;
 		}
 	}
 
+	/**
+	 * Make the Thread sleep for more than 5 minutes.
+	 * @throws InterruptedException
+	 */
 	public static void stopObsAvoid() throws InterruptedException {
 		Thread.sleep(50000000);
 	}

@@ -1,5 +1,12 @@
 package DPM_TEAM04.logging;
 
+/**
+ * 
+ * Object class for data entry providers.
+ * 
+ * @author KareemHalabi
+ *
+ */
 public abstract class DataEntryProvider {
 
 	// heading for data

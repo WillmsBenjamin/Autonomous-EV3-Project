@@ -24,7 +24,7 @@ import lejos.utility.Delay;
  * brings it back to its zone. Otherwise it goes back to its searching point and
  * keep searching for styrofoam blocks.
  * 
- * @author alexisgj & Tristan Toupin
+ * @author Alexis Giguere-Joannette, Tristan Toupin
  *
  */
 public class Search extends Thread {
@@ -126,8 +126,13 @@ public class Search extends Thread {
 		}
 		
 		
-		
 		/* ODO CORRECTION START 
+		 * 
+		 * 
+		 * THE CODE IS COMMENTED BECAUSE ODOMETRY CORRECTION CONTAINS BUGS THAT MAKES THE ODOMETRY WORST.
+		 * Would need to work on odometry correction for further improvements.
+		 * 
+		 * 
 		
 		odoCorrection.isFacingStart = false;
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, odoCorrectionPoint.x, odoCorrectionPoint.y)));
@@ -331,26 +336,17 @@ public class Search extends Thread {
 					* Math.cos(theta)) + position.getX(), (USDistance
 					* Math.sin(theta)) + position.getY());
 			
-			
 			if (collectorZone.contains(ObjectPoint) || builderZone.contains(ObjectPoint)) {
+				// If object seen is inside the green zone or the red zone
 				wallSeen();
 				return false;
 			}
 			
-
-			// System.out.println("\n\n\n\n\n" + ObjectPoint.x + "\n" +
-			// ObjectPoint.y);
-
-			
 			if (mapWithoutWalls.contains(ObjectPoint)) {
-				// good
-				// System.out.println("\n\n\n\n\nIn the map!");
+				// good (it is an object)
 				return true;
 			} else {
 				// is too close to a wall
-				// System.out.println("\n\n\n\n\nToo close to wall!");
-				 
-				 
 				if (blockSeen) {
 					// If an object was seen, search the other way than the wall
 					clockwise = !clockwise;
@@ -360,10 +356,6 @@ public class Search extends Thread {
 				}
 				return false;
 			}
-			
-			//return true;
-			
-
 		} else {
 			return false;
 		}
@@ -371,17 +363,15 @@ public class Search extends Thread {
 	}
 
 	/**
-	 * Turn the robot either clockwise or counter-clockwise.
+	 * Turn the robot either clockwise or counter-clockwise to search the area.
 	 */
 	public static void scanning() {
+		leftMotor.setSpeed(SPEED_SCANNING);
+		rightMotor.setSpeed(SPEED_SCANNING);
 		if (clockwise) {
-			leftMotor.setSpeed(SPEED_SCANNING);
-			rightMotor.setSpeed(SPEED_SCANNING);
 			leftMotor.backward();
 			rightMotor.forward();
 		} else {
-			leftMotor.setSpeed(SPEED_SCANNING);
-			rightMotor.setSpeed(SPEED_SCANNING);
 			leftMotor.forward();
 			rightMotor.backward();
 		}
@@ -423,7 +413,7 @@ public class Search extends Thread {
 	}
 
 	/**
-	 * If the object is too close to a wall, turn instantly.
+	 * If the object is too close to a wall (or inside the green or red zone), turn instantly in the direction it was scanning.
 	 */
 	public static void wallSeen() {
 		leftMotor.stop(true);
@@ -436,6 +426,10 @@ public class Search extends Thread {
 		search();
 	}
 
+	/**
+	 * If the object scanned is a styrofoam block, grab the block, travel back to the waypoints and to the stack point, drop the 
+	 * block according to the @towerHeight and return back to the search points (passing by the waypoints to avoid obstacles).
+	 */
 	public static void captureBlock() {
 		
 		isHoldingBlock = true;
@@ -483,9 +477,7 @@ public class Search extends Thread {
 			leftMotor.rotate(-90, false);
 			rightMotor.rotate(-90, true);
 		}
-
-		
-				
+	
 		// grab the block
 		grabMotor.rotate(240, false);
 		liftMotor.rotate(liftAngle, true);
@@ -495,13 +487,13 @@ public class Search extends Thread {
 			driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, listOfWaypoints.get(i).getX(), listOfWaypoints.get(i).getY())));
 		}
 		
-		
-		
 		/*
+		 * 
+		 * ODOMETRY CORRECTION
+		 * 
+		 * 
 		odoCorrection.isFacingStart = false;
 		driver.travelTo((new Coordinate(CoordinateSystem.CARTESIAN, odoCorrectionPoint.x, odoCorrectionPoint.y)));
-		
-		
 		
 		//here
 		driver.turnTo(45, CoordinateSystem.POLAR_DEG, false);
@@ -512,8 +504,6 @@ public class Search extends Thread {
 		//driver.turnTo(0 - 10, CoordinateSystem.POLAR_DEG, false);
 		
 		//odoCorrection.prepareCorrection();
-		
-		
 		
 		//do odometryCorrection
 		driver.turnTo(-115, CoordinateSystem.POLAR_DEG, false);
@@ -563,62 +553,4 @@ public class Search extends Thread {
 		search();
 
 	}
-	
-	
-	public static void captureBlockWhileAvoiding() {
-		
-		isHoldingBlock = true;
-
-		System.out.println("Block!");
-
-		// Reset the lift position to the bumper
-		if (liftPosition != 0) {
-			liftMotor.rotate(-liftPosition, false);
-			liftPosition = 0;
-		}
-
-		// Set the angles according to the tower height
-		int liftAngle = 0, unliftAngle = 0;
-		if (towerHeight == 0) {
-			liftAngle = -450;
-			unliftAngle = 450;
-		} else if (towerHeight == 1) {
-			liftAngle = -900;
-			unliftAngle = 100;
-		} else if (towerHeight == 2) {
-			liftAngle = -1800;
-			unliftAngle = 100;
-		} else if (towerHeight == 3) {
-			liftAngle = -2600;
-			unliftAngle = 100;
-		}
-		liftPosition = liftAngle + unliftAngle;
-
-		// Place the block in a good direction
-		driver.travelDistance(-1.0);
-		driver.rotate(Math.PI, CoordinateSystem.POLAR_RAD);
-		driver.travelDistance(-Math.abs(BUMPER_TO_CENTER - US_TO_CENTER) - 2.0);
-
-		// orient the block to make it easier to grab
-		if (clockwise) {
-			rightMotor.rotate(-90, false);
-			leftMotor.rotate(-90, false);
-		} else {
-			leftMotor.rotate(-90, false);
-			rightMotor.rotate(-90, false);
-		}
-		
-		//run into the block while we grab it
-		driver.travelDistance(-5.0, true);
-
-
-		// grab the block
-		grabMotor.rotate(200, false);
-		liftMotor.rotate(liftAngle, true);
-
-		towerHeight++;
-
-	}
-	
-	
 }

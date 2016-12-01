@@ -21,7 +21,7 @@ import lejos.utility.Delay;
  * 
  * Sensor data is also acquired through this class
  * 
- * @author Kareem Halabi, Alexis Giguere-Joannette, Tristan Saumure Toupin
+ * @author Kareem Halabi, Alexis Giguere-Joannette, Tristan Toupin
  * @version 3.0
  */
 public class Resources {
@@ -133,6 +133,9 @@ public class Resources {
 	// ENSURE SENSORS AND MOTORS ARE CORRECTED PROPERLY
 	// There is no reasonably easy way to tell if correct
 	// sensors are attached to the correct ports
+	/**
+	 * Initializes resources. Ensure sensors and motors are corrected properly.
+	 */
 	static {
 		// --------------------------Motors-------------------------
 
@@ -189,12 +192,21 @@ public class Resources {
 
 	}
 
+	/**
+	 * Fetch data from the front ultrasonic sensor.
+	 * @return Returns the distance in cm.
+	 */
 	public static float getFrontUSRawData() {
 		float[] singleSample = new float[usFront.sampleSize()];
 		usFront.fetchSample(singleSample, 0);
 		return singleSample[0];
 	}
 
+	/**
+	 * Fetch data from the front ultrasonic sensor applying a median filter. It fetches a number of samples, sort the array of 
+	 * samples and returns the median value of the array.
+	 * @return Returns the median value of the array of samples.
+	 */
 	public static float getFrontUSData() {
 
 		// Populate the array with samples (with a delay between each sample)
@@ -216,12 +228,21 @@ public class Resources {
 		return median;
 	}
 
+	/**
+	 * Fetch data from the side ultrasonic sensor.
+	 * @return Returns the distance in cm.
+	 */
 	public static float getSideUSRawData() {
 		float[] singleSample = new float[usSide.sampleSize()];
 		usSide.fetchSample(singleSample, 0);
 		return singleSample[0];
 	}
 
+	/**
+	 * Fetch data from the side ultrasonic sensor applying a median filter. It fetches a number of samples, sort the array of 
+	 * samples and returns the median value of the array.
+	 * @return Returns the median value of the array of samples.
+	 */
 	public static float getSideUSData() {
 		// Populate the array with samples (with a delay between each sample)
 		for (int i = 0; i < US_SIDE_NUM_SAMPLES; i++) {
@@ -242,6 +263,10 @@ public class Resources {
 		return median;
 	}
 
+	/**
+	 * Fetch the RGB values of the front color sensor.
+	 * @return Return the array of RGB values.
+	 */
 	public static float[] getColorRGB() {
 		// for(int i = 0; i < CS_FRONT_NUM_SAMPLES; i++)
 		// csFrontFilter.fetchSample(csDataFront, 0);
@@ -249,6 +274,10 @@ public class Resources {
 		return csDataFront;
 	}
 
+	/**
+	 * Fetch the red value from the down facing color sensor.
+	 * @return Return the red value.
+	 */
 	public static float getDownCSData() {
 		csDown.fetchSample(csDataDown, 0);
 
