@@ -128,10 +128,16 @@ public class Localization extends Thread {
 	}
 
 	/*
-	 * |---------------| | 4 + + + + + 3 | | + + + + + + + | | + + + + + + + |
-	 * ^y | + + + + + + + | | | + + + + + + + | | | 1 + + + + + 2 | |______>x
+	 * |---------------| 
+	 * | 4 + + + + + 3 | 
+	 * | + + + + + + + | 
+	 * | + + + + + + + | ^y 
+	 * | + + + + + + + | | 
+	 * | + + + + + + + | | 
+	 * | 1 + + + + + 2 | |______>x
 	 * |---------------|
 	 */
+	
 	/**
 	 * This method corrects the coordinates (x,y and heading) of the robot
 	 * depending on its stating corner and on the wall it has bumped into.
@@ -204,8 +210,6 @@ public class Localization extends Thread {
 	 */
 	private void getMinimalDistance() {
 
-		int index = 0;
-
 		// Initialize the first value
 		this.minDistance = this.listOfDistances.get(0).getDistance();
 		this.minDistAngle = this.listOfDistances.get(0).getAngle();
@@ -220,7 +224,6 @@ public class Localization extends Thread {
 
 				this.minDistance = this.listOfDistances.get(i).getDistance();
 				this.minDistAngle = this.listOfDistances.get(i).getAngle();
-				index = i;
 
 			}
 		}

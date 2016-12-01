@@ -1,8 +1,6 @@
 package DPM_TEAM04.test;
 
 import static DPM_TEAM04.Resources.DISPLAY_PERIOD;
-import static DPM_TEAM04.Resources.TILE_WIDTH;
-
 import DPM_TEAM04.Resources;
 import DPM_TEAM04.geometry.Coordinate;
 import DPM_TEAM04.geometry.CoordinateSystem;
@@ -12,8 +10,16 @@ import DPM_TEAM04.navigation.Driver;
 import DPM_TEAM04.odometry.Odometer;
 import lejos.hardware.Button;
 
-public class WheelRadiusTest {
 
+/**
+ * Test class to find the best WheelRadius. Must be performed before the TrackWidthTest test class. 
+ * The robot will travel 120cm. If it does not complete the 120cm, the @Resources.WHEEL_RADIUS
+ * must be smaller. If the robot complete more than 120cm, the @Resources.WHEEL_RADIUS must be greater.
+ * 
+ * @author Tristan Toupin
+ *
+ */
+public class WheelRadiusTest {
 	public static final int VERSION_NB = 1;
 
 	public static void main(String[] args) {

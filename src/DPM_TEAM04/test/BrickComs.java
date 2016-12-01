@@ -17,6 +17,12 @@ import lejos.remote.ev3.RMISampleProvider;
 import lejos.remote.ev3.RemoteEV3;
 import lejos.utility.Delay;
 
+
+/**
+ * Test class to see that the two brick connection is working well using several motors and sensors.
+ * 
+ * @author KareemHalabi
+ */
 public class BrickComs {
 
 	public static final String MASTER_NAME = "T4_M1";
@@ -29,8 +35,7 @@ public class BrickComs {
 			 * RemoteEV3 allows access to the hardware of either local or remote
 			 * EV3s
 			 */
-			RemoteEV3 master = new RemoteEV3(
-					BrickFinder.find(MASTER_NAME)[0].getIPAddress());
+			RemoteEV3 master = new RemoteEV3(BrickFinder.find(MASTER_NAME)[0].getIPAddress());
 
 			final TextLCD masterLCD = LocalEV3.get().getTextLCD(); // master.getTextLCD()
 																	// Does not
@@ -38,8 +43,7 @@ public class BrickComs {
 			masterLCD.clear();
 			masterLCD.drawString("M_Brick", 0, 0);
 
-			RemoteEV3 slave = new RemoteEV3(
-					BrickFinder.find(SLAVE_NAME)[0].getIPAddress());
+			RemoteEV3 slave = new RemoteEV3(BrickFinder.find(SLAVE_NAME)[0].getIPAddress());
 			final TextLCD slaveLCD = slave.getTextLCD();
 			slaveLCD.clear();
 

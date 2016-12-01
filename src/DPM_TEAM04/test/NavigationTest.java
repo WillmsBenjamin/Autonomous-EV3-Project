@@ -12,6 +12,12 @@ import DPM_TEAM04.navigation.Driver;
 import DPM_TEAM04.odometry.Odometer;
 import lejos.hardware.Button;
 
+/**
+ * Navigation test class. Used to access the motor and make displacement and compare with the odometer.
+ * 
+ * @author kareemhalabi
+ *
+ */
 public class NavigationTest {
 
 	public static final int VERSION_NB = 1;

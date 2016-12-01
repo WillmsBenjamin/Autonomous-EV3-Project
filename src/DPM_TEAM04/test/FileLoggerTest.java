@@ -5,9 +5,7 @@ import DPM_TEAM04.logging.DataEntryProvider;
 import DPM_TEAM04.logging.FileLogger;
 import DPM_TEAM04.logging.LCDLogger;
 import lejos.hardware.Button;
-
 import static DPM_TEAM04.Resources.*;
-
 import DPM_TEAM04.Main;
 
 /**
@@ -15,6 +13,7 @@ import DPM_TEAM04.Main;
  * 
  * @author Kareem Halabi
  */
+@SuppressWarnings("unused")
 public class FileLoggerTest {
 
 	public static void main(String[] args) {

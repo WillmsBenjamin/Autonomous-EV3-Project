@@ -1,19 +1,19 @@
 package DPM_TEAM04.odometry;
 
-
 import java.util.LinkedList;
-
 import DPM_TEAM04.geometry.CoordinateSystem;
 import DPM_TEAM04.geometry.DirectedCoordinate;
-import DPM_TEAM04.logging.DataEntryProvider;
-import DPM_TEAM04.logging.FileLogger;
 import DPM_TEAM04.navigation.Driver;
 import static DPM_TEAM04.Resources.*;
 import lejos.hardware.Audio;
-import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
-import lejos.robotics.SampleProvider;
 
+
+/**
+ * 
+ * @author Tristan Toupin & Ben Willms
+ *
+ */
 public class OdometryCorrection {
 	
 	private static final long CORRECTION_PERIOD = 50;
@@ -46,6 +46,11 @@ public class OdometryCorrection {
 		this.position = Odometer.getOdometer().getPosition();
 	}
 	
+	
+	/**
+	 * Will perform the odometry correction properly if the light sensor is 
+	 * place in the bottom left quadrant of a known black cross.
+	 */
 	public void doCorrection() {
 		
 		// drive to location the top right corner of a free square,
@@ -63,72 +68,10 @@ public class OdometryCorrection {
 		angleList.clear();
 		currentPair = new AngleCSDataPair();
 		
-		
-
-		/*DataEntryProvider sampleDifferenceProvider = new DataEntryProvider("Sample Difference") {
-
-			@Override
-			public double getEntry() {
-				return getCurrentSampleDifference();
-			}
-		};*/
-		
-
-		//FileLogger fileLog = new FileLogger("Sample_Difference_Test.csv", 50,
-			//	sampleDifferenceProvider);
-
-		// start logger
-		//fileLog.start();
-		
-		
-		DataEntryProvider errorYProvider = new DataEntryProvider("ErrorY") {
-
-			@Override
-			public double getEntry() {
-				return getErrorY();
-			}
-		};
-		
-		DataEntryProvider errorXProvider = new DataEntryProvider("ErrorX") {
-
-			@Override
-			public double getEntry() {
-				return getErrorX();
-			}
-		};
-		
-		DataEntryProvider currentAngleProvider = new DataEntryProvider("currentAngle") {
-
-			@Override
-			public double getEntry() {
-				return getCurrentAngle();
-			}
-		};
-		
-		DataEntryProvider correctedAngleProvider = new DataEntryProvider("correctedAngle") {
-
-			@Override
-			public double getEntry() {
-				return getCorrectedAngle();
-			}
-		};
-		
-		
-
-		FileLogger fileLog22 = new FileLogger("Poop4.csv", 50,
-				errorYProvider, errorXProvider, currentAngleProvider, correctedAngleProvider);
-
-		// start logger
-		fileLog22.start();
-	
-
-		
-		
 		this.firstTime = true;
 		long correctionStart, correctionEnd;
 		AngleCSDataPair maxPair, minPair;
 		double bottomYLineOrientation = 0.0, firstXLineOrientation = 0.0;
-		
 		
 		while (true) {
 			correctionStart = System.currentTimeMillis();
@@ -160,14 +103,11 @@ public class OdometryCorrection {
 				continue;
 			}
 			
-			
-			
 			// WHEN A LINE IS DETECTED
 			// Numbers were found by experimentation to detect the line
 			maxPair = getMaxSamplePair(samples);
 			minPair = getMinSamplePair(samples);
 
-			
 			if (maxPair.getcsDifference() >= 70 && minPair.getcsDifference() <= -30) {
 				
 				// Make EV3 beep each time a line is seen
@@ -190,7 +130,6 @@ public class OdometryCorrection {
 			if(!leftMotor.isMoving() && !rightMotor.isMoving()) {
 				break;	//The 360 degree turn is finished
 			}
-			
 
 			// this ensures the odometry correction occurs only once every period
 			correctionEnd = System.currentTimeMillis();
@@ -204,9 +143,6 @@ public class OdometryCorrection {
 				}
 			}
 		}
-		
-
-		
 		
 		// After the while loop stops, compute trigonometry to correct it's position and heading
 		if(this.lineCounter > 4 || this.lineCounter < 4) {
@@ -236,21 +172,13 @@ public class OdometryCorrection {
 			// Compute the error between the true orientation, and the odometer's orientation
 			deltaAngleY = (2.0)*Math.PI - ((bottomYLineOrientation)%(2.0*Math.PI))- halfAngleBetweenY;
 			deltaAngleX = (1.0/2.0)*Math.PI - ((firstXLineOrientation)%(2.0*Math.PI))- halfAngleBetweenX;
-			/*
-			if (deltaAngleY < 0.0) {
-				deltaAngleY += 2.0*Math.PI;
-			}
-			if (deltaAngleX < 0.0) {
-				deltaAngleX += 2.0*Math.PI;
-			}*/
+		
 			if(deltaAngleX < -1) {
 				deltaAngleX += 2.0*Math.PI;
 			}
 			
 			errorY = deltaAngleY;
 			errorX = deltaAngleX;
-			
-			
 			averageDeltaAngle = (deltaAngleY + deltaAngleX)/(2.0);
 			
 			//get the theta that the robot actually stopped at.
@@ -263,11 +191,6 @@ public class OdometryCorrection {
 			
 			correctedAngle = thetaCorrected;
 			
-			/*
-			if(yPosition < xPosition) {
-				thetaCorrected += Math.PI;
-			}*/
-			
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
@@ -276,19 +199,18 @@ public class OdometryCorrection {
 				// interrupted by another thread
 			}
 			
-			// save and close logger
-			//fileLog.interrupt();
-			fileLog22.interrupt();
-			
 			//update the odometer
 			position.setDirection(thetaCorrected, CoordinateSystem.POLAR_RAD);
 			position.setX(xPosition + cornerX); 
-			position.setY(yPosition + cornerY);		
-			
-			
+			position.setY(yPosition + cornerY);	
+
 			return;
 		}
 	}
+	/**
+	 * Will place the robot in a decent position if it is place +/-10 cm inside the bottom left tile of odometry correction corner.
+	 * The angle must have a maximum error of 15˚.
+	 */
 	
 public void prepareCorrection() {
 		
@@ -359,33 +281,9 @@ public void prepareCorrection() {
 				// Once a line is detected, clear the list as we don't want to detect the same line twice.
 				samples.clear();
 				driver.travelDistance(7);
-				return;
-
-				
-				/*
-				if (isFacingStart){
-					driver.travelDistance(7);
-					// When a line is passed, store the angle calculated by the odometer in an array
-					leftMotor.stop(true);
-					rightMotor.stop(false);
-					return;
-
-				}else {
-					driver.travelDistance(5);
-					// When a line is passed, store the angle calculated by the odometer in an array
-					leftMotor.stop(true);
-					rightMotor.stop(false);
-					return;
-
-				}*/
-				
-				
-				
-				
+				return;				
 			}
-			
-			
-
+		
 			// this ensures the odometry correction occurs only once every period
 			correctionEnd = System.currentTimeMillis();
 			if (correctionEnd - correctionStart < CORRECTION_PERIOD) {
@@ -398,12 +296,15 @@ public void prepareCorrection() {
 				}
 			}
 		}
-		
-		
 	}
 	
 	
-	
+	/**
+	 * Will return the angle equal to the half of the difference between @angleOne and @angelTwo.
+	 * @param angleOne
+	 * @param angleTwo
+	 * @return
+	 */
 	private Double angleBetween(double angleOne, double angleTwo) {
 		double angleBetween;
 		
@@ -440,8 +341,15 @@ public void prepareCorrection() {
 		return this.currentSampleDifference;
 	}
 	
-	// Loops through the list to find the pair with the maximum CS value
-	// It sets the max if the value is greater than the actual max
+	
+	/**
+	 * 
+	 * Loops through the @samples to find the pair with the maximum CS value
+	 * It sets the max if the value is greater than the actual max
+	 * 
+	 * @param samples
+	 * @return
+	 */
 	public AngleCSDataPair getMaxSamplePair(LinkedList<AngleCSDataPair> samples) {
 		
 		double max = 0.0;
@@ -463,6 +371,15 @@ public void prepareCorrection() {
 		
 	}
 	
+	
+	/**
+	 * 
+	 * Loops through the @samples to find the pair with the minimum CS value
+	 * It sets the max if the value is greater than the actual max
+	 * 
+	 * @param samples
+	 * @return
+	 */
 	// Loops through the list to find the pair with the minimum CS value
 	public AngleCSDataPair getMinSamplePair(LinkedList<AngleCSDataPair> samples) {
 		
@@ -484,6 +401,13 @@ public void prepareCorrection() {
 		return minPair;
 	}
 	
+	
+	/**
+	 * Object class of a light sensor data paired with an angle.
+	 * 
+	 * @author Ben Willms
+	 *
+	 */
 	public class AngleCSDataPair {
 		
 		double csDifference, angle;

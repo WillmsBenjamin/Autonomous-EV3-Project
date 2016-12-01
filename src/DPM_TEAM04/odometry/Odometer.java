@@ -6,6 +6,13 @@ import DPM_TEAM04.geometry.DirectedCoordinate;
 
 import static DPM_TEAM04.Resources.*;
 
+
+/**
+ * A classic odometer. Can output position X, Y and the heading position.
+ * 
+ * @author Tristan Toupin, Alexis GJ & KareemHalabi
+ *
+ */
 public class Odometer extends Thread {
 	// robot position
 	private DirectedCoordinate position;
@@ -14,6 +21,7 @@ public class Odometer extends Thread {
 
 	private static Odometer odometerInstance;
 
+	
 	// default constructor
 	private Odometer() {
 		this.leftMotorTachoCount = 0;
@@ -22,6 +30,10 @@ public class Odometer extends Thread {
 				CoordinateSystem.POLAR_RAD);
 	}
 
+	/**
+	 * return an instance of the current Odometer. If null, will return a new Odometer.
+	 * @return
+	 */
 	public static Odometer getOdometer() {
 		if (odometerInstance == null) {
 			odometerInstance = new Odometer();
@@ -81,6 +93,11 @@ public class Odometer extends Thread {
 		}
 	}
 
+	/**
+	 * Return the current position of the robot.
+	 * 
+	 * @return
+	 */
 	// Position accessor
 	public DirectedCoordinate getPosition() {
 		return position;

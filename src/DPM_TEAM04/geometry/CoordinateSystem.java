@@ -1,16 +1,30 @@
 package DPM_TEAM04.geometry;
 
-/**
+/*
  * Choose a coordinate system
  * 
- * CARTESIAN: POLAR_RAD & DEG HEADING
+ * CARTESIAN:			POLAR_RAD & DEG		  HEADING
  * 
- * +y ^ North ^ | ^ +r ^ ^ +r | | / |- / | | / | \ / +theta (deg only) | | /-- |
- * / | | / \ | / | |/ | +theta |/ +-------------> +x +------------->
- * +-------------> East (0 angle is x axis) (0 angle is y axis)
+ * +y					^					  North  
+ * ^					|     ^ +r			  ^     ^ +r
+ * |    				|    /				  |-   /
+ * |   					|   /				  | \ /  +theta (deg only)
+ * | 					|  /--				  |  /
+ * | 					| /   \				  | /
+ * |					|/     | +theta	  	  |/
+ * +-------------> +x	+------------->		  +-------------> East
+ * 						(0 angle is x axis)	  (0 angle is y axis)
  * 
- * @author KareemHalabi
  */
+
+
+/** Choose a coordinate System between : CARTESIAN, POLAR_RAD, POLAR_DEG, HEADING_DEG.
+ * 
+ * 
+  * @author KareemHalabi
+  */
+
+
 public enum CoordinateSystem {
 	CARTESIAN("Cartesian", "x", "y"), POLAR_RAD("Polar radians", "r", "T"), POLAR_DEG(
 			"Polar degrees", "r", "T"), HEADING_DEG("Heading degrees", "r", "T");

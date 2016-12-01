@@ -1,8 +1,6 @@
 package DPM_TEAM04.test;
 
 import static DPM_TEAM04.Resources.*;
-import static DPM_TEAM04.Resources.DISPLAY_PERIOD;
-import static DPM_TEAM04.Resources.TILE_WIDTH;
 import DPM_TEAM04.Resources;
 import DPM_TEAM04.geometry.Coordinate;
 import DPM_TEAM04.geometry.CoordinateSystem;
@@ -11,9 +9,16 @@ import DPM_TEAM04.logging.LCDLogger;
 import DPM_TEAM04.navigation.Driver;
 import DPM_TEAM04.navigation.ObstacleAvoidance;
 import DPM_TEAM04.odometry.Odometer;
-import lejos.hardware.Button;
 import lejos.robotics.geometry.Point2D;
 
+
+/**
+ * Test class for the obstacle avoidance thread. Will start the odometer, driver, 
+ * ExitThread and the obstacle avoidance threads.
+ * 
+ * @author tristansaumure-toupin
+ *
+ */
 public class ObstacleAvoidTest {
 
 	public static LCDLogger lcdLog;
@@ -67,6 +72,7 @@ public class ObstacleAvoidTest {
 
 		searchPoint = new Point2D.Double((6.0*TILE_WIDTH), 0.0);
 		
+		@SuppressWarnings("static-access")
 		Coordinate position = odometer.getOdometer().getPosition();
 		
 		(new ObstacleAvoidance()).start();

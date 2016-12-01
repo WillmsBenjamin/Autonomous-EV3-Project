@@ -5,6 +5,13 @@ import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
+/**
+ * Test class to use lifter motor and grabber motor.
+ * Used to find angle needed to rotate for achieving the block stack.
+ * 
+ * @author Quentin Norris 
+ *
+ */
 public class CollectingGrabbingTest {
 
 	private static final EV3LargeRegulatedMotor centerMotor = new EV3LargeRegulatedMotor(

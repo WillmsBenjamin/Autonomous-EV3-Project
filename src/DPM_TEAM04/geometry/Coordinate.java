@@ -63,6 +63,7 @@ public class Coordinate {
 
 	// -------------------Getters-------------------
 
+	
 	public synchronized double getX() {
 		return this.x;
 	}

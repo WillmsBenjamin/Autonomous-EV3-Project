@@ -10,24 +10,25 @@ import DPM_TEAM04.logging.DataEntryProvider;
 import DPM_TEAM04.logging.FileLogger;
 import DPM_TEAM04.logging.LCDLogger;
 import DPM_TEAM04.navigation.Driver;
-import DPM_TEAM04.navigation.ObstacleAvoidance;
 import DPM_TEAM04.navigation.Search;
 import DPM_TEAM04.odometry.Localization;
 import DPM_TEAM04.odometry.Odometer;
-import DPM_TEAM04.odometry.OdometryCorrection;
 import lejos.hardware.Button;
 import lejos.robotics.geometry.Point2D;
 import lejos.robotics.geometry.Rectangle2D;
 import wifi.WifiConnection;
 
 /**
- * Main thread. Initializes and starts subsequent threads.
+ * Main thread. Initializes and starts subsequent threads. 
+ * Create the Builder/Garbage collector zone. 
+ * Create StackPoint point, odometry correction point and searching point.
+ * Create a log file named Log_Test.csv with diverse input
  * 
  * @author Tristan Toupin, Alexis GJ
  */
 public class Main {
 
-	public static final double VERSION_NB = 2.3;
+	public static final double VERSION_NB = 3.0;
 
 	public static LCDLogger lcdLog;
 
@@ -79,6 +80,7 @@ public class Main {
 		// Initialize the localization thread
 		Localization localization = new Localization();
 
+		@SuppressWarnings("unused")
 		Driver driver = Driver.getDriver();
 		Search search = new Search();
 
@@ -129,11 +131,6 @@ public class Main {
 				Button.waitForAnyPress();
 				System.exit(0);
 
-				/*
-				 * 
-				 * 
-				 * WHAT SHOULD WE DO WHEN TRANSMISSION FAILED???
-				 */
 
 			} else {
 
@@ -281,7 +278,6 @@ public class Main {
 
 		odometer.start();
 		lcdLog.start();
-		// display.start();
 
 		/*
 		 * 

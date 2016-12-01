@@ -1,7 +1,6 @@
 package DPM_TEAM04.test;
 
 import static DPM_TEAM04.Resources.DISPLAY_PERIOD;
-import static DPM_TEAM04.Resources.TILE_WIDTH;
 
 import DPM_TEAM04.Resources;
 import DPM_TEAM04.geometry.Coordinate;
@@ -12,6 +11,15 @@ import DPM_TEAM04.navigation.Driver;
 import DPM_TEAM04.odometry.Odometer;
 import lejos.hardware.Button;
 
+
+/**
+ * Test class to find the best Track width. Must be performed after the Wheel radius test class. 
+ * The robot will execute 10 laps on itself. If it does not complete the 10 laps, the @Resources.TRACK
+ * must be grater. If the robot complete more than 10 laps, the @Resources.TRACK must be decreased.
+ * 
+ * @author Tristan Toupin
+ *
+ */
 public class TrackWidthTest {
 
 	public static final int VERSION_NB = 1;
@@ -63,7 +71,7 @@ public class TrackWidthTest {
 		// To test the Track
 		while (true) {
 			coordinate.setCoordinate(CoordinateSystem.POLAR_DEG, 0.0, 0.0);
-			driver.rotate(-360.0*1, CoordinateSystem.HEADING_DEG);
+			driver.rotate(-360.0*10, CoordinateSystem.HEADING_DEG);
 
 			// if not escape, break while loop and repeat
 			while (true) {

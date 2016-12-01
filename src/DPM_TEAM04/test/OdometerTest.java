@@ -9,6 +9,12 @@ import lejos.hardware.Button;
 
 import static DPM_TEAM04.Resources.*;
 
+/**
+ * Test class to test the odometer using float motors.
+ * 
+ * @author team04
+ *
+ */
 public class OdometerTest {
 
 	public static final int VERSION_NB = 1;

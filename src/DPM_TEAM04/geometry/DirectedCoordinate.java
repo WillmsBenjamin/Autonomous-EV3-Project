@@ -1,6 +1,14 @@
 package DPM_TEAM04.geometry;
 
 import lejos.robotics.navigation.Pose;
+/**
+ * 
+ * Setter and getter of DirectedCoordinate system.
+ * 
+ * 
+ * @author KareemHalabi
+ *
+ */
 
 public class DirectedCoordinate extends Coordinate {
 
